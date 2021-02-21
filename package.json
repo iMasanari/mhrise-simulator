@@ -1,0 +1,15 @@
+{
+  "name": "mh-rise",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "mh-rise-data",
+    "mh-rise-simulator",
+    "mh-rise-web"
+  ],
+  "scripts": {
+    "dev": "npm --prefix mh-rise-web run dev"
+  },
+  "author": "iMasanari",
+  "license": "MIT"
+}
