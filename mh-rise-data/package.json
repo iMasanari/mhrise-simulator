@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "description": "",
   "scripts": {
+    "fetch": "ts-node -P tsconfig.json src/fetch.ts",
+    "generate": "ts-node -P tsconfig.json src/generate.ts"
   },
   "author": "iMasanari",
   "license": "MIT",
