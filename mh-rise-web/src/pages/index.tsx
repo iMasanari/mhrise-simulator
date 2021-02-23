@@ -1,24 +1,30 @@
-import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
+import { GetStaticProps } from 'next'
+import Head from 'next/head'
 import * as React from 'react'
-import Copyright from '../components/Copyright'
-import Link from '../components/Link'
-import ProTip from '../components/ProTip'
+import { getSkillSystems } from '../api/skills'
+import Simulator from '../components/templates/Simulator'
+import { SkillSystem } from '../domain/skill'
 
-export default function Index() {
+interface Props {
+  skills: SkillSystem[]
+}
+
+export const getStaticProps: GetStaticProps<Props> = async () => {
+  const skills = await getSkillSystems()
+
+  return {
+    props: { skills },
+  }
+}
+
+export default function TopPage({ skills }: Props) {
   return (
     <Container maxWidth="sm">
-      <Box sx={{ my: 4 }}>
-        <Typography variant="h4" component="h1" gutterBottom>
-          Next.js v5-alpha with TypeScript example
-        </Typography>
-        <Link href="/about" color="secondary">
-          Go to the about page
-        </Link>
-        <ProTip />
-        <Copyright />
-      </Box>
+      <Head>
+        <title>MHRise スキルシミュ</title>
+      </Head>
+      <Simulator skills={skills} />
     </Container>
   )
 }
