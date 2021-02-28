@@ -7,6 +7,7 @@ import Head from 'next/head'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
+import Header from '../components/organisms/Header'
 import { store, persistor } from '../configureStore'
 import theme from '../theme'
 
@@ -34,6 +35,7 @@ export default function MyApp(props: AppProps) {
       {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
       <CssBaseline />
       <Global styles={globalStyle} />
+      <Header title="MHRise シミュ" />
       <Component {...pageProps} />
     </ThemeProvider>
   )
