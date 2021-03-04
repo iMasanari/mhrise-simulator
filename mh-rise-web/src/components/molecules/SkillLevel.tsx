@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 
 interface Props {
-  value: number | undefined
+  value?: number | undefined
   items: number[]
-  update: (value: number | undefined) => void
+  update?: (value: number | undefined) => void
 }
 
 const skillLevelStyle = css`
@@ -21,6 +21,9 @@ const itemStyle = css`
   padding: 0;
   background: #fff;
   text-align: center;
+`
+
+const clickableStyle = css`
   cursor: pointer;
 `
 
@@ -34,12 +37,12 @@ export default function SkillLevel({ value, items, update }: Props) {
       {items.map((level) =>
         <li
           key={level}
-          css={[itemStyle, value === level && itemActiveStyle]}
-          onClick={(e) => {
+          css={[itemStyle, update && clickableStyle, value === level && itemActiveStyle]}
+          onClick={update ? ((e) => {
             // TODO: イベント伝搬無効処理の方法を検討する
             e.stopPropagation()
             update(value === level ? 0 : level)
-          }}
+          }) : undefined}
         />
       )}
     </ul>

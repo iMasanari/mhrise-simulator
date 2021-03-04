@@ -37,7 +37,7 @@ const sectionMobileStyle = (theme: Theme) => css`
 
 const navItems = [
   { href: '/', title: 'スキルシミュ' },
-  { href: '/about', title: 'About' },
+  { href: '/skills', title: 'スキル一覧' },
 ]
 
 interface Props {

@@ -11,3 +11,9 @@ export const getSkillSystems = async () => {
 
   return skillSystems
 }
+
+export const getSkills = async () => {
+  const skills = await import('@i-masanari/mh-rise-data/dist/skills.json').then(v => v.default)
+
+  return skills
+}
