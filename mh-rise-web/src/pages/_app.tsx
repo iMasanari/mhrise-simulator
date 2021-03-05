@@ -30,26 +30,23 @@ export default function MyApp(props: AppProps) {
     }
   }, [])
 
-  const content = (
-    <ThemeProvider theme={theme}>
-      {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-      <CssBaseline />
-      <Global styles={globalStyle} />
-      <Header title="MHRise シミュ" />
-      <Component {...pageProps} />
-    </ThemeProvider>
-  )
-
   return (
-    <CacheProvider value={cache}>
-      <Head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
-      </Head>
-      <Provider store={store}>
-        <PersistGate loading={content} persistor={persistor}>
-          {content}
-        </PersistGate>
-      </Provider>
-    </CacheProvider>
+    <Provider store={store}>
+      <PersistGate persistor={persistor}>
+        {() =>
+          <CacheProvider value={cache}>
+            <ThemeProvider theme={theme}>
+              <Head>
+                <meta name="viewport" content="initial-scale=1, width=device-width" />
+              </Head>
+              <CssBaseline />
+              <Global styles={globalStyle} />
+              <Header title="MHRise シミュ" />
+              <Component {...pageProps} />
+            </ThemeProvider>
+          </CacheProvider>
+        }
+      </PersistGate>
+    </Provider>
   )
 }
