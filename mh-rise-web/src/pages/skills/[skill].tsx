@@ -5,6 +5,7 @@ import Typography from '@material-ui/core/Typography'
 import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import * as React from 'react'
+import { findArmor } from '../../api/armors'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
 
@@ -27,16 +28,18 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 
   if (!skill) throw new Error(`${skillName} is not found`)
 
+  const armors = await findArmor(skill.name)
+
   return {
-    props: { skill },
+    props: { skill, armors },
   }
 }
 
-export default function SkillDetailPage({ skill }: Props) {
+export default function SkillDetailPage({ skill, armors }: Props) {
   return (
     <Container>
       <Head>
-        <title>スキル一覧 | MHRise スキルシミュ</title>
+        <title>{skill.name} | MHRise スキルシミュ</title>
       </Head>
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
@@ -55,23 +58,55 @@ export default function SkillDetailPage({ skill }: Props) {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell component="th">スキル</TableCell>
-                  <TableCell component="th" align="center">発動ポイント</TableCell>
+                  <TableCell component="th" colSpan={2}>発動ポイント / スキル</TableCell>
                   <TableCell component="th">効果</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {skill.details.map(detail =>
                   <TableRow key={detail.name}>
-                    <TableCell>
-                      {detail.name}
-                    </TableCell>
                     <TableCell align="center">
-                      {detail.point}
+                      {detail.point}pt
+                    </TableCell>
+                    <TableCell>
+                      <Typography variant="inherit" noWrap>{detail.name}</Typography>
                     </TableCell>
                     <TableCell>
                       {detail.description}
                     </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+        <Typography variant="h6" component="h2" gutterBottom>
+          防具
+        </Typography>
+        <Container maxWidth="md" disableGutters>
+          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell component="th">防具</TableCell>
+                  <TableCell component="th">頭</TableCell>
+                  <TableCell component="th">胴</TableCell>
+                  <TableCell component="th">腕</TableCell>
+                  <TableCell component="th">腰</TableCell>
+                  <TableCell component="th">足</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {armors.map(([name, head, body, arm, wst, leg]) =>
+                  <TableRow key={name}>
+                    <TableCell>
+                      <Link href={`/armors/${name}`} noWrap>{name}</Link>
+                    </TableCell>
+                    <TableCell>{head}</TableCell>
+                    <TableCell>{body}</TableCell>
+                    <TableCell>{arm}</TableCell>
+                    <TableCell>{wst}</TableCell>
+                    <TableCell>{leg}</TableCell>
                   </TableRow>
                 )}
               </TableBody>
