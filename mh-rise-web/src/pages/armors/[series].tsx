@@ -57,6 +57,20 @@ export default function SkillDetailPage({ series }: Props) {
     }))
     .sort((a, b) => b.point - a.point)
 
+  const materials = [...new Set(armors.flatMap(v => Object.keys(v.materials)))]
+    .map(v => ({
+      name: v,
+      count: armors.reduce((acc, { materials }) => acc + (materials[v] || 0), 0),
+    }))
+    .sort((a, b) => b.count - a.count)
+
+  const customMaterials = [...new Set(armors.flatMap(v => Object.keys(v.customMaterials)))]
+    .map(v => ({
+      name: v,
+      count: armors.reduce((acc, { customMaterials }) => acc + (customMaterials[v] || 0), 0),
+    }))
+    .sort((a, b) => b.count - a.count)
+
   return (
     <Container>
       <Head>
@@ -151,6 +165,56 @@ export default function SkillDetailPage({ series }: Props) {
                   </TableRow>
                 )}
               </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+        <Typography variant="h6" component="h2" gutterBottom>
+          必要素材
+        </Typography>
+        <Container maxWidth="md" disableGutters>
+          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell component="th">名称</TableCell>
+                  <TableCell component="th">生産</TableCell>
+                  <TableCell component="th">カスタム強化</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {armors.map(armor =>
+                  <TableRow key={armor.name}>
+                    <TableCell>
+                      <Typography variant="inherit" noWrap>{armor.name}</Typography>
+                    </TableCell>
+                    <TableCell>
+                      {Object.entries(armor.materials).map(([key, value]) =>
+                        <div key={key}>{`${key} x${value}`}</div>
+                      )}
+                    </TableCell>
+                    <TableCell>
+                      {Object.entries(armor.customMaterials).map(([key, value]) =>
+                        <div key={key}>{`${key} x${value}`}</div>
+                      )}
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+              <TableFooter>
+                <TableRow>
+                  <TableCell>合計</TableCell>
+                  <TableCell>
+                    {materials.map((v) =>
+                      <div key={v.name}>{`${v.name} x${v.count}`}</div>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {customMaterials.map((v) =>
+                      <div key={v.name}>{`${v.name} x${v.count}`}</div>
+                    )}
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
             </Table>
           </TableContainer>
         </Container>

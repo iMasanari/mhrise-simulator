@@ -40,12 +40,34 @@ const getArmors = async (path: string) => {
       skillList.filter(([, point]) => point)
     )
 
+    const materialList = [
+      [生産素材1, +生産個数1],
+      [生産素材2, +生産個数2],
+      [生産素材3, +生産個数3],
+      [生産素材4, +生産個数4],
+    ] as const
+
+    const materials = Object.fromEntries(
+      materialList.filter(([, point]) => point)
+    )
+
+    const customMaterialList = [
+      [カスタム強化素材1, +個数1],
+      [カスタム強化素材2, +個数2],
+    ] as const
+
+    const customMaterials = Object.fromEntries(
+      customMaterialList.filter(([, point]) => point)
+    )
+
     return {
       name: 名前,
       slots: [+スロット1, +スロット2, +スロット3],
       defs: [+初期防御力, +最終防御力, +カスタム強化防御力],
       elements: [+火耐性, +水耐性, +雷耐性, +氷耐性, +龍耐性],
       skills,
+      materials,
+      customMaterials,
       oneset: ワンセット防具 === '1',
     }
   })

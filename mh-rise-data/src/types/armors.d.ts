@@ -3,7 +3,9 @@ export interface Armor {
   slots: [number, number, number]
   defs: [number, number, number]
   elements: [number, number, number, number, number]
-  skills: Record<string, number>,
+  skills: Record<string, number>
+  materials: Record<string, number>
+  customMaterials: Record<string, number>
   oneset: boolean
 }
 
