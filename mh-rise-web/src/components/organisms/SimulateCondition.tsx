@@ -42,9 +42,13 @@ export default function SimulateCondition({ skills, activeSkill, setActiveSkill,
     setSkillOpen(true)
 
   const handleClose = (activeSkill: ActiveSkill) => {
+    const value = Object.fromEntries(
+      Object.entries(activeSkill).filter(([_, value]) => value)
+    )
+
     setSkillOpen(false)
-    setActiveSkill(activeSkill)
-    updateSkillLog(activeSkill)
+    setActiveSkill(value)
+    updateSkillLog(value)
   }
 
   return (

@@ -17,7 +17,7 @@ const listItemIconStyle = css`
 
 export default function SkillListItem({ checkbox, skillName, items, value, setValue }: Props) {
   const actionHandler = () =>
-    setValue(value == null ? items[items.length - 1] : undefined)
+    setValue(!value ? items[items.length - 1] : undefined)
 
   const subActionHandler = (e: React.ChangeEvent<{ value: string | number }>) =>
     setValue(+e.currentTarget.value)
@@ -28,7 +28,7 @@ export default function SkillListItem({ checkbox, skillName, items, value, setVa
         <ListItemIcon css={listItemIconStyle}>
           <Checkbox
             edge="start"
-            checked={value != null}
+            checked={!!value}
             tabIndex={-1}
             disableRipple
           />
