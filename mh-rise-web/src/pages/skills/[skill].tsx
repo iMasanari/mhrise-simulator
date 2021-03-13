@@ -6,6 +6,7 @@ import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from '
 import Head from 'next/head'
 import * as React from 'react'
 import { findArmor } from '../../api/armors'
+import { getCharms } from '../../api/charms'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
 
@@ -21,7 +22,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps = async (ctx: GetStaticPropsContext) => {
-  const skillName = ctx.params?.skill
+  const skillName = ctx.params?.skill as string
   const skills = await getSkills()
 
   const skill = skills.find(v => v.name === skillName)
@@ -29,13 +30,16 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
   if (!skill) throw new Error(`${skillName} is not found`)
 
   const armors = await findArmor(skill.name)
+  const charms = (await getCharms())
+    .filter(v => v.charms.some(w => w.skills[skillName] != null))
+    .map(v => ({ name: v.name, point: Math.max(...v.charms.map(w => w.skills[skillName])) }))
 
   return {
-    props: { skill, armors },
+    props: { skill, armors, charms },
   }
 }
 
-export default function SkillDetailPage({ skill, armors }: Props) {
+export default function SkillDetailPage({ skill, armors, charms }: Props) {
   return (
     <Container>
       <Head>
@@ -88,7 +92,7 @@ export default function SkillDetailPage({ skill, armors }: Props) {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell component="th">防具</TableCell>
+                  <TableCell component="th">名称</TableCell>
                   <TableCell component="th">頭</TableCell>
                   <TableCell component="th">胴</TableCell>
                   <TableCell component="th">腕</TableCell>
@@ -107,6 +111,33 @@ export default function SkillDetailPage({ skill, armors }: Props) {
                     <TableCell>{arm}</TableCell>
                     <TableCell>{wst}</TableCell>
                     <TableCell>{leg}</TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Container>
+        <Typography variant="h6" component="h2" gutterBottom>
+          護符
+        </Typography>
+        <Container maxWidth="md" disableGutters>
+          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell component="th">名称</TableCell>
+                  <TableCell component="th" align="center">最大ポイント</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {charms.map(charm =>
+                  <TableRow key={charm.name}>
+                    <TableCell>
+                      <Link href={`/charms/${charm.name}`} noWrap>{charm.name}</Link>
+                    </TableCell>
+                    <TableCell align="center">
+                      {charm.point}
+                    </TableCell>
                   </TableRow>
                 )}
               </TableBody>
