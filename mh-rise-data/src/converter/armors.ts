@@ -84,7 +84,7 @@ const getArmorSeries = async (armors: string[][]) => {
   const txt = await fs.readFile('./lib/series.txt', 'utf-8')
 
   const result = txt.split('\n').map(name => {
-    const [_, prefix, safix] = name.match(/^(.+?)([αβγ]?)$/)!
+    const [_, prefix, safix] = name.match(/^(.+?)・?(覇?)$/)!
     const equips = armors.map(list => findArmor(list, prefix, safix) || null)
 
     return { name, equips }

@@ -2,14 +2,14 @@ import fs from 'fs/promises'
 import fetch from 'node-fetch'
 
 const sheets = {
-  head: 'https://docs.google.com/spreadsheets/d/1OFAc7Z8XR4cvYXy3n2m72RFSD2iTpAFakga_BLSCT5Y/export?format=csv&gid=0',
-  body: 'https://docs.google.com/spreadsheets/d/1eEstWit2pmX7uhAhz0nAxgoQiJ3bPNx2yaTMLdoCb6U/export?format=csv&gid=0',
-  arm: 'https://docs.google.com/spreadsheets/d/1NBedHUXFh0wnNgoDA8K-REMyjrXHF_VE3262pdUjj5g/export?format=csv&gid=0',
-  wst: 'https://docs.google.com/spreadsheets/d/1HCGj4xGKE--8wXiHHmB0f-0t4qLUJeV1YtqPM7-8SN0/export?format=csv&gid=0',
-  leg: 'https://docs.google.com/spreadsheets/d/1yYpBQVZ7qewXAOEydmtRLwFw9Vypwf3bEt08vA3k5fg/export?format=csv&gid=0',
-  deco: 'https://docs.google.com/spreadsheets/d/1oMiUERDAU5_1PUrGwOIthN-DSonMwEHIG65sAtlxWBM/export?format=csv&gid=0',
-  charm: 'https://docs.google.com/spreadsheets/d/1hNFh3nC6fIrfL4Zh2sGsshNmmzEQeKg85wNcftQOQ9Y/export?format=csv&gid=0',
-  skill: 'https://docs.google.com/spreadsheets/d/1FRATMC5CrzTKPMsBKuruR0Q6e6YvRyIJE092jDPuJjk/export?format=csv&gid=0',
+  head: 'https://docs.google.com/spreadsheets/d/1YPoMg-9e2MuppqIZum5lYi5H72aOb84IpGbFMRLxM1k/export?format=csv&gid=0',
+  body: 'https://docs.google.com/spreadsheets/d/1Ac8zX4wuhYK17K-IEMNAoj5W6i6ZrtOcIm6CgtKa-Vs/export?format=csv&gid=0',
+  arm: 'https://docs.google.com/spreadsheets/d/1Rfh-Dn7UHrd1TJxjvF1pjn7ph7-FdypSu52163O5Fx8/export?format=csv&gid=0',
+  wst: 'https://docs.google.com/spreadsheets/d/1_70PiPzkUoZKCmbnGu6z-mB5ze_uMwl18rh6yA9DnW8/export?format=csv&gid=0',
+  leg: 'https://docs.google.com/spreadsheets/d/18tYyKWKpzU4yQqf39jrGQOF2wvu3V9dpNPUFLFhKgw4/export?format=csv&gid=0',
+  deco: 'https://docs.google.com/spreadsheets/d/1LUl_6ujLdTBSuHGlFosIFFclLin7qUpUKpzeZ4-nmSE/export?format=csv&gid=0',
+  charm: 'https://docs.google.com/spreadsheets/d/1oR-l93PaPgeSuf-FPC9LRVOkcDEuTmGrXgteqS9DHEw/export?format=csv&gid=0',
+  skill: 'https://docs.google.com/spreadsheets/d/1pKiITUuHzC_vfhunstQo2QhnEGlCLMYL29iOGPrfzAY/export?format=csv&gid=0',
 }
 
 const outDir = 'lib/spreadsheets'

@@ -4,6 +4,7 @@
   "description": "",
   "scripts": {
     "fetch": "ts-node -P tsconfig.json src/fetch.ts",
+    "postfetch": "npm run generate",
     "generate": "ts-node -P tsconfig.json src/generate.ts"
   },
   "author": "iMasanari",
