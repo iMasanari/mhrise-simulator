@@ -7,6 +7,7 @@ import Head from 'next/head'
 import * as React from 'react'
 import { getSeries } from '../../api/armors'
 import Link from '../../components/atoms/Link'
+import DevelopWarning from '../../components/molecules/DevelopWarning'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -53,6 +54,7 @@ export default function SkillsPage({ series }: Props) {
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
           防具一覧
         </Typography>
+        <DevelopWarning />
         <Container maxWidth="md" disableGutters>
           <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
             <Table>

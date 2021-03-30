@@ -7,6 +7,7 @@ import Head from 'next/head'
 import React from 'react'
 import { getCharms } from '../../api/charms'
 import Link from '../../components/atoms/Link'
+import DevelopWarning from '../../components/molecules/DevelopWarning'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -38,6 +39,7 @@ export default function SkillsPage({ charms }: Props) {
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
           護符一覧
         </Typography>
+        <DevelopWarning />
         <Container maxWidth="md" disableGutters>
           <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
             <Table>
