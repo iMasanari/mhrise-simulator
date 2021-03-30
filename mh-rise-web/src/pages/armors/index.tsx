@@ -71,7 +71,7 @@ export default function SkillsPage({ series }: Props) {
                 {series.map(armor =>
                   <TableRow key={armor.name}>
                     <TableCell>
-                      <Link href={`/armors/${encodeURIComponent(armor.name)}`} noWrap>
+                      <Link href={`/armors/${armor.name}`} noWrap>
                         {armor.name}
                       </Link>
                     </TableCell>

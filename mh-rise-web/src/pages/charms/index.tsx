@@ -28,11 +28,11 @@ export default function SkillsPage({ charms }: Props) {
   return (
     <Container>
       <Head>
-        <title>防具一覧 | MHRise スキルシミュ</title>
+        <title>護符一覧 | MHRise スキルシミュ</title>
       </Head>
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
-        <Typography color="textPrimary">防具一覧</Typography>
+        <Typography color="textPrimary">護符一覧</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
@@ -63,9 +63,10 @@ export default function SkillsPage({ charms }: Props) {
                       </Link>
                     </TableCell>
                     <TableCell>
-                      <Link href={`/skills/${charm.skills[1]}`} noWrap>
-                        {charm.skills[1]}
-                      </Link>
+                      {charm.skills[1] && (
+                        <Link href={`/skills/${charm.skills[1]}`} noWrap>
+                          {charm.skills[1]}
+                        </Link>)}
                     </TableCell>
                   </TableRow>
                 )}

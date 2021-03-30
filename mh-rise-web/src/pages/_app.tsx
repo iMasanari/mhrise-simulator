@@ -3,12 +3,11 @@ import { CacheProvider, css, Global } from '@emotion/react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { AppProps } from 'next/app'
-import Head from 'next/head'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Header from '../components/organisms/Header'
-import { store, persistor } from '../configureStore'
+import { persistor, store } from '../configureStore'
 import theme from '../theme'
 
 const globalStyle = css`
@@ -36,9 +35,6 @@ export default function MyApp(props: AppProps) {
         {() =>
           <CacheProvider value={cache}>
             <ThemeProvider theme={theme}>
-              <Head>
-                <meta name="viewport" content="initial-scale=1, width=device-width" />
-              </Head>
               <CssBaseline />
               <Global styles={globalStyle} />
               <Header title="MHRise シミュ" />

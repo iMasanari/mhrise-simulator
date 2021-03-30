@@ -63,7 +63,7 @@ export default function SkillsPage({ categorySkills }: Props) {
                     {skills.map(skill =>
                       <TableRow key={skill.name}>
                         <TableCell>
-                          <Link href={`/skills/${encodeURIComponent(skill.name)}`} noWrap>
+                          <Link href={`/skills/${skill.name}`} noWrap>
                             {skill.name}
                           </Link>
                           <SkillLevel items={skill.points} />
