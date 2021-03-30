@@ -34,7 +34,7 @@ export const getStaticProps = async () => {
 
 export default function SkillsPage({ categorySkills }: Props) {
   return (
-    <Container>
+    <Container maxWidth="md">
       <Head>
         <title>スキル一覧 | MHRise スキルシミュ</title>
       </Head>
@@ -52,33 +52,31 @@ export default function SkillsPage({ categorySkills }: Props) {
             <Typography variant="h6" component="h2" gutterBottom>
               {category}
             </Typography>
-            <Container maxWidth="md" disableGutters>
-              <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell component="th">スキル</TableCell>
-                      <TableCell component="th">LV最大時効果</TableCell>
+            <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell component="th">スキル</TableCell>
+                    <TableCell component="th">LV最大時効果</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {skills.map(skill =>
+                    <TableRow key={skill.name}>
+                      <TableCell>
+                        <Link href={`/skills/${skill.name}`} noWrap>
+                          {skill.name}
+                        </Link>
+                        <SkillLevel items={skill.points} />
+                      </TableCell>
+                      <TableCell>
+                        {skill.max}
+                      </TableCell>
                     </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {skills.map(skill =>
-                      <TableRow key={skill.name}>
-                        <TableCell>
-                          <Link href={`/skills/${skill.name}`} noWrap>
-                            {skill.name}
-                          </Link>
-                          <SkillLevel items={skill.points} />
-                        </TableCell>
-                        <TableCell>
-                          {skill.max}
-                        </TableCell>
-                      </TableRow>
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Container>
+                  )}
+                </TableBody>
+              </Table>
+            </TableContainer>
           </div>
         )}
       </Box>

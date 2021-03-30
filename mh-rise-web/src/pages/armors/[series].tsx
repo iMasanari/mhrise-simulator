@@ -72,7 +72,7 @@ export default function SkillDetailPage({ series }: Props) {
     .sort((a, b) => b.count - a.count)
 
   return (
-    <Container>
+    <Container maxWidth="md">
       <Head>
         <title>{series.name} | MHRise スキルシミュ</title>
       </Head>
@@ -88,136 +88,130 @@ export default function SkillDetailPage({ series }: Props) {
         <Typography variant="h6" component="h2" gutterBottom>
           基本データ
         </Typography>
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th" colSpan={2}>名称 / スロット</TableCell>
-                  <TableCell component="th" colSpan={2} align="center">防御 / 強化後</TableCell>
-                  <TableCell component="th" align="center">火</TableCell>
-                  <TableCell component="th" align="center">水</TableCell>
-                  <TableCell component="th" align="center">雷</TableCell>
-                  <TableCell component="th" align="center">氷</TableCell>
-                  <TableCell component="th" align="center">龍</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th" colSpan={2}>名称 / スロット</TableCell>
+                <TableCell component="th" colSpan={2} align="center">防御 / 強化後</TableCell>
+                <TableCell component="th" align="center">火</TableCell>
+                <TableCell component="th" align="center">水</TableCell>
+                <TableCell component="th" align="center">雷</TableCell>
+                <TableCell component="th" align="center">氷</TableCell>
+                <TableCell component="th" align="center">龍</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {armors.map(armor =>
+                <TableRow key={armor.name}>
+                  <TableCell>
+                    <Typography variant="inherit" noWrap>{armor.name}</Typography>
+                  </TableCell>
+                  <TableCell>{armor.slots.filter(Boolean).map(v => `【${v}】`).join('')}</TableCell>
+                  <TableCell align="center">{armor.defs[0]}</TableCell>
+                  <TableCell align="center">{armor.defs[2]}</TableCell>
+                  <TableCell align="center">{armor.elements[0] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[1] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[2] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[3] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[4] || null}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {armors.map(armor =>
-                  <TableRow key={armor.name}>
-                    <TableCell>
-                      <Typography variant="inherit" noWrap>{armor.name}</Typography>
-                    </TableCell>
-                    <TableCell>{armor.slots.filter(Boolean).map(v => `【${v}】`).join('')}</TableCell>
-                    <TableCell align="center">{armor.defs[0]}</TableCell>
-                    <TableCell align="center">{armor.defs[2]}</TableCell>
-                    <TableCell align="center">{armor.elements[0] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[1] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[2] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[3] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[4] || null}</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell colSpan={2}>合計</TableCell>
-                  <TableCell align="center">{defs[0]}</TableCell>
-                  <TableCell align="center">{defs[2]}</TableCell>
-                  <TableCell align="center">{elements[0]}</TableCell>
-                  <TableCell align="center">{elements[1]}</TableCell>
-                  <TableCell align="center">{elements[2]}</TableCell>
-                  <TableCell align="center">{elements[3]}</TableCell>
-                  <TableCell align="center">{elements[4]}</TableCell>
-                </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={2}>合計</TableCell>
+                <TableCell align="center">{defs[0]}</TableCell>
+                <TableCell align="center">{defs[2]}</TableCell>
+                <TableCell align="center">{elements[0]}</TableCell>
+                <TableCell align="center">{elements[1]}</TableCell>
+                <TableCell align="center">{elements[2]}</TableCell>
+                <TableCell align="center">{elements[3]}</TableCell>
+                <TableCell align="center">{elements[4]}</TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
         <Typography variant="h6" component="h2" gutterBottom>
           スキル効果
         </Typography>
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th" colSpan={2}>発動スキル</TableCell>
-                  <TableCell component="th">頭</TableCell>
-                  <TableCell component="th">胴</TableCell>
-                  <TableCell component="th">腕</TableCell>
-                  <TableCell component="th">腰</TableCell>
-                  <TableCell component="th">足</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {skills.map(skill =>
-                  <TableRow key={skill.name}>
-                    <TableCell>
-                      <Link href={`/skills/${skill.name}`} noWrap>{skill.name}</Link>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th" colSpan={2}>発動スキル</TableCell>
+                <TableCell component="th">頭</TableCell>
+                <TableCell component="th">胴</TableCell>
+                <TableCell component="th">腕</TableCell>
+                <TableCell component="th">腰</TableCell>
+                <TableCell component="th">足</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {skills.map(skill =>
+                <TableRow key={skill.name}>
+                  <TableCell>
+                    <Link href={`/skills/${skill.name}`} noWrap>{skill.name}</Link>
+                  </TableCell>
+                  <TableCell>{`Lv${skill.point}`}</TableCell>
+                  {armors.map(armor =>
+                    <TableCell key={armor.name}>
+                      {armor.skills[skill.name] || null}
                     </TableCell>
-                    <TableCell>{`Lv${skill.point}`}</TableCell>
-                    {armors.map(armor =>
-                      <TableCell key={armor.name}>
-                        {armor.skills[skill.name] || null}
-                      </TableCell>
-                    )}
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
+                  )}
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <Typography variant="h6" component="h2" gutterBottom>
           必要素材
         </Typography>
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th">名称</TableCell>
-                  <TableCell component="th">生産</TableCell>
-                  <TableCell component="th">カスタム強化</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {armors.map(armor =>
-                  <TableRow key={armor.name}>
-                    <TableCell>
-                      <Typography variant="inherit" noWrap>{armor.name}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      {Object.entries(armor.materials).map(([key, value]) =>
-                        <div key={key}>{`${key} x${value}`}</div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      {Object.entries(armor.customMaterials).map(([key, value]) =>
-                        <div key={key}>{`${key} x${value}`}</div>
-                      )}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-              <TableFooter>
-                <TableRow>
-                  <TableCell>合計</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th">名称</TableCell>
+                <TableCell component="th">生産</TableCell>
+                <TableCell component="th">カスタム強化</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {armors.map(armor =>
+                <TableRow key={armor.name}>
                   <TableCell>
-                    {materials.map((v) =>
-                      <div key={v.name}>{`${v.name} x${v.count}`}</div>
+                    <Typography variant="inherit" noWrap>{armor.name}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    {Object.entries(armor.materials).map(([key, value]) =>
+                      <div key={key}>{`${key} x${value}`}</div>
                     )}
                   </TableCell>
                   <TableCell>
-                    {customMaterials.map((v) =>
-                      <div key={v.name}>{`${v.name} x${v.count}`}</div>
+                    {Object.entries(armor.customMaterials).map(([key, value]) =>
+                      <div key={key}>{`${key} x${value}`}</div>
                     )}
                   </TableCell>
                 </TableRow>
-              </TableFooter>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell>合計</TableCell>
+                <TableCell>
+                  {materials.map((v) =>
+                    <div key={v.name}>{`${v.name} x${v.count}`}</div>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {customMaterials.map((v) =>
+                    <div key={v.name}>{`${v.name} x${v.count}`}</div>
+                  )}
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
       </Box>
     </Container>
   )

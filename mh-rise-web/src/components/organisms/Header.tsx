@@ -67,7 +67,7 @@ export default function Header({ title }: Props) {
     <>
       <Slide appear={false} direction="down" in={!trigger}>
         <AppBar css={appBarStyle} position="fixed" color="default" elevation={1}>
-          <Toolbar component={Container} disableGutters>
+          <Toolbar component={Container} maxWidth="md" disableGutters>
             <SiteTitle
               css={titleStyle}
               isHeading={isRoot}

@@ -41,7 +41,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 
 export default function SkillDetailPage({ skill, armors, charms }: Props) {
   return (
-    <Container>
+    <Container maxWidth="md">
       <Head>
         <title>{skill.name} | MHRise スキルシミュ</title>
       </Head>
@@ -57,93 +57,87 @@ export default function SkillDetailPage({ skill, armors, charms }: Props) {
         <Typography variant="h6" component="h2" gutterBottom>
           スキル効果
         </Typography>
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th" colSpan={2}>発動ポイント / スキル</TableCell>
-                  <TableCell component="th">効果</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th" colSpan={2}>発動ポイント / スキル</TableCell>
+                <TableCell component="th">効果</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {skill.details.map(detail =>
+                <TableRow key={detail.name}>
+                  <TableCell align="center">
+                    {detail.point}pt
+                    </TableCell>
+                  <TableCell>
+                    <Typography variant="inherit" noWrap>{detail.name}</Typography>
+                  </TableCell>
+                  <TableCell>
+                    {detail.description}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {skill.details.map(detail =>
-                  <TableRow key={detail.name}>
-                    <TableCell align="center">
-                      {detail.point}pt
-                    </TableCell>
-                    <TableCell>
-                      <Typography variant="inherit" noWrap>{detail.name}</Typography>
-                    </TableCell>
-                    <TableCell>
-                      {detail.description}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <Typography variant="h6" component="h2" gutterBottom>
           防具
         </Typography>
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th">名称</TableCell>
-                  <TableCell component="th">頭</TableCell>
-                  <TableCell component="th">胴</TableCell>
-                  <TableCell component="th">腕</TableCell>
-                  <TableCell component="th">腰</TableCell>
-                  <TableCell component="th">足</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th">名称</TableCell>
+                <TableCell component="th">頭</TableCell>
+                <TableCell component="th">胴</TableCell>
+                <TableCell component="th">腕</TableCell>
+                <TableCell component="th">腰</TableCell>
+                <TableCell component="th">足</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {armors.map(([name, head, body, arm, wst, leg]) =>
+                <TableRow key={name}>
+                  <TableCell>
+                    <Link href={`/armors/${name}`} noWrap>{name}</Link>
+                  </TableCell>
+                  <TableCell>{head}</TableCell>
+                  <TableCell>{body}</TableCell>
+                  <TableCell>{arm}</TableCell>
+                  <TableCell>{wst}</TableCell>
+                  <TableCell>{leg}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {armors.map(([name, head, body, arm, wst, leg]) =>
-                  <TableRow key={name}>
-                    <TableCell>
-                      <Link href={`/armors/${name}`} noWrap>{name}</Link>
-                    </TableCell>
-                    <TableCell>{head}</TableCell>
-                    <TableCell>{body}</TableCell>
-                    <TableCell>{arm}</TableCell>
-                    <TableCell>{wst}</TableCell>
-                    <TableCell>{leg}</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
         <Typography variant="h6" component="h2" gutterBottom>
           護符
         </Typography>
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th">名称</TableCell>
-                  <TableCell component="th" align="center">最大ポイント</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th">名称</TableCell>
+                <TableCell component="th" align="center">最大ポイント</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {charms.map(charm =>
+                <TableRow key={charm.name}>
+                  <TableCell>
+                    <Link href={`/charms/${charm.name}`} noWrap>{charm.name}</Link>
+                  </TableCell>
+                  <TableCell align="center">
+                    {charm.point}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {charms.map(charm =>
-                  <TableRow key={charm.name}>
-                    <TableCell>
-                      <Link href={`/charms/${charm.name}`} noWrap>{charm.name}</Link>
-                    </TableCell>
-                    <TableCell align="center">
-                      {charm.point}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </Container>
   )

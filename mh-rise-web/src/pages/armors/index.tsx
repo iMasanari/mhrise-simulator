@@ -42,7 +42,7 @@ export const getStaticProps = async () => {
 
 export default function SkillsPage({ series }: Props) {
   return (
-    <Container>
+    <Container maxWidth="md">
       <Head>
         <title>防具一覧 | MHRise スキルシミュ</title>
       </Head>
@@ -55,41 +55,39 @@ export default function SkillsPage({ series }: Props) {
           防具一覧
         </Typography>
         <DevelopWarning />
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th">防具</TableCell>
-                  <TableCell component="th" colSpan={2} align="center">防御 / 強化後</TableCell>
-                  <TableCell component="th" align="center">火</TableCell>
-                  <TableCell component="th" align="center">水</TableCell>
-                  <TableCell component="th" align="center">雷</TableCell>
-                  <TableCell component="th" align="center">氷</TableCell>
-                  <TableCell component="th" align="center">龍</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th">防具</TableCell>
+                <TableCell component="th" colSpan={2} align="center">防御 / 強化後</TableCell>
+                <TableCell component="th" align="center">火</TableCell>
+                <TableCell component="th" align="center">水</TableCell>
+                <TableCell component="th" align="center">雷</TableCell>
+                <TableCell component="th" align="center">氷</TableCell>
+                <TableCell component="th" align="center">龍</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {series.map(armor =>
+                <TableRow key={armor.name}>
+                  <TableCell>
+                    <Link href={`/armors/${armor.name}`} noWrap>
+                      {armor.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">{armor.def[0]}</TableCell>
+                  <TableCell align="center">{armor.def[2]}</TableCell>
+                  <TableCell align="center">{armor.elements[0] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[1] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[2] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[3] || null}</TableCell>
+                  <TableCell align="center">{armor.elements[4] || null}</TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {series.map(armor =>
-                  <TableRow key={armor.name}>
-                    <TableCell>
-                      <Link href={`/armors/${armor.name}`} noWrap>
-                        {armor.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{armor.def[0]}</TableCell>
-                    <TableCell align="center">{armor.def[2]}</TableCell>
-                    <TableCell align="center">{armor.elements[0] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[1] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[2] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[3] || null}</TableCell>
-                    <TableCell align="center">{armor.elements[4] || null}</TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </Container>
   )

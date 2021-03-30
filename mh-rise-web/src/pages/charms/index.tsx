@@ -27,7 +27,7 @@ export const getStaticProps = async () => {
 
 export default function SkillsPage({ charms }: Props) {
   return (
-    <Container>
+    <Container maxWidth="md">
       <Head>
         <title>護符一覧 | MHRise スキルシミュ</title>
       </Head>
@@ -40,42 +40,40 @@ export default function SkillsPage({ charms }: Props) {
           護符一覧
         </Typography>
         <DevelopWarning />
-        <Container maxWidth="md" disableGutters>
-          <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell component="th">名称</TableCell>
-                  <TableCell component="th" align="center">最大強化</TableCell>
-                  <TableCell component="th" colSpan={2}>スキル</TableCell>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th">名称</TableCell>
+                <TableCell component="th" align="center">最大強化</TableCell>
+                <TableCell component="th" colSpan={2}>スキル</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {charms.map(charm =>
+                <TableRow key={charm.name}>
+                  <TableCell>
+                    <Link href={`/charms/${charm.name}`} noWrap>
+                      {charm.name}
+                    </Link>
+                  </TableCell>
+                  <TableCell align="center">{charm.level}</TableCell>
+                  <TableCell>
+                    <Link href={`/skills/${charm.skills[0]}`} noWrap>
+                      {charm.skills[0]}
+                    </Link>
+                  </TableCell>
+                  <TableCell>
+                    {charm.skills[1] && (
+                      <Link href={`/skills/${charm.skills[1]}`} noWrap>
+                        {charm.skills[1]}
+                      </Link>)}
+                  </TableCell>
                 </TableRow>
-              </TableHead>
-              <TableBody>
-                {charms.map(charm =>
-                  <TableRow key={charm.name}>
-                    <TableCell>
-                      <Link href={`/charms/${charm.name}`} noWrap>
-                        {charm.name}
-                      </Link>
-                    </TableCell>
-                    <TableCell align="center">{charm.level}</TableCell>
-                    <TableCell>
-                      <Link href={`/skills/${charm.skills[0]}`} noWrap>
-                        {charm.skills[0]}
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      {charm.skills[1] && (
-                        <Link href={`/skills/${charm.skills[1]}`} noWrap>
-                          {charm.skills[1]}
-                        </Link>)}
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Container>
+              )}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </Box>
     </Container>
   )
