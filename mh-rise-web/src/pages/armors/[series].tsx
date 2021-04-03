@@ -39,7 +39,6 @@ export default function SkillDetailPage({ series }: Props) {
   const defs = [
     armors.reduce((acc, v) => acc + v.defs[0], 0),
     armors.reduce((acc, v) => acc + v.defs[1], 0),
-    armors.reduce((acc, v) => acc + v.defs[2], 0),
   ]
 
   const elements = [
@@ -61,13 +60,6 @@ export default function SkillDetailPage({ series }: Props) {
     .map(v => ({
       name: v,
       count: armors.reduce((acc, { materials }) => acc + (materials[v] || 0), 0),
-    }))
-    .sort((a, b) => b.count - a.count)
-
-  const customMaterials = [...new Set(armors.flatMap(v => Object.keys(v.customMaterials)))]
-    .map(v => ({
-      name: v,
-      count: armors.reduce((acc, { customMaterials }) => acc + (customMaterials[v] || 0), 0),
     }))
     .sort((a, b) => b.count - a.count)
 
@@ -109,7 +101,7 @@ export default function SkillDetailPage({ series }: Props) {
                   </TableCell>
                   <TableCell>{armor.slots.filter(Boolean).map(v => `【${v}】`).join('')}</TableCell>
                   <TableCell align="center">{armor.defs[0]}</TableCell>
-                  <TableCell align="center">{armor.defs[2]}</TableCell>
+                  <TableCell align="center">{armor.defs[1]}</TableCell>
                   <TableCell align="center">{armor.elements[0] || null}</TableCell>
                   <TableCell align="center">{armor.elements[1] || null}</TableCell>
                   <TableCell align="center">{armor.elements[2] || null}</TableCell>
@@ -173,7 +165,6 @@ export default function SkillDetailPage({ series }: Props) {
               <TableRow>
                 <TableCell component="th">名称</TableCell>
                 <TableCell component="th">生産</TableCell>
-                <TableCell component="th">カスタム強化</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -187,11 +178,6 @@ export default function SkillDetailPage({ series }: Props) {
                       <div key={key}>{`${key} x${value}`}</div>
                     )}
                   </TableCell>
-                  <TableCell>
-                    {Object.entries(armor.customMaterials).map(([key, value]) =>
-                      <div key={key}>{`${key} x${value}`}</div>
-                    )}
-                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -200,11 +186,6 @@ export default function SkillDetailPage({ series }: Props) {
                 <TableCell>合計</TableCell>
                 <TableCell>
                   {materials.map((v) =>
-                    <div key={v.name}>{`${v.name} x${v.count}`}</div>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {customMaterials.map((v) =>
                     <div key={v.name}>{`${v.name} x${v.count}`}</div>
                   )}
                 </TableCell>

@@ -23,7 +23,6 @@ export const getStaticProps = async () => {
       def: [
         armors.reduce((acc, v) => acc + v.defs[0], 0),
         armors.reduce((acc, v) => acc + v.defs[1], 0),
-        armors.reduce((acc, v) => acc + v.defs[2], 0),
       ],
       elements: [
         armors.reduce((acc, v) => acc + v.elements[0], 0),
@@ -77,7 +76,7 @@ export default function SkillsPage({ series }: Props) {
                     </Link>
                   </TableCell>
                   <TableCell align="center">{armor.def[0]}</TableCell>
-                  <TableCell align="center">{armor.def[2]}</TableCell>
+                  <TableCell align="center">{armor.def[1]}</TableCell>
                   <TableCell align="center">{armor.elements[0] || null}</TableCell>
                   <TableCell align="center">{armor.elements[1] || null}</TableCell>
                   <TableCell align="center">{armor.elements[2] || null}</TableCell>

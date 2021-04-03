@@ -51,24 +51,13 @@ const getArmors = async (path: string) => {
       materialList.filter(([, point]) => point)
     )
 
-    const customMaterialList = [
-      [カスタム強化素材1, +個数1],
-      [カスタム強化素材2, +個数2],
-    ] as const
-
-    const customMaterials = Object.fromEntries(
-      customMaterialList.filter(([, point]) => point)
-    )
-
     return {
       name: 名前,
       slots: [+スロット1, +スロット2, +スロット3],
-      defs: [+初期防御力, +最終防御力, +カスタム強化防御力],
+      defs: [+初期防御力, +最終防御力],
       elements: [+火耐性, +水耐性, +雷耐性, +氷耐性, +龍耐性],
       skills,
       materials,
-      customMaterials,
-      oneset: ワンセット防具 === '1',
     }
   })
 
