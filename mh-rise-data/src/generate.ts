@@ -1,6 +1,7 @@
 import { copyFile } from 'fs/promises'
 import { getArmorData } from './converter/armors'
 import { getCharms } from './converter/charms'
+import { getDecos } from './converter/deco'
 import { getSkills } from './converter/skill'
 import { writeJson } from './util/fileUtil'
 
@@ -30,6 +31,12 @@ const main = async () => {
   writeJson('dist/charmGroup.json', charmGroup)
 
   copyFile('src/types/charms.d.ts', 'dist/charm.json.d.ts')
+
+  const decos = await getDecos()
+
+  writeJson('dist/deco.json', decos)
+
+  copyFile('src/types/decos.d.ts', 'dist/deco.json.d.ts')
 }
 
 main()
