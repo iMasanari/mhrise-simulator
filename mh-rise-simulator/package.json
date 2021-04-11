@@ -2,11 +2,19 @@
   "name": "@i-masanari/mh-rise-simulator",
   "version": "0.1.0",
   "description": "",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc -p .",
+    "test": "ts-node -P tsconfig.json src/tests.ts"
   },
   "author": "iMasanari",
-  "license": "MIT",
+  "license": "GPLv3",
+  "dependencies": {
+    "@i-masanari/mh-rise-data": "^0.1.0",
+    "glpk.js": "^2.0.1"
+  },
   "devDependencies": {
+    "ts-node": "^9.1.1",
     "typescript": "^4.2.3"
   }
 }

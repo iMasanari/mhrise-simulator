@@ -8,6 +8,7 @@
     "mh-rise-web"
   ],
   "scripts": {
+    "predev": "npm --prefix mh-rise-simulator run build",
     "dev": "npm --prefix mh-rise-web run dev"
   },
   "author": "iMasanari",

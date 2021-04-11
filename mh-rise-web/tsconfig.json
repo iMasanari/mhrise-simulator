@@ -5,7 +5,8 @@
     "jsx": "preserve",
     "lib": [
       "dom",
-      "es2019"
+      "es2019",
+      "WebWorker"
     ],
     "module": "esnext",
     "moduleResolution": "node",
