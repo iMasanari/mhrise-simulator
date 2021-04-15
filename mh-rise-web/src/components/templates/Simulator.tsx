@@ -5,6 +5,7 @@ import React, { useEffect, useReducer, useRef, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { WeaponSlot } from '../../domain/weapon'
 import DevelopWarning from '../molecules/DevelopWarning'
+import ResultEquip from '../molecules/ResultEquip'
 import SimulateCondition from '../organisms/SimulateCondition'
 
 interface Props {
@@ -87,8 +88,10 @@ export default function Simulator({ skills }: Props) {
         setWeaponSlot={setWeaponSlot}
       />
       <Button onClick={exec}>実行</Button>
+      {result.result.map((equip, i) =>
+        <ResultEquip key={i} result={equip} />
+      )}
       <div>{result.loading && '検索中...'}</div>
-      <pre>{JSON.stringify(result.result, null, 2)}</pre>
     </Box>
   )
 }
