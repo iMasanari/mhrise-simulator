@@ -42,26 +42,28 @@ const initState = {
 export const useSimulator = () => {
   const [state, dispatch] = useReducer(reducer, initState)
 
-  const executeRef = useRef<(condition: Condition) => void>()
+  const workerRef = useRef<Worker>()
 
   useEffect(() => {
     const worker = new Worker(new URL('../worker/index.worker.ts', import.meta.url))
+
+    workerRef.current = worker
 
     worker.addEventListener('message', (e) => {
       dispatch(e.data)
     })
 
-    executeRef.current = options => worker.postMessage(options)
-
     return () => worker.terminate()
   }, [])
 
   const simulate = async (activeSkill: Record<string, number>) => {
-    executeRef.current!({
+    const condition: Condition = {
       skill: activeSkill,
       ignore: [],
       limit: 10,
-    })
+    }
+
+    workerRef.current!.postMessage(condition)
   }
 
   return {
