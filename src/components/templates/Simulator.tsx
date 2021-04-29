@@ -1,8 +1,8 @@
 import { Box, Button } from '@material-ui/core'
-import React, { useEffect, useReducer, useRef, useState } from 'react'
-import { Result, Condition } from '../../domain/simulator'
+import React, { useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { WeaponSlot } from '../../domain/weapon'
+import { useSimulator } from '../../hooks/simulatorHooks'
 import DevelopWarning from '../molecules/DevelopWarning'
 import ResultEquip from '../molecules/ResultEquip'
 import SimulateCondition from '../organisms/SimulateCondition'
@@ -11,70 +11,13 @@ interface Props {
   skills: SkillSystem[]
 }
 
-type ResultType =
-  | { type: 'start', id: number }
-  | { type: 'calc', id: number, result: Result }
-  | { type: 'end', id: number }
-
-const resultReducer = (state: State, action: ResultType): State => {
-  switch (action.type) {
-    case 'start':
-      return {
-        loading: true,
-        id: action.id,
-        result: [],
-      }
-    case 'calc':
-      return action.id !== state.id ? state : {
-        ...state,
-        result: [...state.result, action.result],
-      }
-    case 'end':
-      return action.id !== state.id ? state : {
-        ...state,
-        loading: false,
-      }
-  }
-}
-
-type State = {
-  loading: boolean
-  id: number
-  result: Result[]
-}
-
-const initState = {
-  loading: false,
-  id: 0,
-  result: [],
-}
-
 export default function Simulator({ skills }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
   const [weaponSlot, setWeaponSlot] = useState<WeaponSlot>([0, 0, 0])
-  const [result, dispatch] = useReducer(resultReducer, initState)
+  const { loading, result, simulate } = useSimulator()
 
-  const executeRef = useRef<(condition: Condition) => void>()
-
-  useEffect(() => {
-    const worker = new Worker(new URL('../../worker/index.worker.ts', import.meta.url))
-
-    worker.addEventListener('message', (e) => {
-      dispatch(e.data)
-    })
-
-    executeRef.current = options => worker.postMessage(options)
-
-    return () => worker.terminate()
-  }, [])
-
-  const exec = async () => {
-    executeRef.current!({
-      skill: activeSkill as Record<string, number>,
-      ignore: [],
-      limit: 10,
-    })
-  }
+  const execute = () =>
+    simulate(activeSkill as Record<string, number>)
 
   return (
     <Box sx={{ my: 4 }}>
@@ -86,11 +29,11 @@ export default function Simulator({ skills }: Props) {
         weaponSlot={weaponSlot}
         setWeaponSlot={setWeaponSlot}
       />
-      <Button onClick={exec}>実行</Button>
-      {result.result.map((equip, i) =>
+      <Button onClick={execute}>実行</Button>
+      {result.map((equip, i) =>
         <ResultEquip key={i} result={equip} />
       )}
-      <div>{result.loading && '検索中...'}</div>
+      <div>{loading && '検索中...'}</div>
     </Box>
   )
 }

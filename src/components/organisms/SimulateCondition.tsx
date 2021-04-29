@@ -2,7 +2,7 @@ import { Button, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubh
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { WeaponSlot } from '../../domain/weapon'
-import { useSkillLog, useUpdateSkillLog } from '../../hooks/skillLog'
+import { useSkillLog, useUpdateSkillLog } from '../../hooks/skillLogHooks'
 import SkillListItem from '../molecules/SkillListItem'
 import SkillDialog from './SkillDialog'
 

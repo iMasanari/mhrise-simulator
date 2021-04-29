@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import { RootState } from '../modules'
 import { updateSkillLog } from '../modules/skillLog'
-import { useAction } from './action'
+import { useAction } from './actionHooks'
 
 const selector = (state: RootState) =>
   state.skillLog
