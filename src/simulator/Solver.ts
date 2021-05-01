@@ -1,5 +1,5 @@
 // @ts-expect-error
-import glpkPromise from 'glpk.js'
+import glpk from 'glpk.js'
 import { GLP_LO, GLP_MAX, GLP_UP, GLP_NOFEAS } from '../constants/glpk'
 import { Armor, Charm, Deco } from '../domain/equips'
 import { Result } from '../domain/simulator'
@@ -188,6 +188,9 @@ export default class Simulator {
       direction: GLP_MAX,
       vars: [{
         name: Y_DEF_CUSTOM,
+        coef: 100,
+      }, {
+        name: Y_SLOT_1_OVER,
         coef: 1,
       }],
     }
@@ -210,9 +213,7 @@ export default class Simulator {
     }
   }
 
-  async solve(): Promise<Result | null> {
-    const glpk = await glpkPromise
-
+  solve(): Result | null {
     const { result } = glpk.solve(this.getLp())
 
     if (result.status === GLP_NOFEAS) {
