@@ -1,9 +1,9 @@
 import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core'
 import React from 'react'
-import { Result } from '../../domain/simulator'
+import { Equip } from '../../domain/equips'
 
 interface Props {
-  result: Result
+  result: Equip
 }
 
 export default function ResultEquip({ result }: Props) {
@@ -12,29 +12,33 @@ export default function ResultEquip({ result }: Props) {
       <Table>
         <TableBody>
           <TableRow>
+            <TableCell>防御力</TableCell>
+            <TableCell>{result.def}</TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell>頭装備</TableCell>
-            <TableCell>{result.head}</TableCell>
+            <TableCell>{result.head?.name}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>胴装備</TableCell>
-            <TableCell>{result.body}</TableCell>
+            <TableCell>{result.body?.name}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>腕装備</TableCell>
-            <TableCell>{result.arm}</TableCell>
+            <TableCell>{result.arm?.name}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>腰装備</TableCell>
-            <TableCell>{result.wst}</TableCell>
+            <TableCell>{result.wst?.name}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>足装備</TableCell>
-            <TableCell>{result.leg}</TableCell>
+            <TableCell>{result.leg?.name}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>装飾品</TableCell>
             <TableCell>
-              {result.deco.map(([name, count]) =>
+              {result.deco.map(([{ name }, count]) =>
                 <div key={name}>{name} x{count}</div>
               )}
             </TableCell>

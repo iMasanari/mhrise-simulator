@@ -1,74 +1,72 @@
-import { useEffect, useReducer, useRef } from 'react'
-import { Condition, Result } from '../domain/simulator'
-
-type ResultType =
-  | { type: 'start', id: number }
-  | { type: 'calc', id: number, result: Result }
-  | { type: 'end', id: number }
-
-const reducer = (state: State, action: ResultType): State => {
-  switch (action.type) {
-    case 'start':
-      return {
-        loading: true,
-        id: action.id,
-        result: [],
-      }
-    case 'calc':
-      return action.id !== state.id ? state : {
-        ...state,
-        result: [...state.result, action.result],
-      }
-    case 'end':
-      return action.id !== state.id ? state : {
-        ...state,
-        loading: false,
-      }
-  }
-}
-
-type State = {
-  loading: boolean
-  id: number
-  result: Result[]
-}
-
-const initState = {
-  loading: false,
-  id: 0,
-  result: [],
-}
+import { useEffect, useRef, useState } from 'react'
+import { Equip } from '../domain/equips'
+import Simulator from '../simulator'
 
 export const useSimulator = () => {
-  const [state, dispatch] = useReducer(reducer, initState)
+  const [loading, setLoading] = useState(false)
+  const [finish, setFinish] = useState(false)
+  const [result, setResult] = useState([] as Equip[])
 
   const workerRef = useRef<Worker>()
+  const simulatorRef = useRef<any>()
 
   useEffect(() => {
-    const worker = new Worker(new URL('../worker/index.worker.ts', import.meta.url))
+    const worker = new Worker(new URL('../simulator/worker.ts', import.meta.url))
 
     workerRef.current = worker
-
-    worker.addEventListener('message', (e) => {
-      dispatch(e.data)
-    })
 
     return () => worker.terminate()
   }, [])
 
-  const simulate = async (activeSkill: Record<string, number>) => {
-    const condition: Condition = {
-      skill: activeSkill,
-      ignore: [],
-      limit: 10,
+  const exec = async (simulator: Simulator) => {
+    setLoading(true)
+
+    for (let i = 0; i < 10; i++) {
+      const res = await simulator.simulate()
+
+      if (simulator !== simulatorRef.current) {
+        return
+      }
+
+      if (!res) {
+        setLoading(false)
+        setFinish(true)
+        return
+      }
+
+      setResult(result => [...result, res])
     }
 
-    workerRef.current!.postMessage(condition)
+    setLoading(false)
+  }
+
+  const simulate = async (skills: Record<string, number>) => {
+    const worker = workerRef.current
+
+    if (!worker) return
+
+    const simulator = new Simulator(worker, { skills, ignore: [] })
+    simulatorRef.current = simulator
+
+    setFinish(false)
+    setResult([])
+
+    await exec(simulator)
+  }
+
+  const more = async () => {
+    const simulator = simulatorRef.current
+
+    if (!simulator || finish) return
+
+    await exec(simulator)
   }
 
   return {
-    loading: state.loading,
-    result: state.result,
+    loading,
+    finish,
+    result,
     simulate,
+    more,
   }
 }

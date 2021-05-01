@@ -19,3 +19,15 @@ export interface Deco {
   skills: Record<string, number>
   materials: Record<string, number>
 }
+
+export interface Equip {
+  def: number
+  head: Armor | undefined
+  body: Armor | undefined
+  arm: Armor | undefined
+  wst: Armor | undefined
+  leg: Armor | undefined
+  charm: Charm | undefined
+  deco: [Deco, number][]
+  // skills: Record<string, number>
+}

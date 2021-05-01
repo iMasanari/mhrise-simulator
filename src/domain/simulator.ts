@@ -1,5 +1,5 @@
 export interface Condition {
-  skill: Record<string, number>
+  skills: Record<string, number>
   ignore: string[]
   limit?: number
 }

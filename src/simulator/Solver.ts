@@ -114,6 +114,7 @@ export default class Simulator {
 
   private skillKeys: string[]
   private skills: Subject<string>
+  private prevs: Result[] = []
 
   constructor(private skillCondition: Record<string, number>) {
     const skillKeys = Object.keys(skillCondition)
@@ -177,10 +178,8 @@ export default class Simulator {
     }
   }
 
-  private ignore: Result[] = []
-
-  ignoreResult(result: Result) {
-    this.ignore.push(result)
+  setPrevs(prevs: Result[]) {
+    this.prevs = prevs
   }
 
   private getLp() {
@@ -199,7 +198,7 @@ export default class Simulator {
       ...this.slots.toSubjectTo(),
       ...this.skills.toSubjectTo(),
       ...createSubject(this.skillCondition, GLP_LO),
-      ...createIgnoreSubject(this.ignore),
+      ...createIgnoreSubject(this.prevs),
     ]
 
     return {

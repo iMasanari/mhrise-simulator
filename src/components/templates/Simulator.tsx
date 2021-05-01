@@ -14,7 +14,7 @@ interface Props {
 export default function Simulator({ skills }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
   const [weaponSlot, setWeaponSlot] = useState<WeaponSlot>([0, 0, 0])
-  const { loading, result, simulate } = useSimulator()
+  const { loading, finish, result, simulate, more } = useSimulator()
 
   const execute = () =>
     simulate(activeSkill as Record<string, number>)
@@ -29,11 +29,15 @@ export default function Simulator({ skills }: Props) {
         weaponSlot={weaponSlot}
         setWeaponSlot={setWeaponSlot}
       />
-      <Button onClick={execute}>実行</Button>
+      <Button onClick={execute}>検索</Button>
       {result.map((equip, i) =>
         <ResultEquip key={i} result={equip} />
       )}
-      <div>{loading && '検索中...'}</div>
+      {loading && <p>検索中...</p>}
+      {finish && <p>検索完了 {result.length}件</p>}
+      {!loading && !finish && result.length > 0 && (
+        <Button fullWidth onClick={more}>更に検索</Button>
+      )}
     </Box>
   )
 }
