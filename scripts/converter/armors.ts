@@ -3,12 +3,20 @@ import { Armor } from '../types/armors'
 import { readCsv } from '../util/fileUtil'
 
 export const getArmorData = async () => {
+  const txt = await fs.readFile('./lib/series.txt', 'utf-8')
+
+  const seriesList = txt.split('\n').map(name => {
+    const [_, prefix, infix] = name.match(/^(.+?)・?(Ｓ|覇|$)/) || []
+    const reg = new RegExp(`^${prefix}.*${infix}`)
+    return { name, reg }
+  })
+
   const [head, body, arm, wst, leg] = await Promise.all([
-    getArmors('./lib/spreadsheets/head.csv'),
-    getArmors('./lib/spreadsheets/body.csv'),
-    getArmors('./lib/spreadsheets/arm.csv'),
-    getArmors('./lib/spreadsheets/wst.csv'),
-    getArmors('./lib/spreadsheets/leg.csv'),
+    getArmors('./lib/spreadsheets/head.csv', seriesList),
+    getArmors('./lib/spreadsheets/body.csv', seriesList),
+    getArmors('./lib/spreadsheets/arm.csv', seriesList),
+    getArmors('./lib/spreadsheets/wst.csv', seriesList),
+    getArmors('./lib/spreadsheets/leg.csv', seriesList),
   ])
 
   const series = await getArmorSeries([
@@ -22,7 +30,7 @@ export const getArmorData = async () => {
   return { head, body, arm, wst, leg, series }
 }
 
-const getArmors = async (path: string) => {
+const getArmors = async (path: string, seriesList: { name: string, reg: RegExp }[]) => {
   const csv = await readCsv(path)
 
   const list = csv.map((row): Armor => {
@@ -51,8 +59,11 @@ const getArmors = async (path: string) => {
       materialList.filter(([, point]) => point)
     )
 
+    const series = seriesList.find(v => v.reg.test(名前))?.name!
+
     return {
       name: 名前,
+      series,
       slots: [+スロット1, +スロット2, +スロット3],
       defs: [+初期防御力, +最終防御力],
       elements: [+火耐性, +水耐性, +雷耐性, +氷耐性, +龍耐性],

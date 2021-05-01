@@ -17,23 +17,23 @@ export default function ResultEquip({ result }: Props) {
           </TableRow>
           <TableRow>
             <TableCell>頭装備</TableCell>
-            <TableCell>{result.head?.name}</TableCell>
+            <TableCell>{result.head?.series}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>胴装備</TableCell>
-            <TableCell>{result.body?.name}</TableCell>
+            <TableCell>{result.body?.series}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>腕装備</TableCell>
-            <TableCell>{result.arm?.name}</TableCell>
+            <TableCell>{result.arm?.series}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>腰装備</TableCell>
-            <TableCell>{result.wst?.name}</TableCell>
+            <TableCell>{result.wst?.series}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>足装備</TableCell>
-            <TableCell>{result.leg?.name}</TableCell>
+            <TableCell>{result.leg?.series}</TableCell>
           </TableRow>
           <TableRow>
             <TableCell>装飾品</TableCell>

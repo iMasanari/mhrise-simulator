@@ -1,5 +1,6 @@
 export interface Armor {
   name: string
+  series: string
   slots: [number, number, number]
   defs: [number, number]
   elements: [number, number, number, number, number]
