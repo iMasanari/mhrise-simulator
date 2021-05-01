@@ -20,7 +20,7 @@ export const getStaticProps: GetStaticProps<Props> = async () => {
 
 export default function TopPage({ skills }: Props) {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="md">
       <Head>
         <title>MHRise スキルシミュ</title>
       </Head>
