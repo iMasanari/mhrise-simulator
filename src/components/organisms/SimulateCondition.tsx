@@ -57,7 +57,7 @@ export default function SimulateCondition({ skills, activeSkill, setActiveSkill,
         <ListItem>
           <ListItemText primary="武器スロット" />
           <ListItemSecondaryAction>
-            <Select native value={weaponSlot.join('-')} onChange={setWeaponSlotValue}>
+            <Select native value={weaponSlot.join('-')} onChange={setWeaponSlotValue} size="small">
               <optgroup label="武器スロットなし">
                 <option value="0-0-0">なし</option>
               </optgroup>

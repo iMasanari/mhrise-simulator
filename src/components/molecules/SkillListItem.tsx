@@ -40,7 +40,7 @@ export default function SkillListItem({ checkbox, skillName, items, value, setVa
         secondaryTypographyProps={{ component: 'div' }}
       />
       <ListItemSecondaryAction>
-        <Select value={value || 0} onChange={subActionHandler} native>
+        <Select value={value || 0} onChange={subActionHandler} size="small" native>
           <option value={0} />
           {items.map(level =>
             <option key={level} value={level}>{`LV ${level}`}</option>

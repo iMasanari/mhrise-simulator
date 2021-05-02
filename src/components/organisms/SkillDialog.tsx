@@ -39,6 +39,7 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
           label="スキル"
           value={value}
           onChange={(e) => setValue(e.currentTarget.value)}
+          size="small"
           fullWidth
           InputProps={{
             endAdornment: (
