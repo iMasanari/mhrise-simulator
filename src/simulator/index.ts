@@ -124,11 +124,13 @@ export default class Simulator {
     this.condition.prevs.push(result)
 
     const charm = this.groups.charm.get(result.charm)
-    const deco = result.deco.map(([v, amount]): [Deco, number] =>
-      [this.groups.deco.get(v)!, amount]
-    )
 
-    const list = []
+    const decos = result.deco
+      .map(([v, amount]) => [this.groups.deco.get(v)!, amount, v.split('').reverse().join('')] as const)
+      .sort(([, , a], [, , b]) => b > a ? 1 : -1)
+      .flatMap(([deco, amount]) => [...Array(amount).keys()].map(() => deco))
+
+    const list: Equip[] = []
 
     // todo: 多重forをやめる
     for (const head of this.groups.head.get(result.head)!) {
@@ -136,9 +138,15 @@ export default class Simulator {
         for (const arm of this.groups.arm.get(result.arm)!) {
           for (const wst of this.groups.wst.get(result.wst)!) {
             for (const leg of this.groups.leg.get(result.leg)!) {
-              const def = [head, body, arm, wst, leg].reduce((sum, v) => sum + v.defs[1], 0)
+              const equip = [head, body, arm, wst, leg]
+              const def = equip.reduce((sum, v) => sum + v.defs[1], 0)
 
-              list.push({ def, head, body, arm, wst, leg, charm, deco })
+              const skills = [...equip, ...decos].reduce((skills, v) => {
+                const keys = [...Object.keys(skills), ...Object.keys(v.skills)]
+                return Object.fromEntries(keys.map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
+              }, {} as Record<string, number>)
+
+              list.push({ def, head, body, arm, wst, leg, charm, decos, skills })
             }
           }
         }

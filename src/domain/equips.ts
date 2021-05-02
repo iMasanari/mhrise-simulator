@@ -29,6 +29,6 @@ export interface Equip {
   wst: Armor | undefined
   leg: Armor | undefined
   charm: Charm | undefined
-  deco: [Deco, number][]
-  // skills: Record<string, number>
+  decos: Deco[]
+  skills: Record<string, number>
 }
