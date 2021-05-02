@@ -30,6 +30,7 @@
     "redux-persist": "^6.0.0"
   },
   "devDependencies": {
+    "@babel/core": "^7.14.0",
     "@emotion/babel-preset-css-prop": "^11.2.0",
     "@types/node": "^15.0.1",
     "@types/node-fetch": "^2.5.10",
