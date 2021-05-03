@@ -5,6 +5,7 @@ import { Equip, Slots } from '../domain/equips'
 import { ActiveSkill } from '../domain/skill'
 import { RootState } from '../modules'
 import Simulator from '../simulator'
+import WebpackWorker from '../simulator/worker'
 
 const skillMaxPointMap = new Map(
   skillList.map(v => [v.name, v.details[v.details.length - 1].point])
@@ -20,7 +21,7 @@ export const useSimulator = () => {
   const simulatorRef = useRef<any>()
 
   useEffect(() => {
-    const worker = new Worker(new URL('../simulator/worker.ts', import.meta.url))
+    const worker = new WebpackWorker()
 
     workerRef.current = worker
 

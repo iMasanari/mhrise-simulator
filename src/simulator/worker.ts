@@ -21,3 +21,6 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
 
   return solver.solve()
 })
+
+// for Webpack worker-loader
+export default null! as { new(): Worker }

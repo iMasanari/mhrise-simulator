@@ -1,17 +1,20 @@
 module.exports = {
-  future: {
-    webpack5: true,
-  },
-  webpack(config, { isServer, dev }) {
-    config.resolve.fallback = {
-      fs: false,
-      path: false,
-      crypto: false,
+  webpack(config, { defaultLoaders }) {
+    config.node = {
+      fs: 'empty',
+      path: 'empty',
+      crypto: 'empty',
     }
 
-    config.output.chunkFilename = isServer
-      ? `${dev ? '[name]' : '[name].[fullhash]'}.js`
-      : `static/chunks/${dev ? '[name]' : '[name].[fullhash]'}.js`
+    config.module.rules.push({
+      test: /worker\.ts$/,
+      use: [
+        { loader: 'worker-loader', options: { publicPath: '/_next/', filename: 'static/worker/worker.[hash].js' } },
+        defaultLoaders.babel,
+      ],
+    })
+
+    config.output.globalObject = 'self'
 
     return config
   },
