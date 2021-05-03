@@ -21,6 +21,8 @@ export default function ResultEquip({ equip }: Props) {
 
   const decoList = equip.decos.map((deco, i) => [slots[i][0], deco] as const)
 
+  const decos = [...new Set(equip.decos.map(v => v.name))]
+
   return (
     <Table size="small">
       <TableBody>
@@ -86,12 +88,21 @@ export default function ResultEquip({ equip }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">スキル</TableCell>
-          <TableCell colSpan={3}>
+          <TableCell>
             {skills.map(([skill, point]) =>
               <div key={skill}>
                 {`${skill} Lv${point}`}
               </div>
             )}
+          </TableCell>
+          <TableCell component="th">装飾品</TableCell>
+          <TableCell>
+            {decos.map(v =>
+              <div key={v}>
+                {`${v} x${equip.decos.filter(deco => deco.name === v).length}`}
+              </div>
+            )}
+            {!decos.length && 'なし'}
           </TableCell>
         </TableRow>
       </TableBody>
