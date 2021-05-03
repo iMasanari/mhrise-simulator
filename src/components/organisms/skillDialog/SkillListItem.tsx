@@ -19,7 +19,7 @@ export default function SkillListItem({ skillName, items, value, setValue }: Pro
     setValue(!value ? items[items.length - 1] : 0)
 
   return (
-    <ListItem button onClick={actionHandler}>
+    <ListItem button component="li" onClick={actionHandler}>
       <ListItemIcon css={listItemIconStyle}>
         <Checkbox
           edge="start"
