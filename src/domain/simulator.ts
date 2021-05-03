@@ -1,11 +1,15 @@
+import { ActiveSkill } from './skill'
+import { WeaponSlot } from './weapon'
+
 export interface Condition {
-  skills: Record<string, number>
+  weaponSlot: WeaponSlot
+  skills: ActiveSkill
   ignore: string[]
   objectiveSkill?: string
-  limit?: number
 }
 
 export interface Result {
+  weaponSlot: WeaponSlot
   head: string | undefined;
   body: string | undefined;
   arm: string | undefined;

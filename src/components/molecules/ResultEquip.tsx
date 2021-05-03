@@ -12,24 +12,27 @@ const showSlots = (slots: [number, number, number] | undefined) =>
 export default function ResultEquip({ equip }: Props) {
   const skills = Object.entries(equip.skills).sort(([, a], [, b]) => b - a)
 
-  const armors = [equip.head, equip.body, equip.arm, equip.wst, equip.leg]
+  const weapon = { slots: equip.weaponSlot }
+  const armors = [weapon, equip.head, equip.body, equip.arm, equip.wst, equip.leg]
     .filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
-
-  const decos = equip.decos
 
   const slots = armors.flatMap(armor => armor.slots.map(s => [armor, s] as const))
     .sort(([, a], [, b]) => b - a)
 
-  const decoList = decos.map((deco, i) => [slots[i][0], deco] as const)
+  const decoList = equip.decos.map((deco, i) => [slots[i][0], deco] as const)
 
   return (
     <Table size="small">
       <TableBody>
         <TableRow>
           <TableCell component="th">武器</TableCell>
-          <TableCell>スロットなし</TableCell>
-          <TableCell></TableCell>
-          <TableCell></TableCell>
+          <TableCell>スロット{equip.weaponSlot[0] ? showSlots(equip.weaponSlot) : 'なし'}</TableCell>
+          <TableCell>{showSlots(equip.weaponSlot)}</TableCell>
+          <TableCell>
+            {decoList.filter(([v]) => v === weapon).map(([, v], i) =>
+              <div key={i}>{v.name}</div>
+            )}
+          </TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th">頭装備</TableCell>

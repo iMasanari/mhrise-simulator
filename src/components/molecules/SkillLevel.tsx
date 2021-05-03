@@ -1,9 +1,9 @@
 import { css } from '@emotion/react'
 
 interface Props {
-  value?: number | undefined
+  value?: number
   items: number[]
-  update?: (value: number | undefined) => void
+  update?: (value: number) => void
 }
 
 const skillLevelStyle = css`

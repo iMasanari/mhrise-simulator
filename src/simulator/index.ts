@@ -8,9 +8,12 @@ import leg from '../../generated/leg.json'
 import wst from '../../generated/wst.json'
 import { Armor, Charm, Deco, Equip } from '../domain/equips'
 import { Condition, Result } from '../domain/simulator'
+import { ActiveSkill } from '../domain/skill'
+import { WeaponSlot } from '../domain/weapon'
 
 export interface SimulatorCondition {
   objectiveSkill?: string
+  weaponSlot: WeaponSlot
   head: Armor[]
   body: Armor[]
   arm: Armor[]
@@ -18,7 +21,7 @@ export interface SimulatorCondition {
   leg: Armor[]
   charm: Charm[]
   deco: Deco[]
-  skills: Record<string, number>
+  skills: ActiveSkill
   prevs: Result[]
   ignore?: string[]
 }
@@ -70,7 +73,7 @@ export default class Simulator {
   constructor(worker: Worker, condition: Condition) {
     this.pw = new PromiseWorker(worker)
 
-    const objectiveSkill = condition.objectiveSkill
+    const { objectiveSkill, weaponSlot } = condition
     const skills = objectiveSkill ? { ...condition.skills, [objectiveSkill]: 0 } : condition.skills
     const skillKeys = Object.keys(skills)
     const ignore = new Set(condition.ignore || [])
@@ -84,6 +87,7 @@ export default class Simulator {
     this.condition = {
       objectiveSkill,
       skills,
+      weaponSlot,
       head: headData.armors,
       body: bodyData.armors,
       arm: armData.armors,
@@ -148,9 +152,9 @@ export default class Simulator {
               const skills = [...equip, ...decos].reduce((skills, v) => {
                 const keys = [...Object.keys(skills), ...Object.keys(v.skills)]
                 return Object.fromEntries(keys.map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
-              }, {} as Record<string, number>)
+              }, {} as ActiveSkill)
 
-              list.push({ def, head, body, arm, wst, leg, charm, decos, skills })
+              list.push({ def, weaponSlot: result.weaponSlot, head, body, arm, wst, leg, charm, decos, skills })
             }
           }
         }

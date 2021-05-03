@@ -1,4 +1,3 @@
-import { css } from '@emotion/react'
 import { ListItem, ListItemText, Select } from '@material-ui/core'
 import React from 'react'
 import SkillLevel from '../../molecules/SkillLevel'
@@ -6,8 +5,8 @@ import SkillLevel from '../../molecules/SkillLevel'
 interface Props {
   skillName: string
   items: number[]
-  value: number | undefined
-  setValue: (value: number | undefined) => void
+  value: number
+  setValue: (value: number) => void
 }
 
 export default function ActiveSkillListItem({ skillName, items, value, setValue }: Props) {

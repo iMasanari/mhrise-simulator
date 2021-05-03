@@ -4,7 +4,7 @@ import Solver from './Solver'
 import { SimulatorCondition } from '.'
 
 registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
-  const solver = new Solver(condition.skills)
+  const solver = new Solver(condition.skills, condition.weaponSlot)
 
   for (const type of ['head', 'body', 'arm', 'wst', 'leg'] as const) {
     for (const equip of Object.values(condition[type])) {

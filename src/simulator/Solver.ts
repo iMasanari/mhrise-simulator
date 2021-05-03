@@ -3,6 +3,8 @@ import glpk from 'glpk.js'
 import { GLP_LO, GLP_MAX, GLP_UP, GLP_NOFEAS } from '../constants/glpk'
 import { Armor, Charm, Deco } from '../domain/equips'
 import { Result } from '../domain/simulator'
+import { ActiveSkill } from '../domain/skill'
+import { WeaponSlot } from '../domain/weapon'
 import Subject from './Subject'
 
 export type EquipsType = 'head' | 'body' | 'arm' | 'wst' | 'leg' | 'charm'
@@ -117,12 +119,22 @@ export default class Simulator {
   private prevs: Result[] = []
   private objectiveSkill: string | undefined
 
-  constructor(private skillCondition: Record<string, number>) {
+  constructor(private skillCondition: ActiveSkill, private weaponSlot: WeaponSlot) {
     const skillKeys = Object.keys(skillCondition)
 
     this.skillKeys = skillKeys
     this.skills = new Subject(skillKeys)
     this.generals.push(...skillKeys)
+
+    const weaponSlotName = 'X/WeaponSlot'
+
+    // 個数制限
+    this.binaries.push(weaponSlotName)
+
+    this.slots.add(Y_SLOT_1_OVER, weaponSlotName, weaponSlot.filter(v => v >= 1).length)
+    this.slots.add(Y_SLOT_2_OVER, weaponSlotName, weaponSlot.filter(v => v >= 2).length)
+    this.slots.add(Y_SLOT_3_OVER, weaponSlotName, weaponSlot.filter(v => v >= 3).length)
+    this.slots.add(Y_SLOT_4_OVER, weaponSlotName, weaponSlot.filter(v => v >= 4).length)
   }
 
   addEquip(type: EquipsType, equip: Armor) {
@@ -235,6 +247,7 @@ export default class Simulator {
     const deco = findDecoList(entries)
 
     return {
+      weaponSlot: this.weaponSlot,
       head,
       body,
       arm,

@@ -42,13 +42,13 @@ export default function Simulator({ skills }: Props) {
 
   const execute = () => {
     setMode('result')
-    simulate(activeSkill as Record<string, number>)
+    simulate(activeSkill, weaponSlot)
     updateSkillLog(activeSkill)
   }
 
   const addSkill = () => {
     setMode('addSkill')
-    searchAddableSkillList(activeSkill as Record<string, number>)
+    searchAddableSkillList(activeSkill, weaponSlot)
     updateSkillLog(activeSkill)
   }
 

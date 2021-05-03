@@ -4,4 +4,4 @@ export interface SkillSystem {
   items: number[]
 }
 
-export type ActiveSkill = Record<string, number | undefined>
+export type ActiveSkill = Record<string, number>

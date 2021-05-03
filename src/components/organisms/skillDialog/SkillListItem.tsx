@@ -6,8 +6,8 @@ import SkillLevel from '../../molecules/SkillLevel'
 interface Props {
   skillName: string
   items: number[]
-  value: number | undefined
-  setValue: (value: number | undefined) => void
+  value: number
+  setValue: (value: number) => void
 }
 
 const listItemIconStyle = css`
@@ -16,7 +16,7 @@ const listItemIconStyle = css`
 
 export default function SkillListItem({ skillName, items, value, setValue }: Props) {
   const actionHandler = () =>
-    setValue(!value ? items[items.length - 1] : undefined)
+    setValue(!value ? items[items.length - 1] : 0)
 
   return (
     <ListItem button onClick={actionHandler}>
