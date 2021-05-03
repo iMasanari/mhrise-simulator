@@ -1,5 +1,6 @@
 import { css, Theme } from '@emotion/react'
-import { Box, Button } from '@material-ui/core'
+import { Box, Button, Tab, Tabs } from '@material-ui/core'
+import { Mode } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { Slots } from '../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
@@ -70,6 +71,10 @@ export default function Simulator({ skills }: Props) {
           </Box>
         </div>
         <div css={resultStyle}>
+          <Tabs value={mode} onChange={(_, value) => setMode(value)} aria-label="label tabs">
+            <Tab value="result" label="検索結果" />
+            <Tab value="addSkill" label="追加スキル" />
+          </Tabs>
           {mode === 'result' && (
             <SimulatorResult result={result} loading={loading} completed={completed} more={more} />
           )}

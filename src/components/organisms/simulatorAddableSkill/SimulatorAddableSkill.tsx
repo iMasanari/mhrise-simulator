@@ -12,7 +12,7 @@ export default function SimulatorAddableSkill({ skills, completed, setActiveSkil
   return (
     <div>
       {skills.length > 0 && (
-        <List subheader={<ListSubheader>追加スキル</ListSubheader>} dense>
+        <List dense>
           {skills.map(([skill, point]) =>
             <ListItem key={skill} button component="li" onClick={() => setActiveSkill(v => ({ ...v, [skill]: point }))}>
               <ListItemText primary={`${skill} Lv${point}`} />
