@@ -19,13 +19,12 @@ export const getArmorData = async () => {
     getArmors('./lib/spreadsheets/leg.csv', seriesList),
   ])
 
-  const series = await getArmorSeries([
-    head.map(v => v.name),
-    body.map(v => v.name),
-    arm.map(v => v.name),
-    wst.map(v => v.name),
-    leg.map(v => v.name),
-  ])
+  const armors = [head, body, arm, wst, leg]
+
+  const series = seriesList.map(series => ({
+    name: series.name,
+    equips: armors.map(list => list.find(v => v.series === series.name)?.name || null),
+  }))
 
   return { head, body, arm, wst, leg, series }
 }
@@ -74,22 +73,4 @@ const getArmors = async (path: string, seriesList: { name: string, reg: RegExp }
   })
 
   return list
-}
-
-const findArmor = (list: string[], prefix: string, safix: string) =>
-  list.find(name =>
-    name.startsWith(prefix) && (safix ? name.endsWith(safix) : !/[αβγ]$/.test(name))
-  )
-
-const getArmorSeries = async (armors: string[][]) => {
-  const txt = await fs.readFile('./lib/series.txt', 'utf-8')
-
-  const result = txt.split('\n').map(name => {
-    const [_, prefix, safix] = name.match(/^(.+?)・?(覇?)$/)!
-    const equips = armors.map(list => findArmor(list, prefix, safix) || null)
-
-    return { name, equips }
-  })
-
-  return result
 }
