@@ -11,7 +11,7 @@ const skillMaxPointMap = new Map(
 
 export const useSimulator = () => {
   const [loading, setLoading] = useState(false)
-  const [finish, setFinish] = useState(false)
+  const [completed, setCompleted] = useState(false)
   const [result, setResult] = useState([] as Equip[])
   const [addableSkillList, setAddableSkillList] = useState([] as [string, number][])
 
@@ -38,7 +38,7 @@ export const useSimulator = () => {
 
       if (!res) {
         setLoading(false)
-        setFinish(true)
+        setCompleted(true)
         return
       }
 
@@ -56,7 +56,7 @@ export const useSimulator = () => {
     const simulator = new Simulator(worker, { skills, ignore: [] })
     simulatorRef.current = simulator
 
-    setFinish(false)
+    setCompleted(false)
     setResult([])
 
     await exec(simulator)
@@ -65,7 +65,7 @@ export const useSimulator = () => {
   const more = async () => {
     const simulator = simulatorRef.current
 
-    if (!simulator || finish) return
+    if (!simulator || completed) return
 
     await exec(simulator)
   }
@@ -79,7 +79,7 @@ export const useSimulator = () => {
 
     const skillLog = new Set([...store.getState().skillLog, ...skillList.map(v => v.name)])
 
-    setFinish(false)
+    setCompleted(false)
     setAddableSkillList([])
 
     for (const skill of skillLog) {
@@ -92,12 +92,12 @@ export const useSimulator = () => {
       }
     }
 
-    setFinish(true)
+    setCompleted(true)
   }
 
   return {
     loading,
-    finish,
+    completed,
     result,
     addableSkillList,
     simulate,

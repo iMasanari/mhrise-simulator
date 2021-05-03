@@ -1,4 +1,4 @@
-import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
+import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
 import React from 'react'
 import { Equip } from '../../domain/equips'
 

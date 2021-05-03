@@ -1,8 +1,8 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, TextField } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
 import React, { useMemo, useRef, useState } from 'react'
-import { ActiveSkill } from '../../domain/skill'
-import SkillList from '../molecules/SkillList'
+import { ActiveSkill } from '../../../domain/skill'
+import SkillList from './SkillList'
 
 const useStyles = makeStyles(() => ({
   paper: {
@@ -53,7 +53,7 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
         />
       </DialogTitle>
       <DialogContent sx={{ paddingTop: 0 }}>
-        <SkillList skills={filterdSkills} activeSkill={currentActiveSkill} setActiveSkill={setActiveSkill} checkbox />
+        <SkillList skills={filterdSkills} activeSkill={currentActiveSkill} setActiveSkill={setActiveSkill} />
       </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="primary">

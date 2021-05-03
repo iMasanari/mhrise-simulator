@@ -1,6 +1,6 @@
 import { css, Theme } from '@emotion/react'
 import React, { ReactNode } from 'react'
-import Link from '../atoms/Link'
+import Link from '../../atoms/Link'
 
 interface Props {
   href: string

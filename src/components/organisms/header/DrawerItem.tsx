@@ -1,6 +1,6 @@
 import { ListItem, ListItemText } from '@material-ui/core'
 import React, { ReactNode } from 'react'
-import NakedLink from '../atoms/NakedLink'
+import NakedLink from '../../atoms/NakedLink'
 
 interface Props {
   href: string

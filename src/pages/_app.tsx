@@ -6,7 +6,7 @@ import { AppProps } from 'next/app'
 import * as React from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
-import Header from '../components/organisms/Header'
+import Header from '../components/organisms/header/Header'
 import { persistor, store } from '../configureStore'
 import theme from '../theme'
 

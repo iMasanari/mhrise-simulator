@@ -1,6 +1,6 @@
 import { Typography } from '@material-ui/core'
 import React, { HTMLProps } from 'react'
-import Link from '../atoms/Link'
+import Link from '../../atoms/Link'
 
 interface Props extends HTMLProps<HTMLDivElement> {
   title: string

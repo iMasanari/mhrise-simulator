@@ -4,9 +4,9 @@ import CloseIcon from '@material-ui/icons/Close'
 import MenuIcon from '@material-ui/icons/Menu'
 import { useRouter } from 'next/router'
 import React, { useEffect, useState } from 'react'
-import DrawerItem from '../molecules/DrawerItem'
-import NavItem from '../molecules/NavItem'
-import SiteTitle from '../molecules/SiteTitle'
+import DrawerItem from './DrawerItem'
+import NavItem from './NavItem'
+import SiteTitle from './SiteTitle'
 
 const appBarStyle = css`
   overflow: hidden;
