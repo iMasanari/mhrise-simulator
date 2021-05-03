@@ -1,4 +1,4 @@
-import { Button, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader, Select } from '@material-ui/core'
+import { Button, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader, Select, Typography } from '@material-ui/core'
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { WeaponSlot } from '../../domain/weapon'
@@ -38,8 +38,10 @@ export default function SimulateCondition({ skills, activeSkill, setActiveSkill,
   const setWeaponSlotValue = (e: React.ChangeEvent<{ value: string }>) =>
     setWeaponSlot(e.currentTarget.value.split('-').map(Number) as WeaponSlot)
 
-  const handleOpen = () =>
+  const handleOpen = () => {
     setSkillOpen(true)
+    updateSkillLog(activeSkill)
+  }
 
   const handleClose = (activeSkill: ActiveSkill) => {
     const value = Object.fromEntries(
@@ -117,8 +119,13 @@ export default function SimulateCondition({ skills, activeSkill, setActiveSkill,
             setValue={(value) => setActiveSkill(v => ({ ...v, [skill.name]: value }))}
           />
         )}
+        {!activeSkillList.length && (
+          <ListItem>
+            <ListItemText primary="スキルが選択されていません" sx={{ textAlign: 'center' }} />
+          </ListItem>
+        )}
         <ListItem>
-          <Button variant="outlined" onClick={handleOpen} fullWidth>
+          <Button onClick={handleOpen} fullWidth>
             スキル追加
           </Button>
         </ListItem>

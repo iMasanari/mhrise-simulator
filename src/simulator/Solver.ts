@@ -115,6 +115,7 @@ export default class Simulator {
   private skillKeys: string[]
   private skills: Subject<string>
   private prevs: Result[] = []
+  private objectiveSkill: string | undefined
 
   constructor(private skillCondition: Record<string, number>) {
     const skillKeys = Object.keys(skillCondition)
@@ -178,6 +179,10 @@ export default class Simulator {
     }
   }
 
+  sewObjectiveSkill(objectiveSkill: string | undefined) {
+    this.objectiveSkill = objectiveSkill
+  }
+
   setPrevs(prevs: Result[]) {
     this.prevs = prevs
   }
@@ -186,13 +191,11 @@ export default class Simulator {
     const objective = {
       name: Y_DEF_CUSTOM,
       direction: GLP_MAX,
-      vars: [{
-        name: Y_DEF_CUSTOM,
-        coef: 100,
-      }, {
-        name: Y_SLOT_1_OVER,
-        coef: 1,
-      }],
+      vars: [
+        ...this.objectiveSkill ? [{ name: this.objectiveSkill, coef: 100_000 }] : [],
+        { name: Y_DEF_CUSTOM, coef: 100 },
+        { name: Y_SLOT_1_OVER, coef: 1 },
+      ],
     }
 
     const subjectTo = [

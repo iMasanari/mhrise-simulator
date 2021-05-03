@@ -10,6 +10,7 @@ import { Armor, Charm, Deco, Equip } from '../domain/equips'
 import { Condition, Result } from '../domain/simulator'
 
 export interface SimulatorCondition {
+  objectiveSkill?: string
   head: Armor[]
   body: Armor[]
   arm: Armor[]
@@ -69,7 +70,9 @@ export default class Simulator {
   constructor(worker: Worker, condition: Condition) {
     this.pw = new PromiseWorker(worker)
 
-    const skillKeys = Object.keys(condition.skills)
+    const objectiveSkill = condition.objectiveSkill
+    const skills = objectiveSkill ? { ...condition.skills, [objectiveSkill]: 0 } : condition.skills
+    const skillKeys = Object.keys(skills)
     const ignore = new Set(condition.ignore || [])
 
     const headData = createEquipGroup(skillKeys, head, ignore)
@@ -79,7 +82,8 @@ export default class Simulator {
     const legData = createEquipGroup(skillKeys, leg, ignore)
 
     this.condition = {
-      skills: condition.skills,
+      objectiveSkill,
+      skills,
       head: headData.armors,
       body: bodyData.armors,
       arm: armData.armors,

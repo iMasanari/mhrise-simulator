@@ -1,11 +1,12 @@
 import { css, Theme } from '@emotion/react'
-import { Box, Button, Collapse, IconButton, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core'
+import { Box, Button, ButtonGroup, Collapse, IconButton, List, ListItem, ListItemText, ListSubheader, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core'
 import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { Equip } from '../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { WeaponSlot } from '../../domain/weapon'
 import { useSimulator } from '../../hooks/simulatorHooks'
+import { useUpdateSkillLog } from '../../hooks/skillLogHooks'
 import DevelopWarning from '../molecules/DevelopWarning'
 import ResultEquip from '../molecules/ResultEquip'
 import SimulateCondition from '../organisms/SimulateCondition'
@@ -94,10 +95,22 @@ const ResultRow = ({ equip }: { equip: Equip }) => {
 export default function Simulator({ skills }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
   const [weaponSlot, setWeaponSlot] = useState<WeaponSlot>([0, 0, 0])
-  const { loading, finish, result, simulate, more } = useSimulator()
+  const { loading, finish, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
+  const [mode, setMode] = useState('result' as 'result' | 'addSkill')
 
-  const execute = () =>
+  const updateSkillLog = useUpdateSkillLog()
+
+  const execute = () => {
+    setMode('result')
     simulate(activeSkill as Record<string, number>)
+    updateSkillLog(activeSkill)
+  }
+
+  const addSkill = () => {
+    setMode('addSkill')
+    searchAddableSkillList(activeSkill as Record<string, number>)
+    updateSkillLog(activeSkill)
+  }
 
   return (
     <Box sx={{ my: 4 }}>
@@ -111,59 +124,80 @@ export default function Simulator({ skills }: Props) {
             weaponSlot={weaponSlot}
             setWeaponSlot={setWeaponSlot}
           />
-          <Button onClick={execute}>検索</Button>
+          <Box display="flex" mx={2}>
+            <Button onClick={execute} variant="contained" sx={{ flex: '1', mr: 1 }}>検索</Button>
+            <Button onClick={addSkill} variant="outlined">追加スキル検索</Button>
+          </Box>
         </div>
         <div css={resultStyle}>
-          {(result.length > 0 || loading) && (
-            <TableContainer component={Paper} sx={{ my: 1 }} variant="outlined">
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell component="th" sx={{ px: 0.5 }}></TableCell>
-                    <TableCell component="th" align="center" sx={{ px: 0.5 }}>
-                      <Typography variant="body2" component="span" noWrap>防御</Typography>
-                    </TableCell>
-                    <TableCell component="th" align="center" sx={{ px: 0.5 }}>
-                      <Typography variant="body2" component="span" noWrap>頭装備</Typography>
-                    </TableCell>
-                    <TableCell component="th" align="center" sx={{ px: 0.5 }}>
-                      <Typography variant="body2" component="span" noWrap>胴装備</Typography>
-                    </TableCell>
-                    <TableCell component="th" align="center" sx={{ px: 0.5 }}>
-                      <Typography variant="body2" component="span" noWrap>腕装備</Typography>
-                    </TableCell>
-                    <TableCell component="th" align="center" sx={{ px: 0.5 }}>
-                      <Typography variant="body2" component="span" noWrap>腰装備</Typography>
-                    </TableCell>
-                    <TableCell component="th" align="center" sx={{ px: 0.5 }}>
-                      <Typography variant="body2" component="span" noWrap>足装備</Typography>
-                    </TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {result.map((equip, i) =>
-                    <ResultRow key={i} equip={equip} />
+          {mode === 'addSkill' && (
+            <>
+              {addableSkillList.length > 0 && (
+                <List subheader={<ListSubheader>追加スキル</ListSubheader>} dense>
+                  {addableSkillList.map(([skill, point]) =>
+                    <ListItem key={skill} button onClick={() => setActiveSkill(v => ({ ...v, [skill]: point }))}>
+                      <ListItemText primary={`${skill} Lv${point}`} />
+                    </ListItem>
                   )}
-                  {loading && (
-                    [...Array(10 - result.length % 10).keys()].map(key =>
-                      <TableRow key={key}>
-                        <TableCell></TableCell>
-                        <TableCell sx={{ px: 1 }}><Skeleton variant="text" /></TableCell>
-                        <TableCell><Skeleton variant="text" /></TableCell>
-                        <TableCell><Skeleton variant="text" /></TableCell>
-                        <TableCell><Skeleton variant="text" /></TableCell>
-                        <TableCell><Skeleton variant="text" /></TableCell>
-                        <TableCell><Skeleton variant="text" /></TableCell>
-                      </TableRow>
-                    )
-                  )}
-                </TableBody>
-              </Table>
-            </TableContainer>
+                </List>
+              )}
+              {finish && <Typography align="center">検索完了 {addableSkillList.length}件</Typography>}
+            </>
           )}
-          {finish && <Typography align="center">検索完了 {result.length}件</Typography>}
-          {!loading && !finish && result.length > 0 && (
-            <Button fullWidth onClick={more}>更に検索</Button>
+          {mode === 'result' && (
+            <>
+              {(result.length > 0 || loading) && (
+                <TableContainer component={Paper} sx={{ my: 1 }} variant="outlined">
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell component="th" sx={{ px: 0.5 }}></TableCell>
+                        <TableCell component="th" align="center" sx={{ px: 0.5 }}>
+                          <Typography variant="body2" component="span" noWrap>防御</Typography>
+                        </TableCell>
+                        <TableCell component="th" align="center" sx={{ px: 0.5 }}>
+                          <Typography variant="body2" component="span" noWrap>頭装備</Typography>
+                        </TableCell>
+                        <TableCell component="th" align="center" sx={{ px: 0.5 }}>
+                          <Typography variant="body2" component="span" noWrap>胴装備</Typography>
+                        </TableCell>
+                        <TableCell component="th" align="center" sx={{ px: 0.5 }}>
+                          <Typography variant="body2" component="span" noWrap>腕装備</Typography>
+                        </TableCell>
+                        <TableCell component="th" align="center" sx={{ px: 0.5 }}>
+                          <Typography variant="body2" component="span" noWrap>腰装備</Typography>
+                        </TableCell>
+                        <TableCell component="th" align="center" sx={{ px: 0.5 }}>
+                          <Typography variant="body2" component="span" noWrap>足装備</Typography>
+                        </TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {result.map((equip, i) =>
+                        <ResultRow key={i} equip={equip} />
+                      )}
+                      {loading && (
+                        [...Array(10 - result.length % 10).keys()].map(key =>
+                          <TableRow key={key}>
+                            <TableCell></TableCell>
+                            <TableCell sx={{ px: 1 }}><Skeleton variant="text" /></TableCell>
+                            <TableCell><Skeleton variant="text" /></TableCell>
+                            <TableCell><Skeleton variant="text" /></TableCell>
+                            <TableCell><Skeleton variant="text" /></TableCell>
+                            <TableCell><Skeleton variant="text" /></TableCell>
+                            <TableCell><Skeleton variant="text" /></TableCell>
+                          </TableRow>
+                        )
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              )}
+              {finish && <Typography align="center">検索完了 {result.length}件</Typography>}
+              {!loading && !finish && result.length > 0 && (
+                <Button fullWidth onClick={more}>更に検索</Button>
+              )}
+            </>
           )}
         </div>
       </div>

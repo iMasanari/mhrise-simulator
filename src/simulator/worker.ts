@@ -16,6 +16,7 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
     solver.addDeco(equip)
   }
 
+  solver.sewObjectiveSkill(condition.objectiveSkill)
   solver.setPrevs(condition.prevs)
 
   return solver.solve()

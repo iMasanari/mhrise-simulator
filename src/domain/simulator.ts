@@ -1,6 +1,7 @@
 export interface Condition {
   skills: Record<string, number>
   ignore: string[]
+  objectiveSkill?: string
   limit?: number
 }
 
