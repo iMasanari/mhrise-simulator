@@ -1,15 +1,15 @@
+import { Slots } from './equips'
 import { ActiveSkill } from './skill'
-import { WeaponSlot } from './weapon'
 
 export interface Condition {
-  weaponSlot: WeaponSlot
+  weaponSlot: Slots
   skills: ActiveSkill
   ignore: string[]
   objectiveSkill?: string
 }
 
 export interface Result {
-  weaponSlot: WeaponSlot
+  weaponSlot: Slots
   head: string | undefined;
   body: string | undefined;
   arm: string | undefined;

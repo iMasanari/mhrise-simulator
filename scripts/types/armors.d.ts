@@ -1,7 +1,7 @@
 export interface Armor {
   name: string
   series: string
-  slots: [number, number, number]
+  slots: number[]
   defs: [number, number]
   elements: [number, number, number, number, number]
   skills: Record<string, number>

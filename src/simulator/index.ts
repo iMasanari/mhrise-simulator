@@ -6,14 +6,13 @@ import deco from '../../generated/deco.json'
 import head from '../../generated/head.json'
 import leg from '../../generated/leg.json'
 import wst from '../../generated/wst.json'
-import { Armor, Charm, Deco, Equip } from '../domain/equips'
+import { Armor, Charm, Deco, Equip, Slots } from '../domain/equips'
 import { Condition, Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
-import { WeaponSlot } from '../domain/weapon'
 
 export interface SimulatorCondition {
   objectiveSkill?: string
-  weaponSlot: WeaponSlot
+  weaponSlot: Slots
   head: Armor[]
   body: Armor[]
   arm: Armor[]

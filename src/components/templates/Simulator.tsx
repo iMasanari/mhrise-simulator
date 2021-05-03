@@ -1,8 +1,8 @@
 import { css, Theme } from '@emotion/react'
 import { Box, Button } from '@material-ui/core'
 import React, { useState } from 'react'
+import { Slots } from '../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
-import { WeaponSlot } from '../../domain/weapon'
 import { useSimulator } from '../../hooks/simulatorHooks'
 import { useUpdateSkillLog } from '../../hooks/skillLogHooks'
 import DevelopWarning from '../molecules/DevelopWarning'
@@ -34,7 +34,7 @@ const resultStyle = (theme: Theme) => css`
 
 export default function Simulator({ skills }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
-  const [weaponSlot, setWeaponSlot] = useState<WeaponSlot>([0, 0, 0])
+  const [weaponSlot, setWeaponSlot] = useState<Slots>([])
   const { loading, completed, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
   const [mode, setMode] = useState('result' as 'result' | 'addSkill')
 

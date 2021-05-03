@@ -1,7 +1,7 @@
-import { Button, List, ListItem, ListItemSecondaryAction, ListItemText, ListSubheader, Select } from '@material-ui/core'
+import { Button, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core'
 import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
+import { Slots } from '../../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
-import { WeaponSlot } from '../../../domain/weapon'
 import { useSkillLog, useUpdateSkillLog } from '../../../hooks/skillLogHooks'
 import SkillDialog from '../skillDialog/SkillDialog'
 import ActiveSkillListItem from './ActiveSkillListItem'
@@ -11,8 +11,8 @@ interface Props {
   skills: SkillSystem[]
   activeSkill: ActiveSkill
   setActiveSkill: Dispatch<SetStateAction<ActiveSkill>>
-  weaponSlot: WeaponSlot
-  setWeaponSlot: Dispatch<SetStateAction<WeaponSlot>>
+  weaponSlot: Slots
+  setWeaponSlot: Dispatch<SetStateAction<Slots>>
 }
 
 export default function SimulatorCondition({ skills, activeSkill, setActiveSkill, weaponSlot, setWeaponSlot }: Props) {

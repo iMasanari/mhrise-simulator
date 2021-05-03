@@ -1,12 +1,12 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
 import React from 'react'
-import { Equip } from '../../domain/equips'
+import { Equip, Slots } from '../../domain/equips'
 
 interface Props {
   equip: Equip
 }
 
-const showSlots = (slots: [number, number, number] | undefined) =>
+const showSlots = (slots: Slots | undefined) =>
   slots?.map((s) => s ? `【${s}】` : null)
 
 export default function ResultEquip({ equip }: Props) {

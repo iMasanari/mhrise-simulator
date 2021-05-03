@@ -1,10 +1,11 @@
 import { ActiveSkill } from './skill'
-import { WeaponSlot } from './weapon'
+
+export type Slots = number[]
 
 export interface Armor {
   name: string
   series: string
-  slots: [number, number, number]
+  slots: Slots
   defs: [number, number]
   elements: [number, number, number, number, number]
   skills: ActiveSkill
@@ -26,7 +27,7 @@ export interface Deco {
 
 export interface Equip {
   def: number
-  weaponSlot: WeaponSlot
+  weaponSlot: Slots
   head: Armor | undefined
   body: Armor | undefined
   arm: Armor | undefined

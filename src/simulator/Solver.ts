@@ -1,10 +1,9 @@
 // @ts-expect-error
 import glpk from 'glpk.js'
 import { GLP_LO, GLP_MAX, GLP_UP, GLP_NOFEAS } from '../constants/glpk'
-import { Armor, Charm, Deco } from '../domain/equips'
+import { Armor, Charm, Deco, Slots } from '../domain/equips'
 import { Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
-import { WeaponSlot } from '../domain/weapon'
 import Subject from './Subject'
 
 export type EquipsType = 'head' | 'body' | 'arm' | 'wst' | 'leg' | 'charm'
@@ -119,7 +118,7 @@ export default class Simulator {
   private prevs: Result[] = []
   private objectiveSkill: string | undefined
 
-  constructor(private skillCondition: ActiveSkill, private weaponSlot: WeaponSlot) {
+  constructor(private skillCondition: ActiveSkill, private weaponSlot: Slots) {
     const skillKeys = Object.keys(skillCondition)
 
     this.skillKeys = skillKeys

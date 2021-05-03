@@ -59,12 +59,13 @@ const getArmors = async (path: string, seriesList: { name: string, reg: RegExp }
       materialList.filter(([, point]) => point)
     )
 
+    const slots = [+スロット1, +スロット2, +スロット3].filter(Boolean)
     const series = seriesList.find(v => v.reg.test(名前))?.name!
 
     return {
       name: 名前,
       series,
-      slots: [+スロット1, +スロット2, +スロット3],
+      slots,
       defs: [+初期防御力, +最終防御力],
       elements: [+火耐性, +水耐性, +雷耐性, +氷耐性, +龍耐性],
       skills,

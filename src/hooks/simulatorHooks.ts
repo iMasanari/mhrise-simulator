@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from 'react-redux'
 import skillList from '../../generated/skills.json'
-import { Equip } from '../domain/equips'
+import { Equip, Slots } from '../domain/equips'
 import { ActiveSkill } from '../domain/skill'
-import { WeaponSlot } from '../domain/weapon'
 import { RootState } from '../modules'
 import Simulator from '../simulator'
 
@@ -50,7 +49,7 @@ export const useSimulator = () => {
     setLoading(false)
   }
 
-  const simulate = async (skills: ActiveSkill, weaponSlot: WeaponSlot) => {
+  const simulate = async (skills: ActiveSkill, weaponSlot: Slots) => {
     const worker = workerRef.current
 
     if (!worker) return
@@ -74,7 +73,7 @@ export const useSimulator = () => {
 
   const store = useStore<RootState>()
 
-  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlot: WeaponSlot) => {
+  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlot: Slots) => {
     const worker = workerRef.current
 
     if (!worker) return
