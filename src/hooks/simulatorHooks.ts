@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useStore } from 'react-redux'
 import skillList from '../../generated/skills.json'
-import { Equip, Slots } from '../domain/equips'
+import { Charm, Equip, Slots } from '../domain/equips'
 import { ActiveSkill } from '../domain/skill'
 import { RootState } from '../modules'
 import Simulator from '../simulator'
@@ -18,7 +18,7 @@ export const useSimulator = () => {
   const [addableSkillList, setAddableSkillList] = useState([] as [string, number][])
 
   const workerRef = useRef<Worker>()
-  const simulatorRef = useRef<any>()
+  const simulatorRef = useRef<Simulator>()
 
   useEffect(() => {
     const worker = new WebpackWorker()
@@ -50,12 +50,12 @@ export const useSimulator = () => {
     setLoading(false)
   }
 
-  const simulate = async (skills: ActiveSkill, weaponSlot: Slots) => {
+  const simulate = async (skills: ActiveSkill, weaponSlot: Slots, charms: Charm[]) => {
     const worker = workerRef.current
 
     if (!worker) return
 
-    const simulator = new Simulator(worker, { skills, weaponSlot, ignore: [] })
+    const simulator = new Simulator(worker, { skills, weaponSlot, charms, ignore: [] })
     simulatorRef.current = simulator
 
     setCompleted(false)
@@ -74,7 +74,7 @@ export const useSimulator = () => {
 
   const store = useStore<RootState>()
 
-  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlot: Slots) => {
+  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlot: Slots, charms: Charm[]) => {
     const worker = workerRef.current
 
     if (!worker) return
@@ -85,7 +85,7 @@ export const useSimulator = () => {
     setAddableSkillList([])
 
     for (const skill of skillLog) {
-      const simulator = new Simulator(worker, { skills, weaponSlot, ignore: [], objectiveSkill: skill })
+      const simulator = new Simulator(worker, { skills, weaponSlot, charms, ignore: [], objectiveSkill: skill })
       const result = await simulator.simulate()
       const point = result ? Math.min(result.skills[skill] || 0, skillMaxPointMap.get(skill)!) : 0
 

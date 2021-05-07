@@ -3,9 +3,9 @@ import React, { Dispatch, SetStateAction, useMemo, useState } from 'react'
 import { Slots } from '../../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import { useSkillLog, useUpdateSkillLog } from '../../../hooks/skillLogHooks'
+import SlotSelect from '../../molecules/SlotSelect'
 import SkillDialog from '../skillDialog/SkillDialog'
 import ActiveSkillListItem from './ActiveSkillListItem'
-import WeaponSlotSelect from './WeaponSlotSelect'
 
 interface Props {
   skills: SkillSystem[]
@@ -56,14 +56,14 @@ export default function SimulatorCondition({ skills, activeSkill, setActiveSkill
       <List subheader={<ListSubheader disableSticky>武器</ListSubheader>}>
         <ListItem>
           <ListItemText primary="武器スロット" />
-          <WeaponSlotSelect weaponSlot={weaponSlot} setWeaponSlot={setWeaponSlot} />
+          <SlotSelect slot={weaponSlot} setSlot={setWeaponSlot} />
         </ListItem>
       </List>
       <List subheader={<ListSubheader disableSticky>スキル</ListSubheader>}>
         {activeSkillList.map(skill =>
           <ActiveSkillListItem
             key={skill.name}
-            skillName={skill.name}
+            name={skill.name}
             items={skill.items}
             value={activeSkill[skill.name]}
             setValue={(value) => setActiveSkill(v => ({ ...v, [skill.name]: value }))}

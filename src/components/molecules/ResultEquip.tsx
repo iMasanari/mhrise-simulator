@@ -13,7 +13,7 @@ export default function ResultEquip({ equip }: Props) {
   const skills = Object.entries(equip.skills).sort(([, a], [, b]) => b - a)
 
   const weapon = { slots: equip.weaponSlot }
-  const armors = [weapon, equip.head, equip.body, equip.arm, equip.wst, equip.leg]
+  const armors = [weapon, equip.head, equip.body, equip.arm, equip.wst, equip.leg, equip.charm]
     .filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
 
   const slots = armors.flatMap(armor => armor.slots.map(s => [armor, s] as const))
@@ -82,6 +82,16 @@ export default function ResultEquip({ equip }: Props) {
           <TableCell>{showSlots(equip.leg?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.leg).map(([, v], i) =>
+              <div key={i}>{v.name}</div>
+            )}
+          </TableCell>
+        </TableRow>
+        <TableRow>
+          <TableCell component="th">護石</TableCell>
+          <TableCell>{equip.charm?.name}</TableCell>
+          <TableCell>{showSlots(equip.charm?.slots)}</TableCell>
+          <TableCell>
+            {decoList.filter(([v]) => v === equip.charm).map(([, v], i) =>
               <div key={i}>{v.name}</div>
             )}
           </TableCell>

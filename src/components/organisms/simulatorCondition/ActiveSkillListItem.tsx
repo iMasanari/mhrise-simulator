@@ -3,20 +3,20 @@ import React from 'react'
 import SkillLevel from '../../molecules/SkillLevel'
 
 interface Props {
-  skillName: string
+  name: string
   items: number[]
   value: number
   setValue: (value: number) => void
 }
 
-export default function ActiveSkillListItem({ skillName, items, value, setValue }: Props) {
+export default function ActiveSkillListItem({ name, items, value, setValue }: Props) {
   const subActionHandler = (e: React.ChangeEvent<{ value: string | number }>) =>
     setValue(+e.currentTarget.value)
 
   return (
     <ListItem>
       <ListItemText
-        primary={skillName}
+        primary={name}
         secondary={<SkillLevel value={value} items={items} update={setValue} />}
         secondaryTypographyProps={{ component: 'div' }}
       />

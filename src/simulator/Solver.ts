@@ -167,6 +167,11 @@ export default class Simulator {
 
     this.equipLimits.add(typeRecord[type], name, 1)
 
+    this.slots.add(Y_SLOT_1_OVER, name, charm.slots.filter(v => v >= 1).length)
+    this.slots.add(Y_SLOT_2_OVER, name, charm.slots.filter(v => v >= 2).length)
+    this.slots.add(Y_SLOT_3_OVER, name, charm.slots.filter(v => v >= 3).length)
+    this.slots.add(Y_SLOT_4_OVER, name, charm.slots.filter(v => v >= 4).length)
+
     for (const skillKey of this.skillKeys) {
       const value = charm.skills[skillKey] || 0
       this.skills.add(skillKey, name, value)

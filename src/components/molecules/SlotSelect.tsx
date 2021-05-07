@@ -1,19 +1,22 @@
 import { Select } from '@material-ui/core'
 import React from 'react'
-import { Slots } from '../../../domain/equips'
+import { Slots } from '../../domain/equips'
 
 interface Props {
-  weaponSlot: Slots
-  setWeaponSlot: (slot: Slots) => void
+  slot: Slots
+  setSlot: (slot: Slots) => void
+  label?: string
 }
 
-export default function WeaponSlotSelect({ weaponSlot, setWeaponSlot }: Props) {
-  const setWeaponSlotValue = (e: React.ChangeEvent<{ value: string }>) =>
-    setWeaponSlot(e.currentTarget.value.split('-').map(Number))
+export default function WeaponSlotSelect({ slot, setSlot, label }: Props) {
+  const setSlotValue = (e: React.ChangeEvent<{ value: string }>) => {
+    const value = e.currentTarget.value
+    setSlot(value === '0' ? [] : value.split('-').map(Number))
+  }
 
   return (
-    <Select native value={weaponSlot.join('-')} onChange={setWeaponSlotValue} size="small">
-      <optgroup label="武器スロットなし">
+    <Select native value={slot.join('-') || '0'} onChange={setSlotValue} size="small" label={label}>
+      <optgroup label="スロットなし">
         <option value="0">なし</option>
       </optgroup>
       <optgroup label="最大Lv1">
@@ -40,23 +43,6 @@ export default function WeaponSlotSelect({ weaponSlot, setWeaponSlot }: Props) {
         <option value="3-3-1">【3】【3】【1】</option>
         <option value="3-3-2">【3】【3】【2】</option>
         <option value="3-3-3">【3】【3】【3】</option>
-      </optgroup>
-      <optgroup label="最大Lv4">
-        <option value="4">【4】</option>
-        <option value="4-1">【4】【1】</option>
-        <option value="4-1-1">【4】【1】【1】</option>
-        <option value="4-2">【4】【2】</option>
-        <option value="4-2-1">【4】【2】【1】</option>
-        <option value="4-2-2">【4】【2】【2】</option>
-        <option value="4-3">【4】【3】</option>
-        <option value="4-3-1">【4】【3】【1】</option>
-        <option value="4-3-2">【4】【3】【2】</option>
-        <option value="4-3-3">【4】【3】【3】</option>
-        <option value="4-4">【4】【4】</option>
-        <option value="4-4-1">【4】【4】【1】</option>
-        <option value="4-4-2">【4】【4】【2】</option>
-        <option value="4-4-3">【4】【4】【3】</option>
-        <option value="4-4-4">【4】【4】【4】</option>
       </optgroup>
     </Select>
   )

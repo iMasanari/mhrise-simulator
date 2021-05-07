@@ -4,9 +4,11 @@ import { Mode } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { Slots } from '../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
+import { useCharms } from '../../hooks/charmsHooks'
 import { useSimulator } from '../../hooks/simulatorHooks'
 import { useUpdateSkillLog } from '../../hooks/skillLogHooks'
 import DevelopWarning from '../molecules/DevelopWarning'
+import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
 import SimulatorResult from '../organisms/simulatorResult/SimulatorResult'
@@ -14,6 +16,8 @@ import SimulatorResult from '../organisms/simulatorResult/SimulatorResult'
 interface Props {
   skills: SkillSystem[]
 }
+
+type Mode = 'result' | 'addSkill' | 'charm'
 
 const containerStyle = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
@@ -37,19 +41,20 @@ export default function Simulator({ skills }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
   const [weaponSlot, setWeaponSlot] = useState<Slots>([])
   const { loading, completed, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
-  const [mode, setMode] = useState('result' as 'result' | 'addSkill')
+  const charms = useCharms()
+  const [mode, setMode] = useState<Mode>('result')
 
   const updateSkillLog = useUpdateSkillLog()
 
   const execute = () => {
     setMode('result')
-    simulate(activeSkill, weaponSlot)
+    simulate(activeSkill, weaponSlot, charms)
     updateSkillLog(activeSkill)
   }
 
   const addSkill = () => {
     setMode('addSkill')
-    searchAddableSkillList(activeSkill, weaponSlot)
+    searchAddableSkillList(activeSkill, weaponSlot, charms)
     updateSkillLog(activeSkill)
   }
 
@@ -74,12 +79,16 @@ export default function Simulator({ skills }: Props) {
           <Tabs value={mode} onChange={(_, value) => setMode(value)} aria-label="label tabs">
             <Tab value="result" label="検索結果" />
             <Tab value="addSkill" label="追加スキル" />
+            <Tab value="charm" label="護石設定" />
           </Tabs>
           {mode === 'result' && (
             <SimulatorResult result={result} loading={loading} completed={completed} more={more} />
           )}
           {mode === 'addSkill' && (
             <SimulatorAddableSkill skills={addableSkillList} completed={completed} setActiveSkill={setActiveSkill} />
+          )}
+          {mode === 'charm' && (
+            <CharmSettings skills={skills} />
           )}
         </div>
       </div>

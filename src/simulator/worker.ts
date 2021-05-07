@@ -12,6 +12,10 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
     }
   }
 
+  for (const charm of condition.charm) {
+    solver.addCharm(charm)
+  }
+
   for (const equip of condition.deco) {
     solver.addDeco(equip)
   }

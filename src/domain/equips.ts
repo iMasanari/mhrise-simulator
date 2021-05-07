@@ -15,7 +15,7 @@ export interface Armor {
 export interface Charm {
   name: string
   skills: ActiveSkill
-  materials: Record<string, number>
+  slots: Slots
 }
 
 export interface Deco {

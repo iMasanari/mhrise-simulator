@@ -1,7 +1,6 @@
 import PromiseWorker from 'promise-worker'
 import arm from '../../generated/arm.json'
 import body from '../../generated/body.json'
-import charm from '../../generated/charm.json'
 import deco from '../../generated/deco.json'
 import head from '../../generated/head.json'
 import leg from '../../generated/leg.json'
@@ -35,7 +34,7 @@ interface Groups {
   deco: Map<string | undefined, Deco>
 }
 
-const getKey = (armor: Armor, skillKeys: string[]) => {
+const getKey = (armor: Armor | Charm, skillKeys: string[]) => {
   const slotHash = armor.slots.join('_')
   const skillHash = skillKeys.map(skillName => armor.skills[skillName] || 0).join('_')
 
@@ -62,6 +61,22 @@ const createEquipGroup = (skillKeys: string[], equips: Armor[], ignore: Set<stri
   }
 }
 
+const createCharmGroup = (skillKeys: string[], charms: Charm[]) => {
+  const list = charms.map((charm) => [getKey(charm, skillKeys), charm] as const)
+  const keys = [...new Set(list.map(([key]) => key))]
+
+  const data = keys.map((key) => {
+    const [, charm] = list.find(([k]) => k === key)!
+
+    return [key, charm] as const
+  })
+
+  return {
+    charms: data.map(([key, charm]) => ({ ...charm, name: key })),
+    map: new Map(data.map(([key, charm]) => [key, charm])),
+  }
+}
+
 export default class Simulator {
   private pw: PromiseWorker
   private condition: SimulatorCondition
@@ -82,6 +97,7 @@ export default class Simulator {
     const armData = createEquipGroup(skillKeys, arm, ignore)
     const wstData = createEquipGroup(skillKeys, wst, ignore)
     const legData = createEquipGroup(skillKeys, leg, ignore)
+    const charmData = createCharmGroup(skillKeys, condition.charms)
 
     this.condition = {
       objectiveSkill,
@@ -92,7 +108,7 @@ export default class Simulator {
       arm: armData.armors,
       wst: wstData.armors,
       leg: legData.armors,
-      charm: charm.filter(equip => !ignore.has(equip.name)),
+      charm: charmData.charms,
       deco: deco.filter(deco => !ignore.has(deco.name)),
       prevs: [],
     }
@@ -103,7 +119,7 @@ export default class Simulator {
       arm: armData.map,
       wst: wstData.map,
       leg: legData.map,
-      charm: new Map(this.condition.charm.map(v => [v.name, v])),
+      charm: charmData.map,
       deco: new Map(this.condition.deco.map(v => [v.name, v])),
     }
   }
@@ -148,16 +164,20 @@ export default class Simulator {
               const equip = [head, body, arm, wst, leg]
               const def = equip.reduce((sum, v) => sum + v.defs[1], 0)
 
-              const skills = [...equip, ...decos].reduce((skills, v) => {
-                const keys = [...Object.keys(skills), ...Object.keys(v.skills)]
-                return Object.fromEntries(keys.map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
-              }, {} as ActiveSkill)
+              const skills = [...equip, ...(charm ? [charm] : []), ...decos].reduce((skills, v) => (
+                Object.fromEntries([...Object.keys(skills), ...Object.keys(v.skills)].map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
+              ), {} as ActiveSkill)
 
               list.push({ def, weaponSlot: result.weaponSlot, head, body, arm, wst, leg, charm, decos, skills })
             }
           }
         }
       }
+    }
+
+    // TODO: 装備なしを含むときの結果を正しく返す
+    if (!list.length) {
+      return null
     }
 
     const def = list.reduce((max, equip) => Math.max(max, equip.def), 0)

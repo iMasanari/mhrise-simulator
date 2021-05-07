@@ -1,9 +1,10 @@
-import { Slots } from './equips'
+import { Charm, Slots } from './equips'
 import { ActiveSkill } from './skill'
 
 export interface Condition {
   weaponSlot: Slots
   skills: ActiveSkill
+  charms: Charm[]
   ignore: string[]
   objectiveSkill?: string
 }
