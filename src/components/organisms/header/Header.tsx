@@ -38,7 +38,7 @@ const sectionMobileStyle = (theme: Theme) => css`
 const navItems = [
   { href: '/', title: 'スキルシミュ' },
   { href: '/armors', title: '防具一覧' },
-  { href: '/charms', title: '護符一覧' },
+  { href: '/decos', title: '装飾品一覧' },
   { href: '/skills', title: 'スキル一覧' },
 ]
 

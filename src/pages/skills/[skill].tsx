@@ -5,8 +5,8 @@ import Typography from '@material-ui/core/Typography'
 import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import * as React from 'react'
+import { getDecos } from '../../../scripts/converter/deco'
 import { findArmor } from '../../api/armors'
-import { getCharms } from '../../api/charms'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
 
@@ -30,16 +30,16 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
   if (!skill) throw new Error(`${skillName} is not found`)
 
   const armors = await findArmor(skill.name)
-  const charms = (await getCharms())
-    .filter(v => v.charms.some(w => w.skills[skillName] != null))
-    .map(v => ({ name: v.name, point: Math.max(...v.charms.map(w => w.skills[skillName])) }))
+  const decos = (await getDecos())
+    .filter(v => v.skills[skillName] != null)
+    .map(v => ({ name: v.name, point: v.skills[skillName] }))
 
   return {
-    props: { skill, armors, charms },
+    props: { skill, armors, decos },
   }
 }
 
-export default function SkillDetailPage({ skill, armors, charms }: Props) {
+export default function SkillDetailPage({ skill, armors, decos }: Props) {
   return (
     <Container maxWidth="md">
       <Head>
@@ -114,7 +114,7 @@ export default function SkillDetailPage({ skill, armors, charms }: Props) {
           </Table>
         </TableContainer>
         <Typography variant="h6" component="h2" gutterBottom>
-          護符
+          装飾品
         </Typography>
         <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
           <Table>
@@ -125,13 +125,13 @@ export default function SkillDetailPage({ skill, armors, charms }: Props) {
               </TableRow>
             </TableHead>
             <TableBody>
-              {charms.map(charm =>
-                <TableRow key={charm.name}>
+              {decos.map(deco =>
+                <TableRow key={deco.name}>
                   <TableCell>
-                    <Link href={`/charms/${charm.name}`} noWrap>{charm.name}</Link>
+                    <Link href={`/decos/${deco.name}`} noWrap>{deco.name}</Link>
                   </TableCell>
                   <TableCell align="center">
-                    {charm.point}
+                    {deco.point}
                   </TableCell>
                 </TableRow>
               )}
