@@ -101,13 +101,33 @@ export default function SkillDetailPage({ skill, armors, decos }: Props) {
               {armors.map(([name, head, body, arm, wst, leg]) =>
                 <TableRow key={name}>
                   <TableCell>
-                    <Link href={`/armors/${name}`} noWrap>{name}</Link>
+                    <Typography variant="inherit" noWrap>{name}</Typography>
                   </TableCell>
-                  <TableCell>{head}</TableCell>
-                  <TableCell>{body}</TableCell>
-                  <TableCell>{arm}</TableCell>
-                  <TableCell>{wst}</TableCell>
-                  <TableCell>{leg}</TableCell>
+                  <TableCell>
+                    {head && (
+                      <Link href={`/armors/${head.name}`}>{head.point}pt</Link>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {body && (
+                      <Link href={`/armors/${body.name}`}>{body.point}pt</Link>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {arm && (
+                      <Link href={`/armors/${arm.name}`}>{arm.point}pt</Link>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {wst && (
+                      <Link href={`/armors/${wst.name}`}>{wst.point}pt</Link>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {leg && (
+                      <Link href={`/armors/${leg.name}`}>{leg.point}pt</Link>
+                    )}
+                  </TableCell>
                 </TableRow>
               )}
             </TableBody>
@@ -121,7 +141,7 @@ export default function SkillDetailPage({ skill, armors, decos }: Props) {
             <TableHead>
               <TableRow>
                 <TableCell component="th">名称</TableCell>
-                <TableCell component="th" align="center">最大ポイント</TableCell>
+                <TableCell component="th" align="center">ポイント</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -131,7 +151,7 @@ export default function SkillDetailPage({ skill, armors, decos }: Props) {
                     <Link href={`/decos/${deco.name}`} noWrap>{deco.name}</Link>
                   </TableCell>
                   <TableCell align="center">
-                    {deco.point}
+                    {`${deco.point}pt`}
                   </TableCell>
                 </TableRow>
               )}

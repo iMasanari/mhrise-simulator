@@ -40,11 +40,11 @@ export const findArmor = async (skill: string) => {
 
     return [
       v.name,
-      head || null,
-      body || null,
-      arm || null,
-      wst || null,
-      leg || null,
+      head ? { name: v.head!.name, point: head } : null,
+      body ? { name: v.body!.name, point: body } : null,
+      arm ? { name: v.arm!.name, point: arm } : null,
+      wst ? { name: v.wst!.name, point: wst } : null,
+      leg ? { name: v.leg!.name, point: leg } : null,
     ] as const
   })
 

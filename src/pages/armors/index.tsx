@@ -1,43 +1,74 @@
+import { css, Theme } from '@emotion/react'
 import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
-import * as React from 'react'
+import Image from 'next/image'
+import React from 'react'
 import { getSeries } from '../../api/armors'
 import Link from '../../components/atoms/Link'
 import DevelopWarning from '../../components/molecules/DevelopWarning'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
+const tableCellHeadTitleStyle = (theme: Theme) => css`
+  display: none;
+  ${theme.breakpoints.up('sm')} {
+    display: block;
+    flex: 1 1 100px;
+  }
+`
+
+const tableCellTitleStyle = (theme: Theme) => css`
+  display: block;
+  flex: 1 0 100%;
+  display: flex;
+  align-items: center;
+  ${theme.breakpoints.up('sm')} {
+    flex: 1 1 100px;
+  }
+`
+
+const tableCellItemStyle = (theme: Theme) => css`
+  display: block;
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  ${theme.breakpoints.up('sm')} {
+    flex: 1 1 50px;
+  }
+`
+
+const linkIconStyle = css`
+  &:hover {
+    opacity: 0.5;
+  }
+`
+
 export const getStaticProps = async () => {
   const series = await getSeries()
 
   const data = series.map(v => {
-    const armors = [v.head, v.body, v.arm, v.wst, v.leg]
-      .filter(<T,>(v: T | null): v is NonNullable<T> => v as any)
+    const armors = [v.head, v.body, v.arm, v.wst, v.leg].map(v => v ? v.name : null)
 
-    return {
-      name: v.name,
-      def: [
-        armors.reduce((acc, v) => acc + v.defs[0], 0),
-        armors.reduce((acc, v) => acc + v.defs[1], 0),
-      ],
-      elements: [
-        armors.reduce((acc, v) => acc + v.elements[0], 0),
-        armors.reduce((acc, v) => acc + v.elements[1], 0),
-        armors.reduce((acc, v) => acc + v.elements[2], 0),
-        armors.reduce((acc, v) => acc + v.elements[3], 0),
-        armors.reduce((acc, v) => acc + v.elements[4], 0),
-      ],
-    }
+    return { name: v.name, armors }
   })
 
   return {
     props: { series: data },
   }
 }
+
+const images = [
+  'head.svg',
+  'body.svg',
+  'arm.svg',
+  'wst.svg',
+  'leg.svg',
+]
 
 export default function SkillsPage({ series }: Props) {
   return (
@@ -55,33 +86,30 @@ export default function SkillsPage({ series }: Props) {
         </Typography>
         <DevelopWarning />
         <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell component="th">防具</TableCell>
-                <TableCell component="th" colSpan={2} align="center">防御 / 強化後</TableCell>
-                <TableCell component="th" align="center">火</TableCell>
-                <TableCell component="th" align="center">水</TableCell>
-                <TableCell component="th" align="center">雷</TableCell>
-                <TableCell component="th" align="center">氷</TableCell>
-                <TableCell component="th" align="center">龍</TableCell>
+          <Table sx={{ display: 'block' }}>
+            <TableHead sx={{ display: 'block' }}>
+              <TableRow sx={{ display: 'flex' }}>
+                <TableCell component="th" css={tableCellHeadTitleStyle}></TableCell>
+                <TableCell component="th" css={tableCellItemStyle}>頭</TableCell>
+                <TableCell component="th" css={tableCellItemStyle}>胴</TableCell>
+                <TableCell component="th" css={tableCellItemStyle}>腕</TableCell>
+                <TableCell component="th" css={tableCellItemStyle}>腰</TableCell>
+                <TableCell component="th" css={tableCellItemStyle}>足</TableCell>
               </TableRow>
             </TableHead>
-            <TableBody>
+            <TableBody sx={{ display: 'block' }}>
               {series.map(armor =>
-                <TableRow key={armor.name}>
-                  <TableCell>
-                    <Link href={`/armors/${armor.name}`} noWrap>
-                      {armor.name}
-                    </Link>
-                  </TableCell>
-                  <TableCell align="center">{armor.def[0]}</TableCell>
-                  <TableCell align="center">{armor.def[1]}</TableCell>
-                  <TableCell align="center">{armor.elements[0] || null}</TableCell>
-                  <TableCell align="center">{armor.elements[1] || null}</TableCell>
-                  <TableCell align="center">{armor.elements[2] || null}</TableCell>
-                  <TableCell align="center">{armor.elements[3] || null}</TableCell>
-                  <TableCell align="center">{armor.elements[4] || null}</TableCell>
+                <TableRow key={armor.name} sx={{ display: 'flex', flexWrap: 'wrap' }}>
+                  <TableCell css={tableCellTitleStyle}>{armor.name}</TableCell>
+                  {armor.armors.map((v, i) =>
+                    <TableCell key={v || i} css={tableCellItemStyle}>
+                      {v && (
+                        <Link href={`/armors/${v}`} noWrap>
+                          <Image css={linkIconStyle} src={`/images/armors/${images[i]}`} width={24} height={24} />
+                        </Link>
+                      )}
+                    </TableCell>
+                  )}
                 </TableRow>
               )}
             </TableBody>
