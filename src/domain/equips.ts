@@ -13,7 +13,6 @@ export interface Armor {
 }
 
 export interface Charm {
-  name: string
   skills: ActiveSkill
   slots: Slots
 }

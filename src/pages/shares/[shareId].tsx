@@ -32,7 +32,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
     arm: await getArm(data.arm),
     wst: await getWst(data.wst),
     leg: await getLeg(data.leg),
-    charm: { name: '護石', ...data.charm },
+    charm: data.charm,
     decos: data.decos,
     def: 0,
     skills: data.skills,

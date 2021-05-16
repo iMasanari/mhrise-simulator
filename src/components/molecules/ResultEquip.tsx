@@ -24,6 +24,10 @@ export default function ResultEquip({ equip, size }: Props) {
 
   const decos = [...new Set(equip.decos.map(v => v.name))]
 
+  const charmName = equip.charm
+    ? Object.entries(equip.charm.skills).map(([name, point]) => `${name}Lv${point}`).join(' ')
+    : null
+
   return (
     <Table size={size || 'medium'}>
       <TableBody>
@@ -89,7 +93,7 @@ export default function ResultEquip({ equip, size }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">護石</TableCell>
-          <TableCell>{equip.charm?.name}</TableCell>
+          <TableCell>{charmName}</TableCell>
           <TableCell>{showSlots(equip.charm?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.charm).map(([, v], i) =>

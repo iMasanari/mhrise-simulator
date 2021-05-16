@@ -17,7 +17,6 @@ interface Props {
 
 export default function RegisterCharmDialog({ open, onClose, skills }: Props) {
   const classes = useStyles()
-  const [name, setName] = useState('')
   const [skillName1, setSkillName1] = useState('')
   const [skillPoint1, setSkillPoint1] = useState('')
   const [skillName2, setSkillName2] = useState('')
@@ -38,7 +37,7 @@ export default function RegisterCharmDialog({ open, onClose, skills }: Props) {
       skillList.filter(([a, b]) => a && b)
     )
 
-    onClose({ name: name || defaultCharmName, skills, slots })
+    onClose({ skills, slots })
   }
 
   return (
@@ -46,17 +45,6 @@ export default function RegisterCharmDialog({ open, onClose, skills }: Props) {
       <DialogTitle>護石登録</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <TextField
-              label="護石名"
-              size="small"
-              placeholder={defaultCharmName}
-              InputLabelProps={{ shrink: true }}
-              value={name}
-              onChange={e => setName(e.currentTarget.value)}
-              fullWidth
-            />
-          </Grid>
           <Grid item xs={8}>
             <TextField select label="スキル1" fullWidth size="small" SelectProps={{ native: true }} value={skillName1} onChange={e => setSkillName1(e.currentTarget.value)}>
               <option value=""></option>

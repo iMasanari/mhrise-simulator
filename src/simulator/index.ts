@@ -17,7 +17,7 @@ export interface SimulatorCondition {
   arm: Armor[]
   wst: Armor[]
   leg: Armor[]
-  charm: Charm[]
+  charm: (Charm & { name: string })[]
   deco: Deco[]
   skills: ActiveSkill
   prevs: Result[]

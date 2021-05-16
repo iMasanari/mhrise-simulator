@@ -45,9 +45,6 @@ export default function CharmSettings({ skills }: Props) {
           <TableHead>
             <TableRow>
               <TableCell></TableCell>
-              <TableCell>
-                <Typography variant="inherit" noWrap>護石名</Typography>
-              </TableCell>
               <TableCell colSpan={2}>
                 <Typography variant="inherit" noWrap>スキル1</Typography>
               </TableCell>
@@ -68,9 +65,6 @@ export default function CharmSettings({ skills }: Props) {
                     checked={selected[i] || false}
                     onClick={() => setSelected(selected => ({ ...selected, [i]: !selected[i] }))}
                   />
-                </TableCell>
-                <TableCell>
-                  <Typography variant="inherit" noWrap>{charm.name}</Typography>
                 </TableCell>
                 <TableCell>
                   <Typography variant="inherit" noWrap>{Object.keys(charm.skills)[0]}</Typography>

@@ -158,7 +158,7 @@ export default class Simulator {
     }
   }
 
-  addCharm(charm: Charm) {
+  addCharm(charm: Charm & { name: string }) {
     const type = 'charm'
     const name = `X/${type}/${charm.name}`
 
