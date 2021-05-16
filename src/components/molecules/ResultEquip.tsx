@@ -4,12 +4,13 @@ import { Equip, Slots } from '../../domain/equips'
 
 interface Props {
   equip: Equip
+  size?: 'small' | 'medium'
 }
 
 const showSlots = (slots: Slots | undefined) =>
   slots?.map((s) => s ? `【${s}】` : null)
 
-export default function ResultEquip({ equip }: Props) {
+export default function ResultEquip({ equip, size }: Props) {
   const skills = Object.entries(equip.skills).sort(([, a], [, b]) => b - a)
 
   const weapon = { slots: equip.weaponSlot }
@@ -24,7 +25,7 @@ export default function ResultEquip({ equip }: Props) {
   const decos = [...new Set(equip.decos.map(v => v.name))]
 
   return (
-    <Table size="small">
+    <Table size={size || 'medium'}>
       <TableBody>
         <TableRow>
           <TableCell component="th">武器</TableCell>

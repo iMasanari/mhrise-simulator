@@ -1,3 +1,5 @@
+import { Armor } from '../domain/equips'
+
 export const getSeries = async () => {
   const head = await import('../../generated/head.json').then(v => v.default)
   const body = await import('../../generated/body.json').then(v => v.default)
@@ -23,6 +25,18 @@ export const getSeries = async () => {
     return { name: v.name, head, body, arm, wst, leg }
   })
 }
+
+const getArmor = (data: Armor[], name: string | undefined) => {
+  if (!name) return null
+
+  return data.find(v => v.name === name) || null
+}
+
+export const getHead = async (name: string | undefined) => getArmor(await import('../../generated/head.json').then(v => v.default), name)
+export const getBody = async (name: string | undefined) => getArmor(await import('../../generated/body.json').then(v => v.default), name)
+export const getArm = async (name: string | undefined) => getArmor(await import('../../generated/arm.json').then(v => v.default), name)
+export const getWst = async (name: string | undefined) => getArmor(await import('../../generated/wst.json').then(v => v.default), name)
+export const getLeg = async (name: string | undefined) => getArmor(await import('../../generated/leg.json').then(v => v.default), name)
 
 export const findArmor = async (skill: string) => {
   const series = await getSeries()

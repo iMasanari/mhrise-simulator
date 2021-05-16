@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next",
-    "build": "next build && next export",
+    "build": "next build",
+    "start": "next start",
     "fetch": "ts-node -P tsconfig.ts-node.json scripts/fetch.ts",
     "postfetch": "npm run generate",
     "generate": "ts-node -P tsconfig.ts-node.json scripts/generate.ts"
@@ -20,6 +21,7 @@
     "@material-ui/icons": "^5.0.0-alpha.27",
     "action-reducer": "^0.3.1",
     "clsx": "^1.1.1",
+    "firebase-admin": "^9.8.0",
     "glpk.js": "^2.0.1",
     "next": "^10.2.0",
     "promise-worker": "^2.0.1",

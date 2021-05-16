@@ -28,12 +28,12 @@ export interface Deco {
 export interface Equip {
   def: number
   weaponSlot: Slots
-  head: Armor | undefined
-  body: Armor | undefined
-  arm: Armor | undefined
-  wst: Armor | undefined
-  leg: Armor | undefined
-  charm: Charm | undefined
+  head: Armor | null | undefined
+  body: Armor | null | undefined
+  arm: Armor | null | undefined
+  wst: Armor | null | undefined
+  leg: Armor | null | undefined
+  charm: Charm | null | undefined
   decos: Deco[]
   skills: ActiveSkill
 }

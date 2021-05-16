@@ -55,7 +55,7 @@ export default function SimulatorResultRow({ equip }: { equip: Equip }) {
         <TableCell sx={{ py: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ m: 1 }}>
-              <ResultEquip equip={equip} />
+              <ResultEquip equip={equip} size="small" />
             </Box>
           </Collapse>
         </TableCell>
