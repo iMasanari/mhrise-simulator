@@ -13,3 +13,5 @@ const initializeApp = () => {
 admin.apps.length ? admin.app() : initializeApp()
 
 export const firestore = admin.firestore()
+
+export const FieldValue = admin.firestore.FieldValue

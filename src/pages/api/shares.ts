@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
 import { getDecoInfo } from '../../api/decos'
-import { firestore } from '../../api/firebase'
+import { FieldValue, firestore } from '../../api/firebase'
 import { Armor } from '../../domain/equips'
 import { ActiveSkill } from '../../domain/skill'
 
@@ -31,6 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const result = await firestore.collection('shares').add({
     ...req.body,
     skills,
+    createdAt: FieldValue.serverTimestamp(),
   })
 
   res.status(200).json({ id: result.id })

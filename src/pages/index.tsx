@@ -10,7 +10,7 @@ import { ActiveSkill, SkillSystem } from '../domain/skill'
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
 export const getStaticProps = async () => {
-  const collection = await firestore.collection('shares').limit(10).get()
+  const collection = await firestore.collection('shares').orderBy('createdAt', 'desc').limit(10).get()
 
   const shares: { id: string, skills: ActiveSkill }[] = []
   collection.forEach(doc => {
