@@ -12,12 +12,14 @@ import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
 import SimulatorResult from '../organisms/simulatorResult/SimulatorResult'
+import SimulatorUsage from '../organisms/simulatorUsage/SimulatorUsage'
 
 interface Props {
   skills: SkillSystem[]
+  shares: { id: string, skills: ActiveSkill }[]
 }
 
-type Mode = 'result' | 'addSkill' | 'charm'
+type Mode = 'usage' | 'result' | 'addSkill' | 'charm'
 
 const containerStyle = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
@@ -31,18 +33,24 @@ const conditionStyle = (theme: Theme) => css`
   }
 `
 
+const tabStyle = (theme: Theme) => css`
+  ${theme.breakpoints.up('sm')} {
+    min-width: auto;
+  }
+`
+
 const resultStyle = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     width: calc(100% - 320px);
   }
 `
 
-export default function Simulator({ skills }: Props) {
+export default function Simulator({ skills, shares }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
   const [weaponSlot, setWeaponSlot] = useState<Slots>([])
   const { loading, completed, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
   const charms = useCharms()
-  const [mode, setMode] = useState<Mode>('result')
+  const [mode, setMode] = useState<Mode>('usage')
 
   const updateSkillLog = useUpdateSkillLog()
 
@@ -76,11 +84,20 @@ export default function Simulator({ skills }: Props) {
           </Box>
         </div>
         <div css={resultStyle}>
-          <Tabs value={mode} onChange={(_, value) => setMode(value)} aria-label="label tabs">
-            <Tab value="result" label="検索結果" />
-            <Tab value="addSkill" label="追加スキル" />
-            <Tab value="charm" label="護石設定" />
+          <Tabs
+            variant="scrollable"
+            value={mode}
+            onChange={(_, value) => setMode(value)}
+            aria-label="label tabs"
+          >
+            <Tab value="usage" label="使い方" css={tabStyle} />
+            <Tab value="result" label="検索結果" css={tabStyle} />
+            <Tab value="addSkill" label="追加スキル" css={tabStyle} />
+            <Tab value="charm" label="護石設定" css={tabStyle} />
           </Tabs>
+          {mode === 'usage' && (
+            <SimulatorUsage shares={shares} />
+          )}
           {mode === 'result' && (
             <SimulatorResult result={result} loading={loading} completed={completed} more={more} />
           )}

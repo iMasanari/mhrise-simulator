@@ -1,9 +1,10 @@
 import { css } from '@emotion/react'
-import { Box, Collapse, IconButton, TableCell, TableRow, Typography } from '@material-ui/core'
-import { KeyboardArrowDown, KeyboardArrowUp } from '@material-ui/icons'
+import { Box, Button, Collapse, IconButton, TableCell, TableRow, Typography } from '@material-ui/core'
+import { KeyboardArrowDown, KeyboardArrowUp, Link as LinkIcon } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { Equip } from '../../../domain/equips'
 import ResultEquip from '../../molecules/ResultEquip'
+import ShareDialog from './ShareDialog'
 
 const rowRootStyle = css`
   & > td {
@@ -11,8 +12,13 @@ const rowRootStyle = css`
   }
 `
 
-export default function SimulatorResultRow({ equip }: { equip: Equip }) {
+interface Props {
+  equip: Equip
+}
+
+export default function SimulatorResultRow({ equip }: Props) {
   const [open, setOpen] = useState(false)
+  const [isDialogOpen, setDialogOpen] = useState(false)
 
   return (
     <>
@@ -56,10 +62,14 @@ export default function SimulatorResultRow({ equip }: { equip: Equip }) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ m: 1 }}>
               <ResultEquip equip={equip} size="small" />
+              <Button endIcon={<LinkIcon />} fullWidth sx={{ mt: 1 }} onClick={() => setDialogOpen(true)}>
+                {'結果を共有する'}
+              </Button>
             </Box>
           </Collapse>
         </TableCell>
       </TableRow>
+      {isDialogOpen && <ShareDialog open={isDialogOpen} onClose={() => setDialogOpen(false)} equip={equip} />}
     </>
   )
 }

@@ -4,9 +4,11 @@ import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from '
 import Head from 'next/head'
 import React from 'react'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
+import { getDecoInfo } from '../../api/decos'
 import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
+import { Deco } from '../../domain/equips'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -33,14 +35,14 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
     wst: await getWst(data.wst),
     leg: await getLeg(data.leg),
     charm: data.charm,
-    decos: data.decos,
+    decos: await Promise.all(data.decos.map(getDecoInfo)) as Deco[],
     def: 0,
     skills: data.skills,
   }
 
   return {
     props: { equip },
-    revalidate: 60,
+    revalidate: 24 * 60 * 60, // 24時間
   }
 }
 
