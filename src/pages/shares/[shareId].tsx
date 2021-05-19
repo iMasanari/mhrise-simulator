@@ -1,6 +1,6 @@
 import { Box, Breadcrumbs, Button, Paper, TableContainer, Typography } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
-import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
@@ -10,7 +10,9 @@ import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
 import { Deco, Equip } from '../../domain/equips'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+interface Props {
+  equip: Equip
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
@@ -19,11 +21,13 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 
-export const getStaticProps = async (ctx: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const shareId = ctx.params?.shareId as string
   const doc = await firestore.collection('shares').doc(shareId).get()
 
-  if (!doc.exists) throw new Error(`${shareId} is not found`)
+  if (!doc.exists) {
+    return { notFound: true }
+  }
 
   const data = doc.data()!
 
