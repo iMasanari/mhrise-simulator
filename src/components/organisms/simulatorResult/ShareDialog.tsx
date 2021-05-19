@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, TextField, Typography } from '@material-ui/core'
+import { Alert, AlertTitle, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, Snackbar, TextField, Typography } from '@material-ui/core'
 import { ContentCopy } from '@material-ui/icons'
 import React, { useEffect, useRef, useState } from 'react'
 import { Charm, Equip } from '../../../domain/equips'
@@ -18,6 +18,9 @@ interface Props {
 export default function ShareDialog({ open, onClose, equip }: Props) {
   const classes = useStyles()
   const [shareId, setShareId] = useState<string | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(false)
+  const [copySnackbarOpen, setCopySnackbarOpen] = useState(false)
 
   const inputRef = useRef<HTMLInputElement>()
 
@@ -26,6 +29,8 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
   }, [shareId])
 
   const createUrl = async () => {
+    setLoading(true)
+
     const data = {
       weaponSlots: equip.weaponSlot,
       head: equip.head?.name,
@@ -37,18 +42,36 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
       decos: equip.decos.map(v => v.name),
     }
 
-    const res = await fetch('/api/shares', {
-      method: 'POST',
-      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    })
+    try {
+      const res = await fetch('/api/shares', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
 
-    const { id } = await res.json()
+      const { id } = await res.json()
 
-    setShareId(id)
+      setShareId(id)
+    }
+    catch {
+      setError(true)
+    }
+    finally {
+      setLoading(false)
+    }
   }
 
-  const onClick = () => {
+  const copyUrl = () => {
+    const input = inputRef.current
+
+    if (!input) return
+
+    input.select()
+    document.execCommand('copy')
+    setCopySnackbarOpen(true)
+  }
+
+  const clickUrl = () => {
     inputRef.current?.select()
   }
 
@@ -63,13 +86,14 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
           <TextField
             inputRef={inputRef}
             value={`${location.origin}/shares/${shareId}`}
+            onClick={clickUrl}
             size="small"
             fullWidth
             inputProps={{ readOnly: true }}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton edge="end" onClick={onClick}>
+                  <IconButton edge="end" onClick={copyUrl}>
                     <ContentCopy />
                   </IconButton>
                 </InputAdornment>
@@ -77,7 +101,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
             }}
           />
         ) : (
-          <Button variant="outlined" fullWidth onClick={createUrl}>
+          <Button variant="outlined" fullWidth disabled={loading} onClick={createUrl}>
             {'生成'}
           </Button>
         )}
@@ -87,6 +111,27 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
           {'閉じる'}
         </Button>
       </DialogActions>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={copySnackbarOpen}
+        onClose={() => setCopySnackbarOpen(false)}
+        autoHideDuration={5000}
+      >
+        <Alert onClose={() => setCopySnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
+          {'コピーしました'}
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+        open={error}
+        onClose={() => setError(false)}
+        autoHideDuration={5000}
+      >
+        <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
+          <AlertTitle>通信エラーが発生しました</AlertTitle>
+          {'時間をおいて、再度実行してください。'}
+        </Alert>
+      </Snackbar>
     </Dialog>
   )
 }
