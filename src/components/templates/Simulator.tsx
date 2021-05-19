@@ -1,7 +1,8 @@
 import { css, Theme } from '@emotion/react'
 import { Box, Button, Tab, Tabs } from '@material-ui/core'
 import { Mode } from '@material-ui/icons'
-import React, { useState } from 'react'
+import { useRouter } from 'next/router'
+import React, { useEffect, useState } from 'react'
 import { Slots } from '../../domain/equips'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { useCharms } from '../../hooks/charmsHooks'
@@ -51,6 +52,8 @@ export default function Simulator({ skills, shares }: Props) {
   const { loading, completed, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
   const charms = useCharms()
   const [mode, setMode] = useState<Mode>('usage')
+  const [autoExecute, setAutoExecute] = useState(false)
+  const router = useRouter()
 
   const updateSkillLog = useUpdateSkillLog()
 
@@ -65,6 +68,35 @@ export default function Simulator({ skills, shares }: Props) {
     searchAddableSkillList(activeSkill, weaponSlot, charms)
     updateSkillLog(activeSkill)
   }
+
+  useEffect(() => {
+    const query = location.search
+    if (query.length < 2) return
+
+    const searchParams = new URLSearchParams(query)
+
+    const skills = Object.fromEntries(
+      (searchParams.get('skills') || '').split(',')
+        .map(v => v.split('Lv'))
+        .map(([key, value]) => [key, +value])
+    )
+
+    const slots = (searchParams.get('weaponSlots') || '').split(',').map(Number)
+
+    setActiveSkill(skills)
+    setWeaponSlot(slots)
+    setAutoExecute(true)
+
+    router.replace(location.pathname)
+  }, [router])
+
+  useEffect(() => {
+    if (autoExecute) {
+      execute()
+      setAutoExecute(false)
+    }
+    // eslint-disable-next-line
+  }, [autoExecute])
 
   return (
     <Box sx={{ my: 4 }}>

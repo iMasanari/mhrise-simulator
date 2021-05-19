@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Paper, TableContainer, Typography } from '@material-ui/core'
+import { Box, Breadcrumbs, Button, Paper, TableContainer, Typography } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
@@ -8,7 +8,7 @@ import { getDecoInfo } from '../../api/decos'
 import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
-import { Deco } from '../../domain/equips'
+import { Deco, Equip } from '../../domain/equips'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -27,7 +27,7 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 
   const data = doc.data()!
 
-  const equip = {
+  const equip: Equip = {
     weaponSlot: data.weaponSlots,
     head: await getHead(data.head),
     body: await getBody(data.body),
@@ -47,6 +47,11 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 }
 
 export default function Shares({ equip }: Props) {
+  const skillParam = Object.entries(equip.skills).map(([k, v]) => `${k}Lv${v}`).join(',')
+  const slotsParam = equip.weaponSlot.join(',')
+
+  const simulatorUrl = `/?skills=${skillParam}&weaponSlots=${slotsParam}`
+
   return (
     <Container maxWidth="md">
       <Head>
@@ -58,11 +63,14 @@ export default function Shares({ equip }: Props) {
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
-          装備共有
+          {'装備共有'}
         </Typography>
         <TableContainer component={Paper} variant="outlined">
           <ResultEquip equip={equip} />
         </TableContainer>
+        <Button component={Link} href={simulatorUrl} fullWidth sx={{ my: 2 }}>
+          {'この装備の条件で検索する'}
+        </Button>
       </Box>
     </Container>
   )
