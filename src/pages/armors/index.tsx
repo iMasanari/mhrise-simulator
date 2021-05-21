@@ -104,7 +104,7 @@ export default function SkillsPage({ series }: Props) {
                   {armor.armors.map((v, i) =>
                     <TableCell key={v || i} css={tableCellItemStyle}>
                       {v && (
-                        <Link href={`/armors/${v}`} noWrap>
+                        <Link href={`/armors/${v}`} noWrap prefetch={false}>
                           <Image css={linkIconStyle} src={`/images/armors/${images[i]}`} width={24} height={24} />
                         </Link>
                       )}

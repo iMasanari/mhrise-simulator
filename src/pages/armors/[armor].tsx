@@ -2,26 +2,29 @@ import { Breadcrumbs, Grid, Paper, Table, TableBody, TableCell, TableContainer, 
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import React from 'react'
 import { getSeries } from '../../api/armors'
+import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
+import ShareList from '../../components/molecules/ShareList'
+import { Armor } from '../../domain/equips'
+import { ActiveSkill } from '../../domain/skill'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
-
-export const getStaticPaths: GetStaticPaths = async () => {
-  const series = await getSeries()
-  const paths = series.flatMap(v =>
-    [v.head!, v.body!, v.arm!, v.wst!, v.leg!].filter(Boolean).map((armor) => ({
-      params: { armor: armor.name },
-    }))
-  )
-
-  return { paths, fallback: false }
+interface Props {
+  armor: Armor
+  shares: { id: string, skills: ActiveSkill }[]
 }
 
-export const getStaticProps = async (ctx: GetStaticPropsContext) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const armorName = ctx.params?.armor
   const seriesList = await getSeries()
 
@@ -29,16 +32,33 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
     [v.head, v.body, v.arm, v.wst, v.leg].filter(Boolean).some(armor => armor?.name === armorName)
   )
 
-  if (!series) throw new Error(`${armorName} is not found`)
+  if (!series) {
+    return { notFound: true }
+  }
 
-  const armor = [series.head, series.body, series.arm, series.wst, series.leg].find(armor => armor?.name === armorName)!
+  const armors = [series.head, series.body, series.arm, series.wst, series.leg]
+  const armorIndex = armors.findIndex(armor => armor?.name === armorName)!
+  const armor = armors[armorIndex]!
+  const armorType = ['head', 'body', 'arm', 'wst', 'leg'][armorIndex]
+
+  const collection = await firestore.collection('shares')
+    .where(armorType, '==', armor.name)
+    .orderBy('createdAt', 'desc')
+    .limit(10)
+    .get()
+
+  const shares: { id: string, skills: ActiveSkill }[] = []
+  collection.forEach(doc => {
+    shares.push({ id: doc.id, skills: doc.data().skills })
+  })
 
   return {
-    props: { armor },
+    props: { armor, shares },
+    revalidate: 15 * 60, // 15分
   }
 }
 
-export default function SkillDetailPage({ armor }: Props) {
+export default function SkillDetailPage({ armor, shares }: Props) {
   const skills = Object.entries(armor.skills)
     .map(([name, point]) => ({ name, point }))
     .sort((a, b) => b.point - a.point)
@@ -158,6 +178,12 @@ export default function SkillDetailPage({ armor }: Props) {
                 </TableBody>
               </Table>
             </TableContainer>
+          </Grid>
+          <Grid item xs={12}>
+            <Typography variant="h5" component="h2" gutterBottom>
+              {'この防具を使用した装備'}
+            </Typography>
+            <ShareList shares={shares} />
           </Grid>
         </Grid>
       </Box>

@@ -1,26 +1,10 @@
-import { Box, List, ListItem, Typography } from '@material-ui/core'
+import { Box, Typography } from '@material-ui/core'
 import React from 'react'
 import { ActiveSkill } from '../../../domain/skill'
-import Link from '../../atoms/Link'
+import ShareList from '../../molecules/ShareList'
 
 interface Props {
   shares: { id: string, skills: ActiveSkill }[]
-}
-
-interface ShareLinkProps {
-  href: string
-  skills: ActiveSkill
-}
-
-const ShareLink = ({ href, skills }: ShareLinkProps) => {
-  const skillList = Object.entries(skills).map(([name, point]) => ({ name, point }))
-    .sort((a, b) => b.point - a.point)
-
-  return (
-    <Link href={href}>
-      {skillList.map(({ name, point }) => `${name}Lv${point}`).join(' ')}
-    </Link>
-  )
 }
 
 export default function SimulatorUsage({ shares }: Props) {
@@ -60,13 +44,7 @@ export default function SimulatorUsage({ shares }: Props) {
         <Typography variant="h5" component="h2" gutterBottom>
           {'最近共有された装備'}
         </Typography>
-        <List>
-          {shares.map(v =>
-            <ListItem key={v.id}>
-              <ShareLink href={`/shares/${v.id}`} skills={v.skills} />
-            </ListItem>
-          )}
-        </List>
+        <ShareList shares={shares} />
       </Box>
     </Box>
   )
