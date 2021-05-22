@@ -6,7 +6,6 @@ import { InferGetStaticPropsType } from 'next'
 import React from 'react'
 import { getDecos } from '../../api/decos'
 import Link from '../../components/atoms/Link'
-import DevelopWarning from '../../components/molecules/DevelopWarning'
 import MetaData from '../../components/templates/MetaData'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -40,7 +39,6 @@ export default function SkillsPage({ decos }: Props) {
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
           装飾品一覧
         </Typography>
-        <DevelopWarning />
         <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
           <Table>
             <TableHead>

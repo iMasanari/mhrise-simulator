@@ -6,7 +6,6 @@ import { InferGetStaticPropsType } from 'next'
 import * as React from 'react'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
-import DevelopWarning from '../../components/molecules/DevelopWarning'
 import SkillLevel from '../../components/molecules/SkillLevel'
 import MetaData from '../../components/templates/MetaData'
 
@@ -47,7 +46,6 @@ export default function SkillsPage({ categorySkills }: Props) {
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
           スキル一覧
         </Typography>
-        <DevelopWarning />
         {categorySkills.map(({ category, skills }) =>
           <div key={category}>
             <Typography variant="h6" component="h2" gutterBottom>

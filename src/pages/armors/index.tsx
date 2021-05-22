@@ -8,7 +8,6 @@ import Image from 'next/image'
 import React from 'react'
 import { getSeries } from '../../api/armors'
 import Link from '../../components/atoms/Link'
-import DevelopWarning from '../../components/molecules/DevelopWarning'
 import MetaData from '../../components/templates/MetaData'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
@@ -85,7 +84,6 @@ export default function SkillsPage({ series }: Props) {
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
           防具一覧
         </Typography>
-        <DevelopWarning />
         <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
           <Table sx={{ display: 'block' }}>
             <TableHead sx={{ display: 'block' }}>

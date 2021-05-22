@@ -8,7 +8,6 @@ import { ActiveSkill, SkillSystem } from '../../domain/skill'
 import { useCharms } from '../../hooks/charmsHooks'
 import { useSimulator } from '../../hooks/simulatorHooks'
 import { useUpdateSkillLog } from '../../hooks/skillLogHooks'
-import DevelopWarning from '../molecules/DevelopWarning'
 import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
@@ -100,7 +99,6 @@ export default function Simulator({ skills, shares }: Props) {
 
   return (
     <Box sx={{ my: 4 }}>
-      <DevelopWarning />
       <div css={containerStyle}>
         <div css={conditionStyle}>
           <SimulatorCondition
