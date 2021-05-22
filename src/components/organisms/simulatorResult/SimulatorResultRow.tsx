@@ -62,7 +62,7 @@ export default function SimulatorResultRow({ equip }: Props) {
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ m: 1 }}>
               <ResultEquip equip={equip} size="small" />
-              <Button endIcon={<LinkIcon />} fullWidth sx={{ mt: 1 }} onClick={() => setDialogOpen(true)}>
+              <Button startIcon={<LinkIcon />} fullWidth sx={{ mt: 1 }} onClick={() => setDialogOpen(true)}>
                 {'結果を共有する'}
               </Button>
             </Box>

@@ -1,5 +1,6 @@
 import { Alert, AlertTitle, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, Snackbar, TextField, Typography } from '@material-ui/core'
 import { ContentCopy } from '@material-ui/icons'
+import { Link as LinkIcon } from '@material-ui/icons'
 import React, { useEffect, useRef, useState } from 'react'
 import { Charm, Equip } from '../../../domain/equips'
 
@@ -77,9 +78,9 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
 
   return (
     <Dialog open={open} onClose={() => onClose()} classes={{ scrollPaper: classes.paper }} fullWidth>
-      <DialogTitle>結果の共有</DialogTitle>
+      <DialogTitle>結果の共有(β)</DialogTitle>
       <DialogContent>
-        <Typography gutterBottom>
+        <Typography>
           {'この装備の内容を共有するリンクを生成します。'}
         </Typography>
         {shareId ? (
@@ -101,10 +102,16 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
             }}
           />
         ) : (
-          <Button variant="outlined" fullWidth disabled={loading} onClick={createUrl}>
-            {'生成'}
+          <Button startIcon={<LinkIcon />} variant="outlined" fullWidth disabled={loading} onClick={createUrl} sx={{ my: 2 }}>
+            {'共有リンクの生成'}
           </Button>
         )}
+        <Typography gutterBottom variant="body2">
+          {'※生成したリンクはこのサイトのトップページや防具ページ等に掲載されることがあります'}
+        </Typography>
+        <Typography gutterBottom variant="body2">
+          {'※開発等の理由により、生成したリンクを無効化する可能性があります'}
+        </Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose()}>
