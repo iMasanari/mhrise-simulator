@@ -28,9 +28,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       Object.fromEntries([...Object.keys(skills), ...Object.keys(v.skills)].map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
     ), {} as ActiveSkill)
 
+  const skillList = Object.keys(skills)
+
   const result = await firestore.collection('shares').add({
     ...req.body,
     skills,
+    skillList,
     createdAt: FieldValue.serverTimestamp(),
   })
 

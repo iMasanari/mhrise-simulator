@@ -2,26 +2,42 @@ import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableH
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
+import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
 import Head from 'next/head'
 import * as React from 'react'
 import { getDecos } from '../../../scripts/converter/deco'
 import { findArmor } from '../../api/armors'
+import { firestore } from '../../api/firebase'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
+import ShareList from '../../components/molecules/ShareList'
+import { ActiveSkill } from '../../domain/skill'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+type Armor = { name: string, point: number } | null
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const skills = await getSkills()
-  const paths = skills.map(v => ({
-    params: { skill: v.name },
-  }))
-
-  return { paths, fallback: false }
+interface Props {
+  skill: {
+    name: string;
+    category: string;
+    details: {
+      name: string;
+      point: number;
+      description: string;
+    }[];
+  }
+  armors: (readonly [string, Armor, Armor, Armor, Armor, Armor])[]
+  decos: { name: string, point: number }[]
+  shares: { id: string, skills: ActiveSkill }[]
 }
 
-export const getStaticProps = async (ctx: GetStaticPropsContext) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  }
+}
+
+export const getStaticProps: GetStaticProps<Props> = async ctx => {
   const skillName = ctx.params?.skill as string
   const skills = await getSkills()
 
@@ -34,12 +50,24 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
     .filter(v => v.skills[skillName] != null)
     .map(v => ({ name: v.name, point: v.skills[skillName] }))
 
+
+  const collection = await firestore.collection('shares')
+    .where('skillList', 'array-contains', skillName)
+    .orderBy('createdAt', 'desc')
+    .limit(10)
+    .get()
+
+  const shares: { id: string, skills: ActiveSkill }[] = []
+  collection.forEach(doc => {
+    shares.push({ id: doc.id, skills: doc.data().skills })
+  })
+
   return {
-    props: { skill, armors, decos },
+    props: { skill, armors, decos, shares },
   }
 }
 
-export default function SkillDetailPage({ skill, armors, decos }: Props) {
+export default function SkillDetailPage({ skill, armors, decos, shares }: Props) {
   return (
     <Container maxWidth="md">
       <Head>
@@ -158,6 +186,10 @@ export default function SkillDetailPage({ skill, armors, decos }: Props) {
             </TableBody>
           </Table>
         </TableContainer>
+        <Typography variant="h5" component="h2" gutterBottom>
+          {'このスキルを使用した装備'}
+        </Typography>
+        <ShareList shares={shares} />
       </Box>
     </Container>
   )
