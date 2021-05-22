@@ -5,6 +5,16 @@ import * as React from 'react'
 import theme from '../theme'
 import { cache } from './_app'
 
+const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
+
+const googleAnalyticsScript = `
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+
+gtag('config', ${JSON.stringify(googleAnalyticsId)});
+`
+
 const { extractCritical } = createEmotionServer(cache)
 
 export default class MyDocument extends Document {
@@ -41,6 +51,12 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
+          {googleAnalyticsId && (
+            <>
+              <script async src={`https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsId}`}></script>
+              <script dangerouslySetInnerHTML={{ __html: googleAnalyticsScript }}></script>
+            </>
+          )}
           <link rel="icon" href="/images/icon.png" />
           <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png" />
         </Head>
