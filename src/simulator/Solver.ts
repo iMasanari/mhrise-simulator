@@ -20,12 +20,10 @@ const Y_DEF_CUSTOM = 'Y_DEF_CUSTOM'
 const Y_SLOT_1_OVER = 'Y_SLOT_1_OVER'
 const Y_SLOT_2_OVER = 'Y_SLOT_2_OVER'
 const Y_SLOT_3_OVER = 'Y_SLOT_3_OVER'
-const Y_SLOT_4_OVER = 'Y_SLOT_4_OVER'
 
 // const Z_SLOT_1 = Y_SLOT_1_OVER
 const Z_SLOT_2 = 'Z_SLOT_2'
 const Z_SLOT_3 = 'Z_SLOT_3'
-const Z_SLOT_4 = 'Z_SLOT_4'
 
 const DECO_PREFIX = 'X/deco/'
 
@@ -88,7 +86,6 @@ export default class Simulator {
     Y_SLOT_1_OVER,
     Y_SLOT_2_OVER,
     Y_SLOT_3_OVER,
-    Y_SLOT_4_OVER,
   ])
 
   binaries = [
@@ -106,11 +103,9 @@ export default class Simulator {
     Y_SLOT_1_OVER,
     Y_SLOT_2_OVER,
     Y_SLOT_3_OVER,
-    Y_SLOT_4_OVER,
 
     Z_SLOT_2,
     Z_SLOT_3,
-    Z_SLOT_4,
   ]
 
   private skillKeys: string[]
@@ -133,7 +128,6 @@ export default class Simulator {
     this.slots.add(Y_SLOT_1_OVER, weaponSlotName, weaponSlot.filter(v => v >= 1).length)
     this.slots.add(Y_SLOT_2_OVER, weaponSlotName, weaponSlot.filter(v => v >= 2).length)
     this.slots.add(Y_SLOT_3_OVER, weaponSlotName, weaponSlot.filter(v => v >= 3).length)
-    this.slots.add(Y_SLOT_4_OVER, weaponSlotName, weaponSlot.filter(v => v >= 4).length)
   }
 
   addEquip(type: EquipsType, equip: Armor) {
@@ -150,7 +144,6 @@ export default class Simulator {
     this.slots.add(Y_SLOT_1_OVER, name, equip.slots.filter(v => v >= 1).length)
     this.slots.add(Y_SLOT_2_OVER, name, equip.slots.filter(v => v >= 2).length)
     this.slots.add(Y_SLOT_3_OVER, name, equip.slots.filter(v => v >= 3).length)
-    this.slots.add(Y_SLOT_4_OVER, name, equip.slots.filter(v => v >= 4).length)
 
     for (const skillKey of this.skillKeys) {
       const value = equip.skills[skillKey] || 0
@@ -170,7 +163,6 @@ export default class Simulator {
     this.slots.add(Y_SLOT_1_OVER, name, charm.slots.filter(v => v >= 1).length)
     this.slots.add(Y_SLOT_2_OVER, name, charm.slots.filter(v => v >= 2).length)
     this.slots.add(Y_SLOT_3_OVER, name, charm.slots.filter(v => v >= 3).length)
-    this.slots.add(Y_SLOT_4_OVER, name, charm.slots.filter(v => v >= 4).length)
 
     for (const skillKey of this.skillKeys) {
       const value = charm.skills[skillKey] || 0
@@ -187,7 +179,6 @@ export default class Simulator {
     this.slots.add(Y_SLOT_1_OVER, name, deco.size >= 1 ? -1 : 0)
     this.slots.add(Y_SLOT_2_OVER, name, deco.size >= 2 ? -1 : 0)
     this.slots.add(Y_SLOT_3_OVER, name, deco.size >= 3 ? -1 : 0)
-    this.slots.add(Y_SLOT_4_OVER, name, deco.size >= 4 ? -1 : 0)
 
     for (const skillKey of this.skillKeys) {
       const value = deco.skills[skillKey] || 0
@@ -211,6 +202,8 @@ export default class Simulator {
         ...this.objectiveSkill ? [{ name: this.objectiveSkill, coef: 100_000 }] : [],
         { name: Y_DEF_CUSTOM, coef: 100 },
         { name: Y_SLOT_1_OVER, coef: 1 },
+        { name: Y_SLOT_2_OVER, coef: 1 },
+        { name: Y_SLOT_3_OVER, coef: 1 },
       ],
     }
 
