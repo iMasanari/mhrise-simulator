@@ -53,7 +53,7 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   }
 }
 
-export default function Shares({ equip, ogImage }: Props) {
+export default function Shares({ equip }: Props) {
   const skillParam = Object.entries(equip.skills).map(([k, v]) => `${k}Lv${v}`).join(',')
   const slotsParam = equip.weaponSlot.join(',')
 
@@ -64,8 +64,8 @@ export default function Shares({ equip, ogImage }: Props) {
       <MetaData
         title="装備共有 | MHRise スキルシミュ"
         description="MHRise スキルシミュで検索・共有された装備です。"
-        image={ogImage}
-        twitterCard="summary_large_image"
+      // image={ogImage}
+      // twitterCard="summary_large_image"
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
