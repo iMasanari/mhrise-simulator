@@ -25,7 +25,7 @@ export default function ResultEquip({ equip, size }: Props) {
   const decos = [...new Set(equip.decos.map(v => v.name))]
 
   const charmName = equip.charm
-    ? Object.entries(equip.charm.skills).map(([name, point]) => `${name}Lv${point}`).join(' ')
+    ? Object.entries(equip.charm.skills).map(([name, point]) => <div key={name}>{`${name} Lv${point}`}</div>)
     : null
 
   return (
