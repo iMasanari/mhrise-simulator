@@ -4,6 +4,7 @@ import Head from 'next/head'
 import React from 'react'
 import skills from '../../generated/skills.json'
 import { firestore } from '../api/firebase'
+import MetaData from '../components/templates/MetaData'
 import Simulator from '../components/templates/Simulator'
 import { ActiveSkill, SkillSystem } from '../domain/skill'
 
@@ -31,9 +32,10 @@ export default function TopPage({ shares }: Props) {
   }))
   return (
     <Container maxWidth="md">
-      <Head>
-        <title>MHRise スキルシミュ</title>
-      </Head>
+      <MetaData
+        title="MHRise スキルシミュ"
+        description="「モンスターハンター Rise」のスキルシミュレーターです。発動したいスキルが発動する防具や装飾品の組み合わせを検索します。"
+      />
       <Simulator skills={skillList} shares={shares} />
     </Container>
   )

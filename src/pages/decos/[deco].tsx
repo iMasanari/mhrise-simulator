@@ -1,12 +1,12 @@
-import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow } from '@material-ui/core'
+import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
-import Head from 'next/head'
 import * as React from 'react'
 import { getDecos } from '../../api/decos'
 import Link from '../../components/atoms/Link'
+import MetaData from '../../components/templates/MetaData'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -35,9 +35,10 @@ export const getStaticProps = async (ctx: GetStaticPropsContext) => {
 export default function SkillDetailPage({ deco }: Props) {
   return (
     <Container maxWidth="md">
-      <Head>
-        <title>{deco.name} | MHRise スキルシミュ</title>
-      </Head>
+      <MetaData
+        title={`${deco.name} | MHRise スキルシミュ`}
+        description={`装飾品「${deco.name}」の詳細です。`}
+      />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
         <Link color="inherit" href="/decos">装飾品一覧</Link>

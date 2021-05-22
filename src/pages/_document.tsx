@@ -41,6 +41,8 @@ export default class MyDocument extends Document {
         <Head>
           {/* PWA primary color */}
           <meta name="theme-color" content={theme.palette.primary.main} />
+          <link rel="icon" href="/images/icon.png" />
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/icon.png" />
         </Head>
         <body>
           <Main />

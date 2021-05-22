@@ -2,8 +2,7 @@ import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableH
 import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import { GetStaticPaths, GetStaticProps, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
-import Head from 'next/head'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import * as React from 'react'
 import { getDecos } from '../../../scripts/converter/deco'
 import { findArmor } from '../../api/armors'
@@ -11,6 +10,7 @@ import { firestore } from '../../api/firebase'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
 import ShareList from '../../components/molecules/ShareList'
+import MetaData from '../../components/templates/MetaData'
 import { ActiveSkill } from '../../domain/skill'
 
 type Armor = { name: string, point: number } | null
@@ -70,9 +70,10 @@ export const getStaticProps: GetStaticProps<Props> = async ctx => {
 export default function SkillDetailPage({ skill, armors, decos, shares }: Props) {
   return (
     <Container maxWidth="md">
-      <Head>
-        <title>{skill.name} | MHRise スキルシミュ</title>
-      </Head>
+      <MetaData
+        title={`${skill.name} | MHRise スキルシミュ`}
+        description={`スキル「${skill.name}」の詳細及び、そのスキルを使用した装備を紹介します。`}
+      />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
         <Link color="inherit" href="/skills">スキル一覧</Link>

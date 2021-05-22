@@ -3,12 +3,12 @@ import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import Head from 'next/head'
 import React from 'react'
 import { getSeries } from '../../api/armors'
 import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
 import ShareList from '../../components/molecules/ShareList'
+import MetaData from '../../components/templates/MetaData'
 import { Armor } from '../../domain/equips'
 import { ActiveSkill } from '../../domain/skill'
 
@@ -65,9 +65,10 @@ export default function SkillDetailPage({ armor, shares }: Props) {
 
   return (
     <Container maxWidth="md">
-      <Head>
-        <title>{armor.name} | MHRise スキルシミュ</title>
-      </Head>
+      <MetaData
+        title={`${armor.name} | MHRise スキルシミュ`}
+        description={`防具「${armor.name}」の詳細及び、その防具を使用した装備を紹介します。`}
+      />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
         <Link color="inherit" href="/armors">防具一覧</Link>

@@ -3,11 +3,11 @@ import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { InferGetStaticPropsType } from 'next'
-import Head from 'next/head'
 import React from 'react'
 import { getDecos } from '../../api/decos'
 import Link from '../../components/atoms/Link'
 import DevelopWarning from '../../components/molecules/DevelopWarning'
+import MetaData from '../../components/templates/MetaData'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -28,9 +28,10 @@ export const getStaticProps = async () => {
 export default function SkillsPage({ decos }: Props) {
   return (
     <Container maxWidth="md">
-      <Head>
-        <title>装飾品一覧 | MHRise スキルシミュ</title>
-      </Head>
+      <MetaData
+        title="装飾品一覧 | MHRise スキルシミュ"
+        description="MHRise スキルシミュで使用している装飾品の一覧です。"
+      />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
         <Typography color="textPrimary">装飾品一覧</Typography>

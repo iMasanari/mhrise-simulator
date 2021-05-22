@@ -37,7 +37,7 @@ export default function MyApp(props: AppProps) {
             <ThemeProvider theme={theme}>
               <CssBaseline />
               <Global styles={globalStyle} />
-              <Header title="MHRise シミュ" />
+              <Header title="MHRise スキルシミュ" />
               <Component {...pageProps} />
             </ThemeProvider>
           </CacheProvider>

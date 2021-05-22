@@ -3,12 +3,12 @@ import Box from '@material-ui/core/Box'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { InferGetStaticPropsType } from 'next'
-import Head from 'next/head'
 import * as React from 'react'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
 import DevelopWarning from '../../components/molecules/DevelopWarning'
 import SkillLevel from '../../components/molecules/SkillLevel'
+import MetaData from '../../components/templates/MetaData'
 
 type Props = InferGetStaticPropsType<typeof getStaticProps>
 
@@ -35,9 +35,10 @@ export const getStaticProps = async () => {
 export default function SkillsPage({ categorySkills }: Props) {
   return (
     <Container maxWidth="md">
-      <Head>
-        <title>スキル一覧 | MHRise スキルシミュ</title>
-      </Head>
+      <MetaData
+        title="スキル一覧 | MHRise スキルシミュ"
+        description="MHRise スキルシミュで使用しているスキルの一覧です。"
+      />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
         <Typography color="textPrimary">スキル一覧</Typography>
