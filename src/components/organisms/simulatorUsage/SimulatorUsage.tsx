@@ -46,6 +46,18 @@ export default function SimulatorUsage({ shares }: Props) {
         </Typography>
         <ShareList shares={shares} />
       </Box>
+      <Box component="section" sx={{ mb: 4 }}>
+        <Typography variant="h5" component="h2" gutterBottom>
+          {'開発'}
+        </Typography>
+        <Typography gutterBottom>
+          {'コードは GPLv3 ライセンスの元、Github にて公開しています。 '}
+          {'イシューやプルリクをお待ちしています。'}
+        </Typography>
+        <a href="https://github.com/iMasanari/mhrise-simulator" target="_blank" rel="noopener">
+          <img src="https://gh-card.dev/repos/iMasanari/mhrise-simulator.svg" width={442} height={108} />
+        </a>
+      </Box>
     </Box>
   )
 }
