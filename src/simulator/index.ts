@@ -77,6 +77,14 @@ const createCharmGroup = (skillKeys: string[], charms: Charm[]) => {
   }
 }
 
+const withSkills = (equip: Equip) => {
+  const skills = [equip.head!, equip.body!, equip.arm!, equip.wst!, equip.leg!, ...(equip.charm ? [equip.charm] : []), ...equip.decos].reduce((s, v) => (
+    Object.fromEntries([...Object.keys(s), ...Object.keys(v.skills)].map(key => [key, (s[key] || 0) + (v.skills[key] || 0)]))
+  ), {} as ActiveSkill)
+
+  return { ...equip, skills }
+}
+
 export default class Simulator {
   private pw: PromiseWorker
   private condition: SimulatorCondition
@@ -128,7 +136,7 @@ export default class Simulator {
     if (this.next.length) {
       await new Promise(requestAnimationFrame)
 
-      return this.next.pop()!
+      return withSkills(this.next.pop()!)
     }
 
     const result = await this.pw.postMessage<Result | null, SimulatorCondition>(this.condition)
@@ -138,7 +146,7 @@ export default class Simulator {
         this.next = this.stock
         this.stock = []
 
-        return this.next.pop()!
+        return withSkills(this.next.pop()!)
       }
 
       return null
@@ -185,11 +193,6 @@ export default class Simulator {
 
     const equip = this.next.pop()!
 
-    // 発動スキルの計算
-    const skills = [equip.head!, equip.body!, equip.arm!, equip.wst!, equip.leg!, ...(equip.charm ? [equip.charm] : []), ...equip.decos].reduce((s, v) => (
-      Object.fromEntries([...Object.keys(s), ...Object.keys(v.skills)].map(key => [key, (s[key] || 0) + (v.skills[key] || 0)]))
-    ), {} as ActiveSkill)
-
-    return { ...equip, skills }
+    return withSkills(this.next.pop()!)
   }
 }
