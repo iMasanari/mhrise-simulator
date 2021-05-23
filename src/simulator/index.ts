@@ -164,11 +164,8 @@ export default class Simulator {
               const equip = [head, body, arm, wst, leg]
               const def = equip.reduce((sum, v) => sum + v.defs[1], 0)
 
-              const skills = [...equip, ...(charm ? [charm] : []), ...decos].reduce((skills, v) => (
-                Object.fromEntries([...Object.keys(skills), ...Object.keys(v.skills)].map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
-              ), {} as ActiveSkill)
-
-              list.push({ def, weaponSlot: result.weaponSlot, head, body, arm, wst, leg, charm, decos, skills })
+              // 発動スキルは一旦ダミーをセット
+              list.push({ def, weaponSlot: result.weaponSlot, head, body, arm, wst, leg, charm, decos, skills: {} })
             }
           }
         }
@@ -186,6 +183,13 @@ export default class Simulator {
     this.next = tmp.filter(v => v.def >= def)
     this.stock = tmp.filter(v => v.def < def)
 
-    return this.next.pop()!
+    const equip = this.next.pop()!
+
+    // 発動スキルの計算
+    const skills = [equip.head!, equip.body!, equip.arm!, equip.wst!, equip.leg!, ...(equip.charm ? [equip.charm] : []), ...equip.decos].reduce((s, v) => (
+      Object.fromEntries([...Object.keys(s), ...Object.keys(v.skills)].map(key => [key, (s[key] || 0) + (v.skills[key] || 0)]))
+    ), {} as ActiveSkill)
+
+    return { ...equip, skills }
   }
 }
