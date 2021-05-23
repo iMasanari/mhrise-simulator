@@ -32,6 +32,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const result = await firestore.collection('shares').add({
     ...req.body,
+    charm: data.charm || { skills: {}, slots: [] },
     skills,
     skillList,
     createdAt: FieldValue.serverTimestamp(),

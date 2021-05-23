@@ -1,4 +1,5 @@
 import { Box, Typography } from '@material-ui/core'
+import { css } from '@material-ui/styled-engine'
 import React from 'react'
 import { ActiveSkill } from '../../../domain/skill'
 import ShareList from '../../molecules/ShareList'
@@ -6,6 +7,10 @@ import ShareList from '../../molecules/ShareList'
 interface Props {
   shares: { id: string, skills: ActiveSkill }[]
 }
+
+const imgStyle = css`
+  max-width: 100%;
+`
 
 export default function SimulatorUsage({ shares }: Props) {
   return (
@@ -55,7 +60,7 @@ export default function SimulatorUsage({ shares }: Props) {
           {'イシューやプルリクをお待ちしています。'}
         </Typography>
         <a href="https://github.com/iMasanari/mhrise-simulator" target="_blank" rel="noopener">
-          <img src="https://gh-card.dev/repos/iMasanari/mhrise-simulator.svg" width={442} height={108} />
+          <img css={imgStyle} src="https://gh-card.dev/repos/iMasanari/mhrise-simulator.svg" width={442} height={108} />
         </a>
       </Box>
     </Box>

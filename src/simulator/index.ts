@@ -77,7 +77,11 @@ const createCharmGroup = (skillKeys: string[], charms: Charm[]) => {
   }
 }
 
-const withSkills = (equip: Equip) => {
+const withSkills = (equip: Equip | undefined) => {
+  if (!equip) {
+    return null
+  }
+
   const skills = [equip.head!, equip.body!, equip.arm!, equip.wst!, equip.leg!, ...(equip.charm ? [equip.charm] : []), ...equip.decos].reduce((s, v) => (
     Object.fromEntries([...Object.keys(s), ...Object.keys(v.skills)].map(key => [key, (s[key] || 0) + (v.skills[key] || 0)]))
   ), {} as ActiveSkill)
@@ -136,7 +140,7 @@ export default class Simulator {
     if (this.next.length) {
       await new Promise(requestAnimationFrame)
 
-      return withSkills(this.next.pop()!)
+      return withSkills(this.next.pop())
     }
 
     const result = await this.pw.postMessage<Result | null, SimulatorCondition>(this.condition)
@@ -146,7 +150,7 @@ export default class Simulator {
         this.next = this.stock
         this.stock = []
 
-        return withSkills(this.next.pop()!)
+        return withSkills(this.next.pop())
       }
 
       return null
@@ -191,8 +195,6 @@ export default class Simulator {
     this.next = tmp.filter(v => v.def >= def)
     this.stock = tmp.filter(v => v.def < def)
 
-    const equip = this.next.pop()!
-
-    return withSkills(this.next.pop()!)
+    return withSkills(this.next.pop())
   }
 }
