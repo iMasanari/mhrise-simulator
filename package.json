@@ -11,7 +11,7 @@
     "generate": "ts-node -P tsconfig.ts-node.json scripts/generate.ts"
   },
   "author": "iMasanari",
-  "license": "MIT",
+  "license": "GPLv3",
   "dependencies": {
     "@emotion/cache": "^11.1.3",
     "@emotion/react": "^11.1.5",
