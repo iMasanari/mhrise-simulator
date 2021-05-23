@@ -54,18 +54,33 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
 }
 
 export default function Shares({ equip }: Props) {
-  const skillParam = Object.entries(equip.skills).map(([k, v]) => `${k}Lv${v}`).join(',')
+  const skillParam = Object.entries(equip.skills).map(([k, v]) => `${k}Lv${v}`).sort().join(',')
   const slotsParam = equip.weaponSlot.join(',')
 
   const simulatorUrl = `/?skills=${skillParam}&weaponSlots=${slotsParam}`
+
+  const params = {
+    weaponSlot: equip.weaponSlot,
+    head: equip.head!.name,
+    body: equip.body!.name,
+    arm: equip.arm!.name,
+    wst: equip.wst!.name,
+    leg: equip.leg!.name,
+    charmSkills: Object.entries(equip.charm?.skills || {}).map(([k, v]) => `${k}Lv${v}`).join(','),
+    charmSlots: equip.charm?.slots.join(',') || '',
+    decos: equip.decos.map(v => v.name).join(','),
+    skills: skillParam,
+  }
+
+  const ogImageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/og-images?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`
 
   return (
     <Container maxWidth="md">
       <MetaData
         title="装備共有 | MHRise スキルシミュ"
         description="MHRise スキルシミュで検索・共有された装備です。"
-      // image={ogImage}
-      // twitterCard="summary_large_image"
+        image={ogImageUrl}
+        twitterCard="summary_large_image"
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
         <Link color="inherit" href="/">Top</Link>
