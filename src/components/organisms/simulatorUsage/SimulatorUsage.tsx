@@ -1,5 +1,5 @@
+import { css } from '@emotion/react'
 import { Box, Typography } from '@material-ui/core'
-import { css } from '@material-ui/styled-engine'
 import React from 'react'
 import { ActiveSkill } from '../../../domain/skill'
 import ShareList from '../../molecules/ShareList'
