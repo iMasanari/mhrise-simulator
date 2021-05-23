@@ -1,7 +1,7 @@
-import { Alert, AlertTitle, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, Snackbar, TextField, Typography } from '@material-ui/core'
-import { ContentCopy } from '@material-ui/icons'
-import { Link as LinkIcon } from '@material-ui/icons'
+import { Alert, AlertTitle, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, Snackbar, TextField, Typography } from '@material-ui/core'
+import { ContentCopy, Link as LinkIcon, Twitter } from '@material-ui/icons'
 import React, { useEffect, useRef, useState } from 'react'
+import twitter from 'twitter-text'
 import { Charm, Equip } from '../../../domain/equips'
 
 const useStyles = makeStyles(() => ({
@@ -14,6 +14,22 @@ interface Props {
   open: boolean
   onClose: (charm?: Charm) => void
   equip: Equip
+}
+
+const getValidTweetLink = (text: string, url: string) => {
+  const encodedUrl = encodeURI(url)
+  let body = text.slice(0, 280)
+
+  while (true) {
+    const tweet = `${body === text ? body : body + '…'}\n#モンハンライズ #Riseシミュ`
+    const res = twitter.parseTweet(`${tweet} ${encodedUrl}`)
+
+    if (res.valid || !body) {
+      return `http://twitter.com/share?url=${encodedUrl}&text=${encodeURIComponent(tweet)}`
+    }
+
+    body = body.slice(0, -1)
+  }
 }
 
 export default function ShareDialog({ open, onClose, equip }: Props) {
@@ -76,6 +92,12 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
     inputRef.current?.select()
   }
 
+  const tweetLink = () => {
+    const text = Object.entries(equip.skills).map(([key, value]) => `${key}Lv${value}`).join(' ')
+
+    window.open(getValidTweetLink(text, `${location.origin}/shares/${shareId}`))
+  }
+
   return (
     <Dialog open={open} onClose={() => onClose()} classes={{ scrollPaper: classes.paper }} fullWidth>
       <DialogTitle>結果の共有(β)</DialogTitle>
@@ -90,6 +112,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
             onClick={clickUrl}
             size="small"
             fullWidth
+            sx={{ my: 2 }}
             inputProps={{ readOnly: true }}
             InputProps={{
               endAdornment: (
@@ -112,6 +135,13 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
         <Typography gutterBottom variant="body2">
           {'※開発等の理由により、生成したリンクを無効化する可能性があります'}
         </Typography>
+        {shareId && (
+          <Box sx={{ textAlign: 'center' }}>
+            <Button startIcon={<Twitter />} variant="outlined" size="large" sx={{ mt: 1 }} onClick={tweetLink}            >
+              {'ツイートする'}
+            </Button>
+          </Box>
+        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose()}>
@@ -139,6 +169,6 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
           {'時間をおいて、再度実行してください。'}
         </Alert>
       </Snackbar>
-    </Dialog>
+    </Dialog >
   )
 }
