@@ -1,13 +1,14 @@
 // @ts-expect-error
-import glpk from 'glpk.js'
-import { GLP_LO, GLP_MAX, GLP_UP, GLP_NOFEAS } from '../constants/glpk'
+import solver from 'javascript-lp-solver'
 import { Armor, Charm, Deco, Slots } from '../domain/equips'
 import { Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
-import Subject from './Subject'
 
 export type EquipsType = 'head' | 'body' | 'arm' | 'wst' | 'leg' | 'charm'
 
+const Y_OBJECTIVE = 'Y_OBJECTIVE'
+
+const Y_WEAPON_COUNT = 'Y_WEAPON_COUNT'
 const Y_HEAD_COUNT = 'Y_HEAD_COUNT'
 const Y_BODY_COUNT = 'Y_BODY_COUNT'
 const Y_ARM_COUNT = 'Y_ARM_COUNT'
@@ -15,15 +16,9 @@ const Y_WST_COUNT = 'Y_WST_COUNT'
 const Y_LEG_COUNT = 'Y_LEG_COUNT'
 const Y_CHARM_COUNT = 'Y_CHARM_COUNT'
 
-const Y_DEF_CUSTOM = 'Y_DEF_CUSTOM'
-
 const Y_SLOT_1_OVER = 'Y_SLOT_1_OVER'
 const Y_SLOT_2_OVER = 'Y_SLOT_2_OVER'
 const Y_SLOT_3_OVER = 'Y_SLOT_3_OVER'
-
-// const Z_SLOT_1 = Y_SLOT_1_OVER
-const Z_SLOT_2 = 'Z_SLOT_2'
-const Z_SLOT_3 = 'Z_SLOT_3'
 
 const DECO_PREFIX = 'X/deco/'
 
@@ -36,28 +31,7 @@ const typeRecord = {
   charm: Y_CHARM_COUNT,
 } as const
 
-const createSubject = (data: Record<string, number>, type: number) =>
-  Object.entries(data).map(([name, value]) => ({
-    name,
-    vars: [{ name, coef: 1 }],
-    bnds: { type, ub: value, lb: value },
-  }))
-
-const createIgnoreSubject = (results: Result[]) =>
-  results.map(result => {
-    const equips = (['head', 'body', 'arm', 'wst', 'leg'] as const)
-      .map(type => result[type] ? `X/${type}/${result[type]}` : null)
-      .filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
-
-    return {
-      name: equips.join('-'),
-      vars: equips.map(name => ({ name, coef: 1 })),
-      bnds: { type: GLP_UP, ub: equips.length - 1, lb: equips.length - 1 },
-    }
-  })
-
-
-const findEquip = (type: EquipsType, list: [string, number][]) => {
+const findEquip = (type: EquipsType, list: [string, unknown][]) => {
   const prefix = `X/${type}/`
   const key = list.find(([v]) => v.startsWith(prefix))
 
@@ -71,168 +45,180 @@ const findDecoList = (list: [string, number][]) => {
 }
 
 export default class Simulator {
-  private equipLimits = new Subject([
-    Y_HEAD_COUNT,
-    Y_BODY_COUNT,
-    Y_ARM_COUNT,
-    Y_WST_COUNT,
-    Y_LEG_COUNT,
-    Y_CHARM_COUNT,
-  ])
+  private constraints: Record<string, { max?: number, min?: number }> = {
+    // 装備数
+    [Y_WEAPON_COUNT]: { max: 1 },
+    [Y_HEAD_COUNT]: { max: 1 },
+    [Y_BODY_COUNT]: { max: 1 },
+    [Y_ARM_COUNT]: { max: 1 },
+    [Y_WST_COUNT]: { max: 1 },
+    [Y_LEG_COUNT]: { max: 1 },
+    [Y_CHARM_COUNT]: { max: 1 },
+    // スロット
+    [Y_SLOT_1_OVER]: { min: 0 },
+    [Y_SLOT_2_OVER]: { min: 0 },
+    [Y_SLOT_3_OVER]: { min: 0 },
+  }
 
-  private defs = new Subject([Y_DEF_CUSTOM])
+  private ints: Record<string, number> = {
+    [Y_OBJECTIVE]: 1,
+    [Y_WEAPON_COUNT]: 1,
+    [Y_HEAD_COUNT]: 1,
+    [Y_BODY_COUNT]: 1,
+    [Y_ARM_COUNT]: 1,
+    [Y_WST_COUNT]: 1,
+    [Y_LEG_COUNT]: 1,
+    [Y_CHARM_COUNT]: 1,
+    [Y_SLOT_1_OVER]: 1,
+    [Y_SLOT_2_OVER]: 1,
+    [Y_SLOT_3_OVER]: 1,
+  }
 
-  private slots = new Subject([
-    Y_SLOT_1_OVER,
-    Y_SLOT_2_OVER,
-    Y_SLOT_3_OVER,
-  ])
-
-  binaries = [
-    Y_HEAD_COUNT,
-    Y_BODY_COUNT,
-    Y_ARM_COUNT,
-    Y_WST_COUNT,
-    Y_LEG_COUNT,
-    Y_CHARM_COUNT,
-  ]
-
-  generals = [
-    Y_DEF_CUSTOM,
-
-    Y_SLOT_1_OVER,
-    Y_SLOT_2_OVER,
-    Y_SLOT_3_OVER,
-
-    Z_SLOT_2,
-    Z_SLOT_3,
-  ]
+  private variables: Record<string, Record<string, number>> = {
+  }
 
   private skillKeys: string[]
-  private skills: Subject<string>
-  private prevs: Result[] = []
-  private objectiveSkill: string | undefined
 
-  constructor(private skillCondition: ActiveSkill, private weaponSlot: Slots) {
-    const skillKeys = Object.keys(skillCondition)
+  constructor(skillCondition: ActiveSkill, private objectiveSkill: string | undefined) {
+    this.skillKeys = Object.keys(skillCondition)
 
-    this.skillKeys = skillKeys
-    this.skills = new Subject(skillKeys)
-    this.generals.push(...skillKeys)
+    for (const [skill, point] of Object.entries(skillCondition)) {
+      this.ints[skill] = 1
+      this.constraints[skill] = { min: point }
+    }
+  }
 
-    const weaponSlotName = 'X/WeaponSlot'
+  setWeaponSlots(slots: Slots) {
+    const key = 'X/WeaponSlot'
 
     // 個数制限
-    this.binaries.push(weaponSlotName)
+    this.ints[key] = 1
+    this.constraints[key] = { max: 1 }
 
-    this.slots.add(Y_SLOT_1_OVER, weaponSlotName, weaponSlot.filter(v => v >= 1).length)
-    this.slots.add(Y_SLOT_2_OVER, weaponSlotName, weaponSlot.filter(v => v >= 2).length)
-    this.slots.add(Y_SLOT_3_OVER, weaponSlotName, weaponSlot.filter(v => v >= 3).length)
+    this.variables[key] = {
+      [Y_WEAPON_COUNT]: 1,
+      [Y_SLOT_1_OVER]: slots.filter(v => v >= 1).length,
+      [Y_SLOT_2_OVER]: slots.filter(v => v >= 2).length,
+      [Y_SLOT_3_OVER]: slots.filter(v => v >= 3).length,
+    }
   }
 
   addEquip(type: EquipsType, equip: Armor) {
-    const name = `X/${type}/${equip.name}`
+    const key = `X/${type}/${equip.name}`
 
     // 個数制限
-    this.binaries.push(name)
+    this.ints[key] = 1
+    this.constraints[key] = { max: 1 }
 
-    this.equipLimits.add(typeRecord[type], name, 1)
+    const def = equip.defs[1] || 0
+    const slot1Over = equip.slots.filter(v => v >= 1).length
+    const slot2Over = equip.slots.filter(v => v >= 2).length
+    const slot3Over = equip.slots.filter(v => v >= 3).length
 
-    // TODO: 強化前防御力・属性耐性
-    this.defs.add(Y_DEF_CUSTOM, name, equip.defs[1] || 0)
+    const target = this.objectiveSkill
+      ? (equip.skills[this.objectiveSkill] || 0) * 1000 + def
+      : def * 100 + slot1Over + slot2Over + slot3Over
 
-    this.slots.add(Y_SLOT_1_OVER, name, equip.slots.filter(v => v >= 1).length)
-    this.slots.add(Y_SLOT_2_OVER, name, equip.slots.filter(v => v >= 2).length)
-    this.slots.add(Y_SLOT_3_OVER, name, equip.slots.filter(v => v >= 3).length)
-
-    for (const skillKey of this.skillKeys) {
-      const value = equip.skills[skillKey] || 0
-      this.skills.add(skillKey, name, value)
+    this.variables[key] = {
+      [Y_OBJECTIVE]: target,
+      [typeRecord[type]]: 1,
+      // スロット
+      [Y_SLOT_1_OVER]: slot1Over,
+      [Y_SLOT_2_OVER]: slot2Over,
+      [Y_SLOT_3_OVER]: slot3Over,
+      // スキル
+      ...Object.fromEntries(this.skillKeys.map(skill =>
+        [skill, equip.skills[skill] || 0]
+      )),
     }
   }
 
   addCharm(charm: Charm & { name: string }) {
-    const type = 'charm'
-    const name = `X/${type}/${charm.name}`
+    const key = `X/charm/${charm.name}`
 
     // 個数制限
-    this.binaries.push(name)
+    this.ints[key] = 1
+    this.constraints[key] = { max: 1 }
 
-    this.equipLimits.add(typeRecord[type], name, 1)
+    const slot1Over = charm.slots.filter(v => v >= 1).length
+    const slot2Over = charm.slots.filter(v => v >= 2).length
+    const slot3Over = charm.slots.filter(v => v >= 3).length
 
-    this.slots.add(Y_SLOT_1_OVER, name, charm.slots.filter(v => v >= 1).length)
-    this.slots.add(Y_SLOT_2_OVER, name, charm.slots.filter(v => v >= 2).length)
-    this.slots.add(Y_SLOT_3_OVER, name, charm.slots.filter(v => v >= 3).length)
+    const target = this.objectiveSkill
+      ? (charm.skills[this.objectiveSkill] || 0) * 1000
+      : slot1Over + slot2Over + slot3Over
 
-    for (const skillKey of this.skillKeys) {
-      const value = charm.skills[skillKey] || 0
-      this.skills.add(skillKey, name, value)
+    this.variables[key] = {
+      [Y_OBJECTIVE]: target,
+      [typeRecord.charm]: 1,
+      // スロット
+      [Y_SLOT_1_OVER]: slot1Over,
+      [Y_SLOT_2_OVER]: slot2Over,
+      [Y_SLOT_3_OVER]: slot3Over,
+      // スキル
+      ...Object.fromEntries(this.skillKeys.map(skill =>
+        [skill, charm.skills[skill] || 0]
+      )),
     }
   }
 
   addDeco(deco: Deco) {
-    const name = `${DECO_PREFIX}${deco.name}`
+    const key = `${DECO_PREFIX}${deco.name}`
 
-    // 個数制限 (整数)
-    this.generals.push(name)
+    // 個数制限
+    this.ints[key] = 1
 
-    this.slots.add(Y_SLOT_1_OVER, name, deco.size >= 1 ? -1 : 0)
-    this.slots.add(Y_SLOT_2_OVER, name, deco.size >= 2 ? -1 : 0)
-    this.slots.add(Y_SLOT_3_OVER, name, deco.size >= 3 ? -1 : 0)
+    const slot1Over = deco.size >= 1 ? -1 : 0
+    const slot2Over = deco.size >= 2 ? -1 : 0
+    const slot3Over = deco.size >= 3 ? -1 : 0
 
-    for (const skillKey of this.skillKeys) {
-      const value = deco.skills[skillKey] || 0
-      this.skills.add(skillKey, name, value)
+    const target = this.objectiveSkill
+      ? (deco.skills[this.objectiveSkill] || 0) * 1000
+      : slot1Over + slot2Over + slot3Over
+
+    this.variables[key] = {
+      [Y_OBJECTIVE]: target,
+      // スロット
+      [Y_SLOT_1_OVER]: slot1Over,
+      [Y_SLOT_2_OVER]: slot2Over,
+      [Y_SLOT_3_OVER]: slot3Over,
+      // スキル
+      ...Object.fromEntries(this.skillKeys.map(skill =>
+        [skill, deco.skills[skill] || 0]
+      )),
     }
-  }
-
-  sewObjectiveSkill(objectiveSkill: string | undefined) {
-    this.objectiveSkill = objectiveSkill
   }
 
   setPrevs(prevs: Result[]) {
-    this.prevs = prevs
-  }
+    for (const [index, equip] of prevs.entries()) {
+      const key = `Y_PREVS/${index}`
 
-  private getLp() {
-    const objective = {
-      name: Y_DEF_CUSTOM,
-      direction: GLP_MAX,
-      vars: [
-        ...this.objectiveSkill ? [{ name: this.objectiveSkill, coef: 100_000 }] : [],
-        { name: Y_DEF_CUSTOM, coef: 100 },
-        { name: Y_SLOT_1_OVER, coef: 1 },
-        { name: Y_SLOT_2_OVER, coef: 1 },
-        { name: Y_SLOT_3_OVER, coef: 1 },
-      ],
-    }
+      this.constraints[key] = {
+        max: [equip.head, equip.body, equip.arm, equip.wst, equip.leg].filter(Boolean).length - 1,
+      }
 
-    const subjectTo = [
-      ...this.equipLimits.toSubjectTo(),
-      ...this.defs.toSubjectTo(),
-      ...this.slots.toSubjectTo(),
-      ...this.skills.toSubjectTo(),
-      ...createSubject(this.skillCondition, GLP_LO),
-      ...createIgnoreSubject(this.prevs),
-    ]
-
-    return {
-      name: 'Lp',
-      objective,
-      subjectTo,
-      binaries: this.binaries,
-      generals: this.generals,
+      this.variables[`X/head/${equip.head}`][key] = 1
+      this.variables[`X/body/${equip.body}`][key] = 1
+      this.variables[`X/arm/${equip.arm}`][key] = 1
+      this.variables[`X/wst/${equip.wst}`][key] = 1
+      this.variables[`X/leg/${equip.leg}`][key] = 1
     }
   }
 
   solve(): Result | null {
-    const { result } = glpk.solve(this.getLp())
+    const result = solver.Solve({
+      optimize: Y_OBJECTIVE,
+      opType: 'max',
+      constraints: this.constraints,
+      variables: this.variables,
+      ints: this.ints,
+    })
 
-    if (result.status === GLP_NOFEAS) {
+    if (!result.feasible) {
       return null
     }
 
-    const entries = Object.entries<number>(result.vars).filter(([key]) => result.vars[key])
+    const entries = Object.entries<number>(result)
 
     const head = findEquip('head', entries)
     const body = findEquip('body', entries)
@@ -244,7 +230,6 @@ export default class Simulator {
     const deco = findDecoList(entries)
 
     return {
-      weaponSlot: this.weaponSlot,
       head,
       body,
       arm,

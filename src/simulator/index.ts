@@ -177,7 +177,7 @@ export default class Simulator {
               const def = equip.reduce((sum, v) => sum + v.defs[1], 0)
 
               // 発動スキルは一旦ダミーをセット
-              list.push({ def, weaponSlot: result.weaponSlot, head, body, arm, wst, leg, charm, decos, skills: {} })
+              list.push({ def, weaponSlot: this.condition.weaponSlot, head, body, arm, wst, leg, charm, decos, skills: {} })
             }
           }
         }

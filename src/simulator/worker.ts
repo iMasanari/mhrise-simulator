@@ -4,7 +4,9 @@ import Solver from './Solver'
 import { SimulatorCondition } from '.'
 
 registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
-  const solver = new Solver(condition.skills, condition.weaponSlot)
+  const solver = new Solver(condition.skills, condition.objectiveSkill)
+
+  solver.setWeaponSlots(condition.weaponSlot)
 
   for (const type of ['head', 'body', 'arm', 'wst', 'leg'] as const) {
     for (const equip of Object.values(condition[type])) {
@@ -20,7 +22,6 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
     solver.addDeco(equip)
   }
 
-  solver.sewObjectiveSkill(condition.objectiveSkill)
   solver.setPrevs(condition.prevs)
 
   return solver.solve()

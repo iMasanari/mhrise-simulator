@@ -23,7 +23,7 @@
     "chrome-aws-lambda": "7.0.0",
     "clsx": "^1.1.1",
     "firebase-admin": "^9.8.0",
-    "glpk.js": "^2.0.1",
+    "javascript-lp-solver": "^0.4.24",
     "next": "^10.2.0",
     "promise-worker": "^2.0.1",
     "puppeteer-core": "7.0.0",
