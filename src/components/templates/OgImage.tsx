@@ -1,119 +1,151 @@
 import { css, Global } from '@emotion/react'
-import { Box, Container, createMuiTheme, CssBaseline, Grid, Link, Paper, Table, TableBody, TableCell, TableContainer, TableRow, ThemeProvider, Typography } from '@material-ui/core'
 import React from 'react'
-import { Equip, Slots } from '../../domain/equips'
-import theme from '../../theme'
+import { Slots } from '../../domain/equips'
+import { ActiveSkill } from '../../domain/skill'
 
 interface Props {
-  equip: Equip
-  font: string
+  equip: {
+    weaponSlot: Slots
+    head: string
+    body: string
+    arm: string
+    wst: string
+    leg: string
+    charm: {
+      skills: ActiveSkill
+      slots: Slots
+    },
+    decos: string[]
+    skills: ActiveSkill
+  }
 }
 
 const globalStyle = css`
+@import url('https://fonts.googleapis.com/css?family=Noto+Sans+JP');
+
 html {
-  font-size: 30px;
+  font-size: 24px;
 }
 
 body {
+  font-family: 'Noto Sans JP', sans-serif;
   font-feature-settings: "palt";
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: normal;
+  text-align: center;
+}
+
+.titleLink {
+  color: #556cd6;
+  text-decoration: none;
+}
+
+.table-container {
+  border-radius: 4px;
+  border: 1px solid rgba(200, 200, 200, 1);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+th, td {
+  font-weight: 400;
+  border-bottom: 1px solid rgba(200, 200, 200, 1);
+  text-align: left;
+  padding: 16px;
+}
+
+.skillsHeader {
+  border-left: 1px solid rgba(200, 200, 200, 1);
+  text-align: center;
+}
+
+.skillsCell {
+  border-left: 1px solid rgba(200, 200, 200, 1);
+  vertical-align: top;
+}
+
+.skills {
+  column-count: 2;
 }
 `
-
-const ogTheme = createMuiTheme({
-  ...theme,
-  typography: {
-    fontFamily: '"Noto Sans JP", sans-serif',
-  },
-})
 
 const showSlots = (slots: Slots | undefined) =>
   slots?.map((s) => s ? `【${s}】` : null)
 
-export default function OgImage({ equip, font }: Props) {
+export default function OgImage({ equip }: Props) {
   const skills = Object.entries(equip.skills).sort(([, a], [, b]) => b - a)
 
-  const weapon = { slots: equip.weaponSlot }
-  const armors = [weapon, equip.head, equip.body, equip.arm, equip.wst, equip.leg, equip.charm]
-    .filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
-
-  const slots = armors.flatMap(armor => armor.slots.map(s => [armor, s] as const))
-    .sort(([, a], [, b]) => b - a)
-
   const charmName = equip.charm
-    ? Object.entries(equip.charm.skills).map(([name, point]) => <div key={name}>{`${name} Lv${point}`}</div>) : null
+    ? Object.entries(equip.charm.skills).map(([name, point]) => <div key={name}>{`${name} Lv${point}`}</div>)
+    : null
 
   return (
-    <ThemeProvider theme={ogTheme}>
-      <CssBaseline />
-      <Container>
-        <Typography variant="h5" component="h1" align="center" gutterBottom>
+    <html>
+      <body>
+        <h1 className="title">
           {'装備共有 '}
-          <Link>#Riseシミュ</Link>
-        </Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TableContainer component={Paper} variant="outlined">
-              <Table>
-                <TableBody>
-                  <TableRow>
-                    <TableCell component="th">武器</TableCell>
-                    <TableCell>スロット{equip.weaponSlot[0] ? showSlots(equip.weaponSlot) : 'なし'}</TableCell>
-                    <TableCell>{showSlots(equip.weaponSlot)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">頭装備</TableCell>
-                    <TableCell>{equip.head?.name}</TableCell>
-                    <TableCell>{showSlots(equip.head?.slots)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">胴装備</TableCell>
-                    <TableCell>{equip.body?.name}</TableCell>
-                    <TableCell>{showSlots(equip.body?.slots)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">腕装備</TableCell>
-                    <TableCell>{equip.arm?.name}</TableCell>
-                    <TableCell>{showSlots(equip.arm?.slots)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">腰装備</TableCell>
-                    <TableCell>{equip.wst?.name}</TableCell>
-                    <TableCell>{showSlots(equip.wst?.slots)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">足装備</TableCell>
-                    <TableCell>{equip.leg?.name}</TableCell>
-                    <TableCell>{showSlots(equip.leg?.slots)}</TableCell>
-                  </TableRow>
-                  <TableRow>
-                    <TableCell component="th">護石</TableCell>
-                    <TableCell>{charmName}</TableCell>
-                    <TableCell>{showSlots(equip.charm?.slots)}</TableCell>
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </TableContainer>
-          </Grid>
-          <Grid item xs={6}>
-            <Typography gutterBottom>発動スキル</Typography>
-            <Box sx={{ columnCount: 2 }}>
-              {skills.map(([skill, point]) =>
-                <div key={skill}>
-                  {`${skill} Lv${point}`}
-                </div>
-              )}
-            </Box>
-          </Grid>
-        </Grid>
-      </Container>
+          <a className="titleLink">#Riseシミュ</a>
+        </h1>
+        <div>
+          <div className="table-container">
+            <table>
+              <tbody>
+                <tr>
+                  <th>武器</th>
+                  <td>スロット{equip.weaponSlot[0] ? showSlots(equip.weaponSlot) : 'なし'}</td>
+                  <th className="skillsHeader">発動スキル</th>
+                </tr>
+                <tr>
+                  <th>頭装備</th>
+                  <td>{equip.head}</td>
+                  <td rowSpan={6} className="skillsCell">
+                    <div className="skills">
+                      {skills.map(([skill, point]) =>
+                        <div key={skill}>
+                          {`${skill} Lv${point}`}
+                        </div>
+                      )}
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>胴装備</th>
+                  <td>{equip.body}</td>
+                </tr>
+                <tr>
+                  <th>腕装備</th>
+                  <td>{equip.arm}</td>
+                </tr>
+                <tr>
+                  <th>腰装備</th>
+                  <td>{equip.wst}</td>
+                </tr>
+                <tr>
+                  <th>足装備</th>
+                  <td>{equip.leg}</td>
+                </tr>
+                <tr>
+                  <th>護石</th>
+                  <td>
+                    {charmName}
+                    {`スロット${showSlots(equip.charm?.slots)?.join('') || 'なし'}`}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </body>
       <Global styles={globalStyle} />
-      <Global styles={css`
-        @font-face {
-          font-family: 'Noto Sans JP';
-          font-weight: nomal;
-          src: url('data:font/ttf;charset=utf-8;base64,${font}') format('woff');
-        }`
-      } />
-    </ThemeProvider >
+    </html>
   )
 }
