@@ -18,6 +18,9 @@ yarn-error.log*
 /.next
 /out
 
+# firebase
+/*-debug.log
+
 # scripts
 /generated
 
