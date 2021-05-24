@@ -33,27 +33,27 @@ export default function SimulatorResultRow({ equip }: Props) {
         </TableCell>
         <TableCell align="center" sx={{ px: 0.5 }}>
           <Typography variant="body2" component="div" noWrap overflow="hidden" textOverflow="ellipsis" sx={{ minWidth: '6em' }}>
-            {equip.head?.series}
+            {equip.head?.series || '装備なし'}
           </Typography>
         </TableCell>
         <TableCell align="center" sx={{ px: 0.5 }}>
           <Typography variant="body2" component="div" noWrap overflow="hidden" textOverflow="ellipsis" sx={{ minWidth: '6em' }}>
-            {equip.body?.series}
+            {equip.body?.series || '装備なし'}
           </Typography>
         </TableCell>
         <TableCell align="center" sx={{ px: 0.5 }}>
           <Typography variant="body2" component="div" noWrap overflow="hidden" textOverflow="ellipsis" sx={{ minWidth: '6em' }}>
-            {equip.arm?.series}
+            {equip.arm?.series || '装備なし'}
           </Typography>
         </TableCell>
         <TableCell align="center" sx={{ px: 0.5 }}>
           <Typography variant="body2" component="div" noWrap overflow="hidden" textOverflow="ellipsis" sx={{ minWidth: '6em' }}>
-            {equip.wst?.series}
+            {equip.wst?.series || '装備なし'}
           </Typography>
         </TableCell>
         <TableCell align="center" sx={{ px: 0.5 }}>
           <Typography variant="body2" component="div" noWrap overflow="hidden" textOverflow="ellipsis" sx={{ minWidth: '6em' }}>
-            {equip.leg?.series}
+            {equip.leg?.series || '装備なし'}
           </Typography>
         </TableCell>
       </TableRow>

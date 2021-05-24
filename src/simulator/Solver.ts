@@ -3,6 +3,7 @@ import solver from 'javascript-lp-solver'
 import { Armor, Charm, Deco, Slots } from '../domain/equips'
 import { Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
+import { NO_ARMOR_COEFFICIENT } from './constants'
 
 export type EquipsType = 'head' | 'body' | 'arm' | 'wst' | 'leg' | 'charm'
 
@@ -117,7 +118,7 @@ export default class Simulator {
 
     const target = this.objectiveSkill
       ? (equip.skills[this.objectiveSkill] || 0) * 1000 + def
-      : def * 100 + slot1Over + slot2Over + slot3Over
+      : -1 * (NO_ARMOR_COEFFICIENT * 100) + def * 100 + slot1Over + slot2Over + slot3Over
 
     this.variables[key] = {
       [Y_OBJECTIVE]: target,
@@ -197,11 +198,11 @@ export default class Simulator {
         max: [equip.head, equip.body, equip.arm, equip.wst, equip.leg].filter(Boolean).length - 1,
       }
 
-      this.variables[`X/head/${equip.head}`][key] = 1
-      this.variables[`X/body/${equip.body}`][key] = 1
-      this.variables[`X/arm/${equip.arm}`][key] = 1
-      this.variables[`X/wst/${equip.wst}`][key] = 1
-      this.variables[`X/leg/${equip.leg}`][key] = 1
+      if (equip.head) this.variables[`X/head/${equip.head}`][key] = 1
+      if (equip.body) this.variables[`X/body/${equip.body}`][key] = 1
+      if (equip.arm) this.variables[`X/arm/${equip.arm}`][key] = 1
+      if (equip.wst) this.variables[`X/wst/${equip.wst}`][key] = 1
+      if (equip.leg) this.variables[`X/leg/${equip.leg}`][key] = 1
     }
   }
 

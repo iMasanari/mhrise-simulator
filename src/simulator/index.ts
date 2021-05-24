@@ -8,6 +8,7 @@ import wst from '../../generated/wst.json'
 import { Armor, Charm, Deco, Equip, Slots } from '../domain/equips'
 import { Condition, Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
+import { NO_ARMOR_COEFFICIENT } from './constants'
 
 export interface SimulatorCondition {
   objectiveSkill?: string
@@ -32,6 +33,18 @@ interface Groups {
   leg: Map<string | undefined, Armor[]>
   charm: Map<string | undefined, Charm>
   deco: Map<string | undefined, Deco>
+}
+
+interface Stock {
+  sortKey: number
+  weaponSlot: Slots
+  head: Armor | null
+  body: Armor | null
+  arm: Armor | null
+  wst: Armor | null
+  leg: Armor | null
+  charm: Charm | null
+  decos: Deco[]
 }
 
 const getKey = (armor: Armor | Charm, skillKeys: string[]) => {
@@ -77,24 +90,32 @@ const createCharmGroup = (skillKeys: string[], charms: Charm[]) => {
   }
 }
 
-const withSkills = (equip: Equip | undefined) => {
+const toEquip = (equip: Stock | undefined): Equip | null => {
   if (!equip) {
     return null
   }
 
-  const skills = [equip.head!, equip.body!, equip.arm!, equip.wst!, equip.leg!, ...(equip.charm ? [equip.charm] : []), ...equip.decos].reduce((s, v) => (
-    Object.fromEntries([...Object.keys(s), ...Object.keys(v.skills)].map(key => [key, (s[key] || 0) + (v.skills[key] || 0)]))
-  ), {} as ActiveSkill)
+  const armors = [equip.head, equip.body, equip.arm, equip.wst, equip.leg]
+  const def = armors.reduce((sum, v) => sum + (v ? v.defs[1] : 0), 0)
 
-  return { ...equip, skills }
+  const skills = {} as ActiveSkill
+
+  for (const value of [...armors, equip.charm, ...equip.decos]) {
+    if (!value) continue
+    for (const [skill, point] of Object.entries(value.skills)) {
+      skills[skill] = (skills[skill] || 0) + point
+    }
+  }
+
+  return { ...equip, def, skills }
 }
 
 export default class Simulator {
   private pw: PromiseWorker
   private condition: SimulatorCondition
   private groups: Groups
-  private stock: Equip[] = []
-  private next: Equip[] = []
+  private stocks: Stock[] = []
+  private next: Stock[] = []
 
   constructor(worker: Worker, condition: Condition) {
     this.pw = new PromiseWorker(worker)
@@ -136,21 +157,29 @@ export default class Simulator {
     }
   }
 
+  private getArmors(type: 'head' | 'body' | 'arm' | 'wst' | 'leg', key: string | undefined) {
+    return this.groups[type].get(key) || [null]
+  }
+
+  private getCharm(key: string | undefined) {
+    return this.groups.charm.get(key) || null
+  }
+
   async simulate() {
     if (this.next.length) {
       await new Promise(requestAnimationFrame)
 
-      return withSkills(this.next.pop())
+      return toEquip(this.next.pop())
     }
 
     const result = await this.pw.postMessage<Result | null, SimulatorCondition>(this.condition)
 
     if (!result) {
-      if (this.stock.length) {
-        this.next = this.stock
-        this.stock = []
+      if (this.stocks.length) {
+        this.next = this.stocks
+        this.stocks = []
 
-        return withSkills(this.next.pop())
+        return toEquip(this.next.pop())
       }
 
       return null
@@ -158,43 +187,35 @@ export default class Simulator {
 
     this.condition.prevs.push(result)
 
-    const charm = this.groups.charm.get(result.charm)
+    const charm = this.getCharm(result.charm)
 
     const decos = result.deco
-      .map(([v, amount]) => [this.groups.deco.get(v)!, amount, v.split('').reverse().join('')] as const)
-      .sort(([, , a], [, , b]) => b > a ? 1 : -1)
-      .flatMap(([deco, amount]) => [...Array(amount).keys()].map(() => deco))
+      .map(([v, amount]) => [this.groups.deco.get(v)!, amount] as const)
+      .sort(([a, aAmount], [b, bAmount]) => b.size - a.size || bAmount - aAmount)
+      .flatMap(([deco, amount]) => Array<Deco>(amount).fill(deco))
 
-    const list: Equip[] = []
+    const list: Stock[] = []
 
-    // todo: 多重forをやめる
-    for (const head of this.groups.head.get(result.head)!) {
-      for (const body of this.groups.body.get(result.body)!) {
-        for (const arm of this.groups.arm.get(result.arm)!) {
-          for (const wst of this.groups.wst.get(result.wst)!) {
-            for (const leg of this.groups.leg.get(result.leg)!) {
-              const equip = [head, body, arm, wst, leg]
-              const def = equip.reduce((sum, v) => sum + v.defs[1], 0)
+    for (const head of this.getArmors('head', result.head)) {
+      for (const body of this.getArmors('body', result.body)) {
+        for (const arm of this.getArmors('arm', result.arm)) {
+          for (const wst of this.getArmors('wst', result.wst)) {
+            for (const leg of this.getArmors('leg', result.leg)) {
+              const sortKey = [head, body, arm, wst, leg].reduce((sum, v) => sum + (v ? v.defs[1] : NO_ARMOR_COEFFICIENT), 0)
 
-              // 発動スキルは一旦ダミーをセット
-              list.push({ def, weaponSlot: this.condition.weaponSlot, head, body, arm, wst, leg, charm, decos, skills: {} })
+              list.push({ sortKey, weaponSlot: this.condition.weaponSlot, head, body, arm, wst, leg, charm, decos })
             }
           }
         }
       }
     }
 
-    // TODO: 装備なしを含むときの結果を正しく返す
-    if (!list.length) {
-      return null
-    }
+    const border = list.reduce((max, equip) => Math.max(max, equip.sortKey), 0)
+    const tmp = [...this.stocks, ...list]
 
-    const def = list.reduce((max, equip) => Math.max(max, equip.def), 0)
-    const tmp = [...this.stock, ...list].sort((a, b) => a.def - b.def)
+    this.next = tmp.filter(v => v.sortKey >= border).sort((a, b) => a.sortKey - b.sortKey)
+    this.stocks = tmp.filter(v => v.sortKey < border)
 
-    this.next = tmp.filter(v => v.def >= def)
-    this.stock = tmp.filter(v => v.def < def)
-
-    return withSkills(this.next.pop())
+    return toEquip(this.next.pop())
   }
 }

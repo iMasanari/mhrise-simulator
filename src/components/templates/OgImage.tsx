@@ -79,7 +79,7 @@ th, td {
 `
 
 const showSlots = (slots: Slots | undefined) =>
-  slots?.map((s) => s ? `【${s}】` : null)
+  slots?.map((s) => s ? `【${s}】` : null).join('')
 
 export default function OgImage({ equip }: Props) {
   const skills = Object.entries(equip.skills).sort(([, a], [, b]) => b - a)
@@ -106,7 +106,7 @@ export default function OgImage({ equip }: Props) {
                 </tr>
                 <tr>
                   <th>頭装備</th>
-                  <td>{equip.head}</td>
+                  <td>{equip.head || '装備なし'}</td>
                   <td rowSpan={6} className="skillsCell">
                     <div className="skills">
                       {skills.map(([skill, point]) =>
@@ -119,25 +119,25 @@ export default function OgImage({ equip }: Props) {
                 </tr>
                 <tr>
                   <th>胴装備</th>
-                  <td>{equip.body}</td>
+                  <td>{equip.body || '装備なし'}</td>
                 </tr>
                 <tr>
                   <th>腕装備</th>
-                  <td>{equip.arm}</td>
+                  <td>{equip.arm || '装備なし'}</td>
                 </tr>
                 <tr>
                   <th>腰装備</th>
-                  <td>{equip.wst}</td>
+                  <td>{equip.wst || '装備なし'}</td>
                 </tr>
                 <tr>
                   <th>足装備</th>
-                  <td>{equip.leg}</td>
+                  <td>{equip.leg || '装備なし'}</td>
                 </tr>
                 <tr>
                   <th>護石</th>
                   <td>
                     {charmName}
-                    {`スロット${showSlots(equip.charm?.slots)?.join('') || 'なし'}`}
+                    {`スロット${showSlots(equip.charm?.slots) || 'なし'}`}
                   </td>
                 </tr>
               </tbody>
