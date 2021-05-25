@@ -43,7 +43,7 @@ export default function ResultEquip({ equip, size }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">頭装備</TableCell>
-          <TableCell>{equip.head?.name}</TableCell>
+          <TableCell>{equip.head?.name || '装備なし'}</TableCell>
           <TableCell>{showSlots(equip.head?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.head).map(([, v], i) =>
@@ -53,7 +53,7 @@ export default function ResultEquip({ equip, size }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">胴装備</TableCell>
-          <TableCell>{equip.body?.name}</TableCell>
+          <TableCell>{equip.body?.name || '装備なし'}</TableCell>
           <TableCell>{showSlots(equip.body?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.body).map(([, v], i) =>
@@ -63,7 +63,7 @@ export default function ResultEquip({ equip, size }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">腕装備</TableCell>
-          <TableCell>{equip.arm?.name}</TableCell>
+          <TableCell>{equip.arm?.name || '装備なし'}</TableCell>
           <TableCell>{showSlots(equip.arm?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.arm).map(([, v], i) =>
@@ -73,7 +73,7 @@ export default function ResultEquip({ equip, size }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">腰装備</TableCell>
-          <TableCell>{equip.wst?.name}</TableCell>
+          <TableCell>{equip.wst?.name || '装備なし'}</TableCell>
           <TableCell>{showSlots(equip.wst?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.wst).map(([, v], i) =>
@@ -83,7 +83,7 @@ export default function ResultEquip({ equip, size }: Props) {
         </TableRow>
         <TableRow>
           <TableCell component="th">足装備</TableCell>
-          <TableCell>{equip.leg?.name}</TableCell>
+          <TableCell>{equip.leg?.name || '装備なし'}</TableCell>
           <TableCell>{showSlots(equip.leg?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.leg).map(([, v], i) =>

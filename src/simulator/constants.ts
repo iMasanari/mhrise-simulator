@@ -1,0 +1,1 @@
+export const NO_ARMOR_COEFFICIENT = 1000

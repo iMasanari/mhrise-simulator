@@ -10,7 +10,6 @@ export interface Condition {
 }
 
 export interface Result {
-  weaponSlot: Slots
   head: string | undefined;
   body: string | undefined;
   arm: string | undefined;

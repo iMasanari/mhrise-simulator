@@ -2,8 +2,7 @@ module.exports = {
   webpack(config, { defaultLoaders }) {
     config.node = {
       fs: 'empty',
-      path: 'empty',
-      crypto: 'empty',
+      child_process: 'empty',
     }
 
     config.module.rules.push({

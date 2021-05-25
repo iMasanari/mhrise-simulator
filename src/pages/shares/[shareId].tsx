@@ -61,11 +61,11 @@ export default function Shares({ equip }: Props) {
 
   const params = {
     weaponSlot: equip.weaponSlot,
-    head: equip.head!.name,
-    body: equip.body!.name,
-    arm: equip.arm!.name,
-    wst: equip.wst!.name,
-    leg: equip.leg!.name,
+    head: equip.head?.name || '',
+    body: equip.body?.name || '',
+    arm: equip.arm?.name || '',
+    wst: equip.wst?.name || '',
+    leg: equip.leg?.name || '',
     charmSkills: Object.entries(equip.charm?.skills || {}).map(([k, v]) => `${k}Lv${v}`).join(','),
     charmSlots: equip.charm?.slots.join(',') || '',
     decos: equip.decos.map(v => v.name).join(','),

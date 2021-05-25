@@ -1,5 +1,5 @@
+import { css } from '@emotion/react'
 import { Box, Typography } from '@material-ui/core'
-import { css } from '@material-ui/styled-engine'
 import React from 'react'
 import { ActiveSkill } from '../../../domain/skill'
 import ShareList from '../../molecules/ShareList'
@@ -56,7 +56,7 @@ export default function SimulatorUsage({ shares }: Props) {
           {'開発'}
         </Typography>
         <Typography gutterBottom>
-          {'コードは GPLv3 ライセンスの元、Github にて公開しています。 '}
+          {'コードは MIT ライセンスの元、Github にて公開しています。 '}
           {'イシューやプルリクをお待ちしています。'}
         </Typography>
         <a href="https://github.com/iMasanari/mhrise-simulator" target="_blank" rel="noopener">
