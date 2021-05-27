@@ -1,7 +1,7 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, TextField } from '@material-ui/core'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, Select, TextField } from '@material-ui/core'
 import { Search } from '@material-ui/icons'
 import React, { useMemo, useRef, useState } from 'react'
-import { ActiveSkill } from '../../../domain/skill'
+import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import SkillList from './SkillList'
 
 const useStyles = makeStyles(() => ({
@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
 
 interface Props {
   open: boolean
-  skills: { name: string, items: number[] }[]
+  skills: SkillSystem[]
   activeSkill: ActiveSkill
   onClose: (activeSkill: ActiveSkill) => void
 }
@@ -21,11 +21,13 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
   const classes = useStyles()
   const [currentActiveSkill, setActiveSkill] = useState(activeSkill)
   const [value, setValue] = useState('')
+  const [category, setCategory] = useState('')
+  const categoryList = useMemo(() => [...new Set(skills.map(v => v.category))], [skills])
   const inputRef = useRef<HTMLInputElement>(null)
 
   const filterdSkills = useMemo(() => (
-    skills.filter(v => v.name.includes(value))
-  ), [skills, value])
+    skills.filter(v => (category ? v.category === category : v.name.includes(value)))
+  ), [skills, value, category])
 
   const handleClose = () => {
     onClose(currentActiveSkill)
@@ -36,7 +38,7 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
       <DialogTitle>
         <TextField
           inputRef={inputRef}
-          label="スキル"
+          label="スキル名"
           value={value}
           onChange={(e) => setValue(e.currentTarget.value)}
           size="small"
@@ -51,6 +53,21 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
             ),
           }}
         />
+        <TextField
+          select
+          label="カテゴリー"
+          size="small"
+          fullWidth
+          sx={{ mt: 2 }}
+          value={category}
+          onChange={e => setCategory(e.currentTarget.value)}
+          SelectProps={{ native: true }}
+        >
+          <option value=""></option>
+          {categoryList.map(v =>
+            <option key={v} value={v}>{v}</option>
+          )}
+        </TextField>
       </DialogTitle>
       <DialogContent sx={{ paddingTop: 0 }}>
         <SkillList skills={filterdSkills} activeSkill={currentActiveSkill} setActiveSkill={setActiveSkill} />
