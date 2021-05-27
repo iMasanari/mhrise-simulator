@@ -1,9 +1,41 @@
 import { NextApiRequest, NextApiResponse } from 'next'
+import { Deco } from '../../../generated/deco.json'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
 import { getDecoInfo } from '../../api/decos'
 import { FieldValue, firestore } from '../../api/firebase'
-import { Armor } from '../../domain/equips'
+import { Armor, Charm } from '../../domain/equips'
 import { ActiveSkill } from '../../domain/skill'
+
+const getSkills = (armors: (Armor | null)[], charm: Charm | null, decos: (Deco | null)[]) => {
+  const skills = {} as ActiveSkill
+
+  // 防具スキル
+  for (const value of armors) {
+    if (!value) continue
+    for (const [skill, point] of Object.entries(value.skills)) {
+      skills[skill] = (skills[skill] || 0) + point
+    }
+  }
+
+  // 風雷合一スキル対応
+  if (skills['風雷合一'] > 4) {
+    const point = skills['風雷合一'] - 3
+    for (const skill of Object.keys(skills)) {
+      if (skill === '風雷合一') continue
+      skills[skill] = skills[skill] + point
+    }
+  }
+
+  // 護石、装飾品スキル
+  for (const value of [charm, ...decos]) {
+    if (!value) continue
+    for (const [skill, point] of Object.entries(value.skills)) {
+      skills[skill] = (skills[skill] || 0) + point
+    }
+  }
+
+  return skills
+}
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
@@ -23,11 +55,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   const leg = await getLeg(data.leg)
   const decos = await Promise.all((data.decos as string[]).map(getDecoInfo))
 
-  const skills = [head, body, arm, wst, leg, data.charm, ...decos].filter((v): v is Armor => v as any)
-    .reduce((skills, v) => (
-      Object.fromEntries([...Object.keys(skills), ...Object.keys(v.skills)].map(key => [key, (skills[key] || 0) + (v.skills[key] || 0)]))
-    ), {} as ActiveSkill)
-
+  const skills = getSkills([head, body, arm, wst, leg], data.charm, decos)
   const skillList = Object.keys(skills)
 
   const result = await firestore.collection('shares').add({
