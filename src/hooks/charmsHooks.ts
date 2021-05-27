@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { RootState } from '../modules'
-import { addCharm, removeCharms } from '../modules/charms'
+import { addCharm, removeCharms, replaceCharm } from '../modules/charms'
 import { useAction } from './actionHooks'
 
 const selector = (state: RootState) =>
@@ -11,6 +11,9 @@ export const useCharms = () =>
 
 export const useAddCharm = () =>
   useAction(addCharm)
+
+export const useReplaceCharm = () =>
+  useAction(replaceCharm)
 
 export const useRemoveCharms = () =>
   useAction(removeCharms)
