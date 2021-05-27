@@ -100,7 +100,25 @@ const toEquip = (equip: Stock | undefined): Equip | null => {
 
   const skills = {} as ActiveSkill
 
-  for (const value of [...armors, equip.charm, ...equip.decos]) {
+  // 防具スキル
+  for (const value of armors) {
+    if (!value) continue
+    for (const [skill, point] of Object.entries(value.skills)) {
+      skills[skill] = (skills[skill] || 0) + point
+    }
+  }
+
+  // 風雷合一スキル対応
+  if (skills['風雷合一'] > 4) {
+    const point = skills['風雷合一'] - 3
+    for (const skill of Object.keys(skills)) {
+      if (skill === '風雷合一') continue
+      skills[skill] = skills[skill] + point
+    }
+  }
+
+  // 護石、装飾品スキル
+  for (const value of [equip.charm, ...equip.decos]) {
     if (!value) continue
     for (const [skill, point] of Object.entries(value.skills)) {
       skills[skill] = (skills[skill] || 0) + point

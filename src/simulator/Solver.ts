@@ -84,8 +84,32 @@ export default class Simulator {
     this.skillKeys = Object.keys(skillCondition)
 
     for (const [skill, point] of Object.entries(skillCondition)) {
+      // スキル設定
       this.ints[skill] = 1
       this.constraints[skill] = { min: point }
+
+      // 風雷合一用スキル設定
+      if (skill !== '風雷合一') {
+        this.constraints[`Y_風雷合一_${skill}_count`] = { max: 1 }
+        this.constraints[`Y_風雷合一_${skill}_armor`] = { min: 0 }
+        this.constraints[`Y_風雷合一_${skill}_skill`] = { min: 0 }
+
+        this.ints[`風雷合一Lv4_${skill}`] = 1
+        this.variables[`風雷合一Lv4_${skill}`] = {
+          [`Y_風雷合一_${skill}_count`]: 1,
+          [`Y_風雷合一_${skill}_armor`]: -1,
+          [`Y_風雷合一_${skill}_skill`]: -4,
+          [skill]: 1,
+        }
+
+        this.ints[`風雷合一Lv5_${skill}`] = 1
+        this.variables[`風雷合一Lv5_${skill}`] = {
+          [`Y_風雷合一_${skill}_count`]: 1,
+          [`Y_風雷合一_${skill}_armor`]: -1,
+          [`Y_風雷合一_${skill}_skill`]: -5,
+          [skill]: 2,
+        }
+      }
     }
   }
 
@@ -131,6 +155,11 @@ export default class Simulator {
       ...Object.fromEntries(this.skillKeys.map(skill =>
         [skill, equip.skills[skill] || 0]
       )),
+      // 風雷合一スキル
+      ...Object.fromEntries(this.skillKeys.flatMap(skill => [
+        [`Y_風雷合一_${skill}_armor`, equip.skills[skill] || 0],
+        [`Y_風雷合一_${skill}_skill`, equip.skills['風雷合一'] || 0],
+      ])),
     }
   }
 
