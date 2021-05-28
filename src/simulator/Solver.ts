@@ -5,7 +5,8 @@ import { Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
 import { NO_ARMOR_COEFFICIENT } from './constants'
 
-export type EquipsType = 'head' | 'body' | 'arm' | 'wst' | 'leg' | 'charm'
+type ArmorType = 'head' | 'body' | 'arm' | 'wst' | 'leg'
+type EquipType = ArmorType | 'charm'
 
 const Y_OBJECTIVE = 'Y_OBJECTIVE'
 
@@ -16,6 +17,9 @@ const Y_ARM_COUNT = 'Y_ARM_COUNT'
 const Y_WST_COUNT = 'Y_WST_COUNT'
 const Y_LEG_COUNT = 'Y_LEG_COUNT'
 const Y_CHARM_COUNT = 'Y_CHARM_COUNT'
+const Y_ARMAR_COUNT = 'Y_ARMAR_COUNT'
+
+const Y_DEF = 'Y_DEF'
 
 const Y_SLOT_1_OVER = 'Y_SLOT_1_OVER'
 const Y_SLOT_2_OVER = 'Y_SLOT_2_OVER'
@@ -23,16 +27,15 @@ const Y_SLOT_3_OVER = 'Y_SLOT_3_OVER'
 
 const DECO_PREFIX = 'X/deco/'
 
-const typeRecord = {
+const armorTypeRecord = {
   head: Y_HEAD_COUNT,
   body: Y_BODY_COUNT,
   arm: Y_ARM_COUNT,
   wst: Y_WST_COUNT,
   leg: Y_LEG_COUNT,
-  charm: Y_CHARM_COUNT,
 } as const
 
-const findEquip = (type: EquipsType, list: [string, unknown][]) => {
+const findEquip = (type: EquipType, list: [string, unknown][]) => {
   const prefix = `X/${type}/`
   const key = list.find(([v]) => v.startsWith(prefix))
 
@@ -62,17 +65,6 @@ export default class Simulator {
   }
 
   private ints: Record<string, number> = {
-    [Y_OBJECTIVE]: 1,
-    [Y_WEAPON_COUNT]: 1,
-    [Y_HEAD_COUNT]: 1,
-    [Y_BODY_COUNT]: 1,
-    [Y_ARM_COUNT]: 1,
-    [Y_WST_COUNT]: 1,
-    [Y_LEG_COUNT]: 1,
-    [Y_CHARM_COUNT]: 1,
-    [Y_SLOT_1_OVER]: 1,
-    [Y_SLOT_2_OVER]: 1,
-    [Y_SLOT_3_OVER]: 1,
   }
 
   private variables: Record<string, Record<string, number>> = {
@@ -94,129 +86,92 @@ export default class Simulator {
         this.constraints[`Y_風雷合一_${skill}_armor`] = { min: 0 }
         this.constraints[`Y_風雷合一_${skill}_skill`] = { min: 0 }
 
-        this.ints[`風雷合一Lv4_${skill}`] = 1
-        this.variables[`風雷合一Lv4_${skill}`] = {
+        this.addIntVariable(`風雷合一Lv4_${skill}`, {
           [`Y_風雷合一_${skill}_count`]: 1,
           [`Y_風雷合一_${skill}_armor`]: -1,
           [`Y_風雷合一_${skill}_skill`]: -4,
           [skill]: 1,
-        }
+        })
 
-        this.ints[`風雷合一Lv5_${skill}`] = 1
-        this.variables[`風雷合一Lv5_${skill}`] = {
+        this.addIntVariable(`風雷合一Lv5_${skill}`, {
           [`Y_風雷合一_${skill}_count`]: 1,
           [`Y_風雷合一_${skill}_armor`]: -1,
           [`Y_風雷合一_${skill}_skill`]: -5,
           [skill]: 2,
-        }
+        })
       }
     }
   }
 
-  setWeaponSlots(slots: Slots) {
-    const key = 'X/WeaponSlot'
-
-    // 個数制限
+  private addIntVariable(key: string, variable: Record<string, number>) {
     this.ints[key] = 1
-    this.constraints[key] = { max: 1 }
+
+    const objective = this.objectiveSkill
+      ? (variable[this.objectiveSkill] || 0) * 1000 + (variable[Y_DEF] || 0)
+      : -(variable[Y_ARMAR_COUNT] || 0) * (NO_ARMOR_COEFFICIENT * 100) + (variable[Y_DEF] || 0) * 100 + (variable[Y_SLOT_1_OVER] || 0) + (variable[Y_SLOT_2_OVER] || 0) + (variable[Y_SLOT_3_OVER] || 0)
 
     this.variables[key] = {
+      ...variable,
+      [Y_OBJECTIVE]: objective,
+    }
+  }
+
+  setWeaponSlots(slots: Slots) {
+    this.addIntVariable('X/WeaponSlot', {
       [Y_WEAPON_COUNT]: 1,
       [Y_SLOT_1_OVER]: slots.filter(v => v >= 1).length,
       [Y_SLOT_2_OVER]: slots.filter(v => v >= 2).length,
       [Y_SLOT_3_OVER]: slots.filter(v => v >= 3).length,
-    }
+    })
   }
 
-  addEquip(type: EquipsType, equip: Armor) {
-    const key = `X/${type}/${equip.name}`
-
-    // 個数制限
-    this.ints[key] = 1
-    this.constraints[key] = { max: 1 }
-
-    const def = equip.defs[1] || 0
-    const slot1Over = equip.slots.filter(v => v >= 1).length
-    const slot2Over = equip.slots.filter(v => v >= 2).length
-    const slot3Over = equip.slots.filter(v => v >= 3).length
-
-    const target = this.objectiveSkill
-      ? (equip.skills[this.objectiveSkill] || 0) * 1000 + def
-      : -1 * (NO_ARMOR_COEFFICIENT * 100) + def * 100 + slot1Over + slot2Over + slot3Over
-
-    this.variables[key] = {
-      [Y_OBJECTIVE]: target,
-      [typeRecord[type]]: 1,
+  addArmor(type: ArmorType, armor: Armor) {
+    this.addIntVariable(`X/${type}/${armor.name}`, {
+      [armorTypeRecord[type]]: 1,
+      [Y_ARMAR_COUNT]: 1,
+      // 防御力
+      [Y_DEF]: armor.defs[1] || 0,
       // スロット
-      [Y_SLOT_1_OVER]: slot1Over,
-      [Y_SLOT_2_OVER]: slot2Over,
-      [Y_SLOT_3_OVER]: slot3Over,
+      [Y_SLOT_1_OVER]: armor.slots.filter(v => v >= 1).length,
+      [Y_SLOT_2_OVER]: armor.slots.filter(v => v >= 2).length,
+      [Y_SLOT_3_OVER]: armor.slots.filter(v => v >= 3).length,
       // スキル
       ...Object.fromEntries(this.skillKeys.map(skill =>
-        [skill, equip.skills[skill] || 0]
+        [skill, armor.skills[skill] || 0]
       )),
       // 風雷合一スキル
       ...Object.fromEntries(this.skillKeys.flatMap(skill => [
-        [`Y_風雷合一_${skill}_armor`, equip.skills[skill] || 0],
-        [`Y_風雷合一_${skill}_skill`, equip.skills['風雷合一'] || 0],
+        [`Y_風雷合一_${skill}_armor`, armor.skills[skill] || 0],
+        [`Y_風雷合一_${skill}_skill`, armor.skills['風雷合一'] || 0],
       ])),
-    }
+    })
   }
 
   addCharm(charm: Charm & { name: string }) {
-    const key = `X/charm/${charm.name}`
-
-    // 個数制限
-    this.ints[key] = 1
-    this.constraints[key] = { max: 1 }
-
-    const slot1Over = charm.slots.filter(v => v >= 1).length
-    const slot2Over = charm.slots.filter(v => v >= 2).length
-    const slot3Over = charm.slots.filter(v => v >= 3).length
-
-    const target = this.objectiveSkill
-      ? (charm.skills[this.objectiveSkill] || 0) * 1000
-      : slot1Over + slot2Over + slot3Over
-
-    this.variables[key] = {
-      [Y_OBJECTIVE]: target,
-      [typeRecord.charm]: 1,
+    this.addIntVariable(`X/charm/${charm.name}`, {
+      [Y_CHARM_COUNT]: 1,
       // スロット
-      [Y_SLOT_1_OVER]: slot1Over,
-      [Y_SLOT_2_OVER]: slot2Over,
-      [Y_SLOT_3_OVER]: slot3Over,
+      [Y_SLOT_1_OVER]: charm.slots.filter(v => v >= 1).length,
+      [Y_SLOT_2_OVER]: charm.slots.filter(v => v >= 2).length,
+      [Y_SLOT_3_OVER]: charm.slots.filter(v => v >= 3).length,
       // スキル
       ...Object.fromEntries(this.skillKeys.map(skill =>
         [skill, charm.skills[skill] || 0]
       )),
-    }
+    })
   }
 
   addDeco(deco: Deco) {
-    const key = `${DECO_PREFIX}${deco.name}`
-
-    // 個数制限
-    this.ints[key] = 1
-
-    const slot1Over = deco.size >= 1 ? -1 : 0
-    const slot2Over = deco.size >= 2 ? -1 : 0
-    const slot3Over = deco.size >= 3 ? -1 : 0
-
-    const target = this.objectiveSkill
-      ? (deco.skills[this.objectiveSkill] || 0) * 1000
-      : slot1Over + slot2Over + slot3Over
-
-    this.variables[key] = {
-      [Y_OBJECTIVE]: target,
+    this.addIntVariable(`${DECO_PREFIX}${deco.name}`, {
       // スロット
-      [Y_SLOT_1_OVER]: slot1Over,
-      [Y_SLOT_2_OVER]: slot2Over,
-      [Y_SLOT_3_OVER]: slot3Over,
+      [Y_SLOT_1_OVER]: deco.size >= 1 ? -1 : 0,
+      [Y_SLOT_2_OVER]: deco.size >= 2 ? -1 : 0,
+      [Y_SLOT_3_OVER]: deco.size >= 3 ? -1 : 0,
       // スキル
       ...Object.fromEntries(this.skillKeys.map(skill =>
         [skill, deco.skills[skill] || 0]
       )),
-    }
+    })
   }
 
   setPrevs(prevs: Result[]) {

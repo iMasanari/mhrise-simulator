@@ -9,8 +9,8 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
   solver.setWeaponSlots(condition.weaponSlot)
 
   for (const type of ['head', 'body', 'arm', 'wst', 'leg'] as const) {
-    for (const equip of Object.values(condition[type])) {
-      solver.addEquip(type, equip)
+    for (const armor of Object.values(condition[type])) {
+      solver.addArmor(type, armor)
     }
   }
 
