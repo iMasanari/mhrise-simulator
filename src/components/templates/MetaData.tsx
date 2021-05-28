@@ -8,7 +8,7 @@ interface Props {
   twitterCard?: string
 }
 
-const icon = `${process.env.BASE_URL}/images/icon.png`
+const icon = `${process.env.NEXT_PUBLIC_BASE_URL}/images/icon.png`
 
 export default function MetaData({ title, description, type = 'website', image = icon, twitterCard = 'summary' }: Props) {
   return (

@@ -12,7 +12,6 @@ import { Deco, Equip } from '../../domain/equips'
 
 interface Props {
   equip: Equip
-  ogImage: string
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -45,10 +44,8 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
     skills: data.skills,
   }
 
-  const ogImage = `${process.env.BASE_URL}/api/og-images/${doc.id}`
-
   return {
-    props: { equip, ogImage },
+    props: { equip },
     revalidate: 24 * 60 * 60, // 24時間
   }
 }
