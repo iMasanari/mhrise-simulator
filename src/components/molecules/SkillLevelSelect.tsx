@@ -1,5 +1,6 @@
-import { IconButton, InputAdornment, makeStyles, Select } from '@material-ui/core'
+import { IconButton, InputAdornment, Select } from '@material-ui/core'
 import { Add, Remove } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/styles'
 
 interface Props {
   value: number

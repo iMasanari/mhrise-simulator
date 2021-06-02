@@ -1,5 +1,5 @@
 import createEmotionServer from '@emotion/server/create-instance'
-import { ServerStyleSheets } from '@material-ui/core/styles'
+import { ServerStyleSheets } from '@material-ui/styles'
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
 import * as React from 'react'
 import theme from '../theme'

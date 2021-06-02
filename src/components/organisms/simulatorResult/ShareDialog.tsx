@@ -1,5 +1,6 @@
-import { Alert, AlertTitle, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, makeStyles, Snackbar, TextField, Typography } from '@material-ui/core'
+import { Alert, AlertTitle, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, Snackbar, TextField, Typography } from '@material-ui/core'
 import { ContentCopy, Link as LinkIcon, Twitter } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/styles'
 import React, { useEffect, useRef, useState } from 'react'
 import twitter from 'twitter-text'
 import { Charm, Equip } from '../../../domain/equips'

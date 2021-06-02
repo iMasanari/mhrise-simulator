@@ -1,5 +1,5 @@
 import { red } from '@material-ui/core/colors'
-import { createMuiTheme, Theme as MuiTheme } from '@material-ui/core/styles'
+import { createTheme, Theme as MuiTheme } from '@material-ui/core/styles'
 
 declare module '@emotion/react' {
   interface Theme extends MuiTheme {
@@ -7,7 +7,7 @@ declare module '@emotion/react' {
 }
 
 // Create a theme instance.
-const theme = createMuiTheme({
+const theme = createTheme({
   palette: {
     primary: {
       main: '#556cd6',
