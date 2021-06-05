@@ -49,12 +49,12 @@ export const useSimulator = () => {
     setLoading(false)
   }
 
-  const simulate = async (skills: ActiveSkill, weaponSlot: Slots, charms: Charm[]) => {
+  const simulate = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
     const worker = workerRef.current
 
     if (!worker) return
 
-    const simulator = new Simulator(worker, { skills, weaponSlot, charms, ignore: [] })
+    const simulator = new Simulator(worker, { skills, weaponSlots, charms, ignore: [] })
     simulatorRef.current = simulator
 
     setCompleted(false)
@@ -73,7 +73,7 @@ export const useSimulator = () => {
 
   const store = useStore<RootState>()
 
-  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlot: Slots, charms: Charm[]) => {
+  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
     const worker = workerRef.current
 
     if (!worker) return
@@ -84,7 +84,7 @@ export const useSimulator = () => {
     setAddableSkillList([])
 
     for (const skill of skillLog) {
-      const simulator = new Simulator(worker, { skills, weaponSlot, charms, ignore: [], objectiveSkill: skill })
+      const simulator = new Simulator(worker, { skills, weaponSlots, charms, ignore: [], objectiveSkill: skill })
       const result = await simulator.simulate()
       const point = result ? Math.min(result.skills[skill] || 0, skillMaxPointMap.get(skill)!) : 0
 

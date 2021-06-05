@@ -5,7 +5,7 @@ import { ActiveSkill } from '../../domain/skill'
 
 interface Props {
   equip: {
-    weaponSlot: Slots
+    weaponSlots: Slots
     head: string
     body: string
     arm: string
@@ -101,7 +101,7 @@ export default function OgImage({ equip }: Props) {
               <tbody>
                 <tr>
                   <th>武器</th>
-                  <td>スロット{equip.weaponSlot[0] ? showSlots(equip.weaponSlot) : 'なし'}</td>
+                  <td>スロット{equip.weaponSlots[0] ? showSlots(equip.weaponSlots) : 'なし'}</td>
                   <th className="skillsHeader">発動スキル</th>
                 </tr>
                 <tr>

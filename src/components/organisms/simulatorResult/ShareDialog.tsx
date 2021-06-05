@@ -50,7 +50,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
     setLoading(true)
 
     const data = {
-      weaponSlots: equip.weaponSlot,
+      weaponSlots: equip.weaponSlots,
       head: equip.head?.name,
       body: equip.body?.name,
       arm: equip.arm?.name,

@@ -13,7 +13,7 @@ const showSlots = (slots: Slots | undefined) =>
 export default function ResultEquip({ equip, size }: Props) {
   const skills = Object.entries(equip.skills).sort(([, a], [, b]) => b - a)
 
-  const weapon = { slots: equip.weaponSlot }
+  const weapon = { slots: equip.weaponSlots }
   const armors = [weapon, equip.head, equip.body, equip.arm, equip.wst, equip.leg, equip.charm]
     .filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
 
@@ -33,8 +33,8 @@ export default function ResultEquip({ equip, size }: Props) {
       <TableBody>
         <TableRow>
           <TableCell component="th">武器</TableCell>
-          <TableCell>スロット{equip.weaponSlot[0] ? showSlots(equip.weaponSlot) : 'なし'}</TableCell>
-          <TableCell>{showSlots(equip.weaponSlot)}</TableCell>
+          <TableCell>スロット{equip.weaponSlots[0] ? showSlots(equip.weaponSlots) : 'なし'}</TableCell>
+          <TableCell>{showSlots(equip.weaponSlots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === weapon).map(([, v], i) =>
               <div key={i}>{v.name}</div>

@@ -11,11 +11,11 @@ interface Props {
   skills: SkillSystem[]
   activeSkill: ActiveSkill
   setActiveSkill: Dispatch<SetStateAction<ActiveSkill>>
-  weaponSlot: Slots
-  setWeaponSlot: Dispatch<SetStateAction<Slots>>
+  weaponSlots: Slots
+  setWeaponSlots: Dispatch<SetStateAction<Slots>>
 }
 
-export default function SimulatorCondition({ skills, activeSkill, setActiveSkill, weaponSlot, setWeaponSlot }: Props) {
+export default function SimulatorCondition({ skills, activeSkill, setActiveSkill, weaponSlots, setWeaponSlots }: Props) {
   const [skillOpen, setSkillOpen] = useState(false)
 
   const skillLog = useSkillLog()
@@ -56,7 +56,7 @@ export default function SimulatorCondition({ skills, activeSkill, setActiveSkill
       <List subheader={<ListSubheader disableSticky>武器</ListSubheader>}>
         <ListItem>
           <ListItemText primary="武器スロット" />
-          <SlotSelect slot={weaponSlot} setSlot={setWeaponSlot} />
+          <SlotSelect slot={weaponSlots} setSlot={setWeaponSlots} />
         </ListItem>
       </List>
       <List subheader={<ListSubheader disableSticky>スキル</ListSubheader>}>

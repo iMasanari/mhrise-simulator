@@ -47,7 +47,7 @@ const resultStyle = (theme: Theme) => css`
 
 export default function Simulator({ skills, shares }: Props) {
   const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
-  const [weaponSlot, setWeaponSlot] = useState<Slots>([])
+  const [weaponSlots, setWeaponSlots] = useState<Slots>([])
   const { loading, completed, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
   const charms = useCharms()
   const [mode, setMode] = useState<Mode>('usage')
@@ -58,13 +58,13 @@ export default function Simulator({ skills, shares }: Props) {
 
   const execute = () => {
     setMode('result')
-    simulate(activeSkill, weaponSlot, charms)
+    simulate(activeSkill, weaponSlots, charms)
     updateSkillLog(activeSkill)
   }
 
   const addSkill = () => {
     setMode('addSkill')
-    searchAddableSkillList(activeSkill, weaponSlot, charms)
+    searchAddableSkillList(activeSkill, weaponSlots, charms)
     updateSkillLog(activeSkill)
   }
 
@@ -83,7 +83,7 @@ export default function Simulator({ skills, shares }: Props) {
     const slots = (searchParams.get('weaponSlots') || '').split(',').map(Number)
 
     setActiveSkill(skills)
-    setWeaponSlot(slots)
+    setWeaponSlots(slots)
     setAutoExecute(true)
 
     router.replace(location.pathname)
@@ -105,8 +105,8 @@ export default function Simulator({ skills, shares }: Props) {
             skills={skills}
             activeSkill={activeSkill}
             setActiveSkill={setActiveSkill}
-            weaponSlot={weaponSlot}
-            setWeaponSlot={setWeaponSlot}
+            weaponSlots={weaponSlots}
+            setWeaponSlots={setWeaponSlots}
           />
           <Box display="flex" mx={2}>
             <Button onClick={execute} variant="contained" sx={{ flex: '1', mr: 1 }}>検索</Button>

@@ -8,7 +8,7 @@ import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
 import MetaData from '../../components/templates/MetaData'
-import { Deco, Equip } from '../../domain/equips'
+import { Deco, Equip, toEquip } from '../../domain/equips'
 
 interface Props {
   equip: Equip
@@ -31,8 +31,8 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
 
   const data = doc.data()!
 
-  const equip: Equip = {
-    weaponSlot: data.weaponSlots,
+  const equip = toEquip({
+    weaponSlots: data.weaponSlots,
     head: await getHead(data.head),
     body: await getBody(data.body),
     arm: await getArm(data.arm),
@@ -40,9 +40,7 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
     leg: await getLeg(data.leg),
     charm: data.charm,
     decos: await Promise.all(data.decos.map(getDecoInfo)) as Deco[],
-    def: 0,
-    skills: data.skills,
-  }
+  })
 
   return {
     props: { equip },
@@ -52,12 +50,12 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
 
 export default function Shares({ equip }: Props) {
   const skillParam = Object.entries(equip.skills).map(([k, v]) => `${k}Lv${v}`).sort().join(',')
-  const slotsParam = equip.weaponSlot.join(',')
+  const slotsParam = equip.weaponSlots.join(',')
 
   const simulatorUrl = `/?skills=${skillParam}&weaponSlots=${slotsParam}`
 
   const params = {
-    weaponSlot: equip.weaponSlot,
+    weaponSlots: equip.weaponSlots,
     head: equip.head?.name || '',
     body: equip.body?.name || '',
     arm: equip.arm?.name || '',

@@ -42,10 +42,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { weaponSlot, head, body, arm, wst, leg, charmSkills, charmSlots, decos, skills } = req.query as Record<string, string>
+    const { weaponSlots, head, body, arm, wst, leg, charmSkills, charmSlots, decos, skills } = req.query as Record<string, string>
 
     const equip = {
-      weaponSlot: weaponSlot.split(',').map(Number),
+      weaponSlots: weaponSlots.split(',').map(Number),
       head,
       body,
       arm,

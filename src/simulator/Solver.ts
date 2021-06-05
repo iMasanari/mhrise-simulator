@@ -117,7 +117,7 @@ export default class Simulator {
   }
 
   setWeaponSlots(slots: Slots) {
-    this.addIntVariable('X/WeaponSlot', {
+    this.addIntVariable('X/weaponSlots', {
       [Y_WEAPON_COUNT]: 1,
       [Y_SLOT_1_OVER]: slots.filter(v => v >= 1).length,
       [Y_SLOT_2_OVER]: slots.filter(v => v >= 2).length,
