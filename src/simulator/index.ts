@@ -90,6 +90,9 @@ const createCharmGroup = (skillKeys: string[], charms: Charm[]) => {
   }
 }
 
+export const createSiumlatorWorker = () =>
+  new Worker(new URL('./worker.ts', import.meta.url))
+
 export default class Simulator {
   private pw: PromiseWorker
   private condition: SimulatorCondition
@@ -97,7 +100,7 @@ export default class Simulator {
   private stocks: Stock[] = []
   private next: Stock[] = []
 
-  constructor(worker: Worker, condition: Condition) {
+  constructor(condition: Condition, private worker = createSiumlatorWorker()) {
     this.pw = new PromiseWorker(worker)
 
     const { objectiveSkill, weaponSlots } = condition
@@ -200,5 +203,9 @@ export default class Simulator {
 
     const stock = this.next.pop()
     return stock ? toEquip(stock) : null
+  }
+
+  terminate() {
+    this.worker.terminate()
   }
 }
