@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableRow } from '@material-ui/core'
 import React from 'react'
 import { Equip, Slots } from '../../domain/equips'
+import Link from '../atoms/Link'
 
 interface Props {
   equip: Equip
@@ -37,57 +38,94 @@ export default function ResultEquip({ equip, size }: Props) {
           <TableCell>{showSlots(equip.weaponSlots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === weapon).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th">頭装備</TableCell>
-          <TableCell>{equip.head?.name || '装備なし'}</TableCell>
+          <TableCell>
+            {equip.head
+              ? <Link href={`/armors/${equip.head.name}`} >{equip.head.name}</Link>
+              : '装備なし'
+            }
+          </TableCell>
           <TableCell>{showSlots(equip.head?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.head).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th">胴装備</TableCell>
-          <TableCell>{equip.body?.name || '装備なし'}</TableCell>
+          <TableCell>
+            {equip.body
+              ? <Link href={`/armors/${equip.body.name}`} >{equip.body.name}</Link>
+              : '装備なし'
+            }
+          </TableCell>
           <TableCell>{showSlots(equip.body?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.body).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th">腕装備</TableCell>
-          <TableCell>{equip.arm?.name || '装備なし'}</TableCell>
+          <TableCell>
+            {equip.arm
+              ? <Link href={`/armors/${equip.arm.name}`} >{equip.arm.name}</Link>
+              : '装備なし'
+            }
+          </TableCell>
           <TableCell>{showSlots(equip.arm?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.arm).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th">腰装備</TableCell>
-          <TableCell>{equip.wst?.name || '装備なし'}</TableCell>
+          <TableCell>
+            {equip.wst
+              ? <Link href={`/armors/${equip.wst.name}`} >{equip.wst.name}</Link>
+              : '装備なし'
+            }
+          </TableCell>
           <TableCell>{showSlots(equip.wst?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.wst).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
         <TableRow>
           <TableCell component="th">足装備</TableCell>
-          <TableCell>{equip.leg?.name || '装備なし'}</TableCell>
+          <TableCell>
+            {equip.leg
+              ? <Link href={`/armors/${equip.leg.name}`} >{equip.leg.name}</Link>
+              : '装備なし'
+            }
+          </TableCell>
           <TableCell>{showSlots(equip.leg?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.leg).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
@@ -97,7 +135,9 @@ export default function ResultEquip({ equip, size }: Props) {
           <TableCell>{showSlots(equip.charm?.slots)}</TableCell>
           <TableCell>
             {decoList.filter(([v]) => v === equip.charm).map(([, v], i) =>
-              <div key={i}>{v.name}</div>
+              <div key={i}>
+                <Link href={`/decos/${v.name}`} >{v.name}</Link>
+              </div>
             )}
           </TableCell>
         </TableRow>
@@ -106,7 +146,8 @@ export default function ResultEquip({ equip, size }: Props) {
           <TableCell>
             {skills.map(([skill, point]) =>
               <div key={skill}>
-                {`${skill} Lv${point}`}
+                <Link href={`/skills/${skill}`} >{skill}</Link>
+                {` Lv${point}`}
               </div>
             )}
           </TableCell>
@@ -114,7 +155,8 @@ export default function ResultEquip({ equip, size }: Props) {
           <TableCell>
             {decos.map(v =>
               <div key={v}>
-                {`${v} x${equip.decos.filter(deco => deco.name === v).length}`}
+                <Link href={`/decos/${v}`} >{v}</Link>
+                {` x${equip.decos.filter(deco => deco.name === v).length}`}
               </div>
             )}
             {!decos.length && 'なし'}

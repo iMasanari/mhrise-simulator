@@ -1,26 +1,24 @@
-import { List, ListItem, ListItemText, ListSubheader, Typography } from '@material-ui/core'
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core'
 import React from 'react'
-import { ActiveSkill } from '../../../domain/skill'
+import { useAddableSkillsSimulator } from '../../../hooks/addableSkillsSimulator'
+import { useAddSkills } from '../../../hooks/simulatorConditionsHooks'
 
-interface Props {
-  skills: [string, number][]
-  completed: boolean
-  setActiveSkill: React.Dispatch<React.SetStateAction<ActiveSkill>>
-}
+export default function SimulatorAddableSkill() {
+  const setSkillConditons = useAddSkills()
+  const { result, loading } = useAddableSkillsSimulator()
 
-export default function SimulatorAddableSkill({ skills, completed, setActiveSkill }: Props) {
   return (
     <div>
-      {skills.length > 0 && (
+      {result.length > 0 && (
         <List dense>
-          {skills.map(([skill, point]) =>
-            <ListItem key={skill} button component="li" onClick={() => setActiveSkill(v => ({ ...v, [skill]: point }))}>
+          {result.map(([skill, point]) =>
+            <ListItem key={skill} button component="li" onClick={() => setSkillConditons(skill, point)}>
               <ListItemText primary={`${skill} Lv${point}`} />
             </ListItem>
           )}
         </List>
       )}
-      {completed && <Typography align="center">検索完了 {skills.length}件</Typography>}
+      {!loading && <Typography align="center">検索完了 {result.length}件</Typography>}
     </div>
   )
 }

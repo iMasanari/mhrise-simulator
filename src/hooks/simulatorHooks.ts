@@ -1,44 +1,45 @@
-import { useRef, useState } from 'react'
-import { useStore } from 'react-redux'
-import skillList from '../../generated/skills.json'
-import { Charm, Equip, Slots } from '../domain/equips'
+import { useSelector } from 'react-redux'
+import { useSimulatorRef } from '../contexts/SimulatorContext'
+import { Charm, Slots } from '../domain/equips'
 import { ActiveSkill } from '../domain/skill'
 import { RootState } from '../modules'
-import Simulator, { createSiumlatorWorker } from '../simulator'
+import { addResult, simulateComplete, simulateInit, simulateStart, simulateStop } from '../modules/simulatorResult'
+import Simulator from '../simulator'
+import { useAction } from './actionHooks'
+import { useResetResultOpens } from './simualtorPageState'
 
-const skillMaxPointMap = new Map(
-  skillList.map(v => [v.name, v.details[v.details.length - 1].point])
-)
+const selector = (state: RootState) =>
+  state.simulatorResult
 
 export const useSimulator = () => {
-  const [loading, setLoading] = useState(false)
-  const [completed, setCompleted] = useState(false)
-  const [result, setResult] = useState([] as Equip[])
-  const [addableSkillList, setAddableSkillList] = useState([] as [string, number][])
-
-  const simulatorRef = useRef<Simulator>()
-  const addableSkillWorkerRef = useRef<Worker>()
+  const { loading, completed, result } = useSelector(selector)
+  const init = useAction(simulateInit)
+  const start = useAction(simulateStart)
+  const stop = useAction(simulateStop)
+  const complete = useAction(simulateComplete)
+  const add = useAction(addResult)
+  const resetResultOpen = useResetResultOpens()
+  const simulatorRef = useSimulatorRef()
 
   const exec = async (simulator: Simulator) => {
-    setLoading(true)
+    start()
 
     for (let i = 0; i < 10; i++) {
-      const res = await simulator.simulate()
+      const equip = await simulator.simulate()
 
       if (simulator !== simulatorRef.current) {
         return
       }
 
-      if (!res) {
-        setLoading(false)
-        setCompleted(true)
+      if (!equip) {
+        complete()
         return
       }
 
-      setResult(result => [...result, res])
+      add(equip)
     }
 
-    setLoading(false)
+    stop()
   }
 
   const simulate = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
@@ -49,8 +50,8 @@ export const useSimulator = () => {
     const simulator = new Simulator({ skills, weaponSlots, charms, ignore: [] })
     simulatorRef.current = simulator
 
-    setCompleted(false)
-    setResult([])
+    init()
+    resetResultOpen()
 
     await exec(simulator)
   }
@@ -63,41 +64,11 @@ export const useSimulator = () => {
     await exec(simulator)
   }
 
-  const store = useStore<RootState>()
-
-  const searchAddableSkillList = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
-    if (addableSkillWorkerRef.current) {
-      addableSkillWorkerRef.current.terminate()
-    }
-
-    const worker = createSiumlatorWorker()
-    addableSkillWorkerRef.current = worker
-
-    const skillLog = new Set([...store.getState().skillLog, ...skillList.map(v => v.name)])
-
-    setCompleted(false)
-    setAddableSkillList([])
-
-    for (const skill of skillLog) {
-      const simulator = new Simulator({ skills, weaponSlots, charms, ignore: [], objectiveSkill: skill }, worker)
-      const result = await simulator.simulate()
-      const point = result ? Math.min(result.skills[skill] || 0, skillMaxPointMap.get(skill)!) : 0
-
-      if (point && skills[skill] !== point) {
-        setAddableSkillList((list) => [...list, [skill, point]])
-      }
-    }
-
-    setCompleted(true)
-  }
-
   return {
     loading,
     completed,
     result,
-    addableSkillList,
     simulate,
     more,
-    searchAddableSkillList,
   }
 }

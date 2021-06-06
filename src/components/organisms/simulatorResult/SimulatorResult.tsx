@@ -1,16 +1,14 @@
 import { Button, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core'
 import React from 'react'
-import { Equip } from '../../../domain/equips'
+import { useSetResultOpen, useSimulatorPageState } from '../../../hooks/simualtorPageState'
+import { useSimulator } from '../../../hooks/simulatorHooks'
 import SimulatorResultRow from './SimulatorResultRow'
 
-interface Props {
-  result: Equip[]
-  loading: boolean
-  completed: boolean
-  more: () => void
-}
+export default function SimulatorResult() {
+  const { result, loading, completed, more } = useSimulator()
+  const { opens } = useSimulatorPageState()
+  const setResultOpen = useSetResultOpen()
 
-export default function SimulatorResult({ result, loading, completed, more }: Props) {
   return (
     <div>
       {(result.length > 0 || loading) && (
@@ -41,7 +39,7 @@ export default function SimulatorResult({ result, loading, completed, more }: Pr
             </TableHead>
             <TableBody>
               {result.map((equip, i) =>
-                <SimulatorResultRow key={i} equip={equip} />
+                <SimulatorResultRow key={i} equip={equip} open={opens[i] || false} setOpen={open => setResultOpen(i, open)} />
               )}
               {loading && (
                 [...Array(10 - result.length % 10).keys()].map(key =>
