@@ -26,13 +26,57 @@ export interface Deco {
 
 export interface Equip {
   def: number
-  weaponSlot: Slots
-  head: Armor | null | undefined
-  body: Armor | null | undefined
-  arm: Armor | null | undefined
-  wst: Armor | null | undefined
-  leg: Armor | null | undefined
-  charm: Charm | null | undefined
+  weaponSlots: Slots
+  head: Armor | null
+  body: Armor | null
+  arm: Armor | null
+  wst: Armor | null
+  leg: Armor | null
+  charm: Charm | null
   decos: Deco[]
   skills: ActiveSkill
+}
+
+interface EquipConditon {
+  weaponSlots: Slots
+  head: Armor | null
+  body: Armor | null
+  arm: Armor | null
+  wst: Armor | null
+  leg: Armor | null
+  charm: Charm | null
+  decos: Deco[]
+}
+
+export const toEquip = ({ weaponSlots, head, body, arm, wst, leg, charm, decos }: EquipConditon): Equip => {
+  const armors = [head, body, arm, wst, leg].filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
+  const def = armors.reduce((sum, v) => sum + (v ? v.defs[1] : 0), 0)
+
+  const skills = {} as ActiveSkill
+
+  // 防具スキル
+  for (const value of armors) {
+    for (const [skill, point] of Object.entries(value.skills)) {
+      skills[skill] = (skills[skill] || 0) + point
+    }
+  }
+
+  // 風雷合一スキル対応
+  if (skills['風雷合一'] > 4) {
+    const point = skills['風雷合一'] - 3
+    for (const skill of Object.keys(skills)) {
+      if (skill === '風雷合一') continue
+      skills[skill] = skills[skill] + point
+    }
+  }
+
+  // 護石、装飾品スキル
+  for (const value of [charm, ...decos]) {
+    if (!value) continue
+    for (const [skill, point] of Object.entries(value.skills)) {
+      skills[skill] = (skills[skill] || 0) + point
+    }
+  }
+
+  return { weaponSlots, head, body, arm, wst, leg, charm, decos, def, skills }
 }

@@ -5,14 +5,14 @@ import deco from '../../generated/deco.json'
 import head from '../../generated/head.json'
 import leg from '../../generated/leg.json'
 import wst from '../../generated/wst.json'
-import { Armor, Charm, Deco, Equip, Slots } from '../domain/equips'
+import { Armor, Charm, Deco, Slots, toEquip } from '../domain/equips'
 import { Condition, Result } from '../domain/simulator'
 import { ActiveSkill } from '../domain/skill'
 import { NO_ARMOR_COEFFICIENT } from './constants'
 
 export interface SimulatorCondition {
   objectiveSkill?: string
-  weaponSlot: Slots
+  weaponSlots: Slots
   head: Armor[]
   body: Armor[]
   arm: Armor[]
@@ -37,7 +37,7 @@ interface Groups {
 
 interface Stock {
   sortKey: number
-  weaponSlot: Slots
+  weaponSlots: Slots
   head: Armor | null
   body: Armor | null
   arm: Armor | null
@@ -90,43 +90,8 @@ const createCharmGroup = (skillKeys: string[], charms: Charm[]) => {
   }
 }
 
-const toEquip = (equip: Stock | undefined): Equip | null => {
-  if (!equip) {
-    return null
-  }
-
-  const armors = [equip.head, equip.body, equip.arm, equip.wst, equip.leg]
-  const def = armors.reduce((sum, v) => sum + (v ? v.defs[1] : 0), 0)
-
-  const skills = {} as ActiveSkill
-
-  // 防具スキル
-  for (const value of armors) {
-    if (!value) continue
-    for (const [skill, point] of Object.entries(value.skills)) {
-      skills[skill] = (skills[skill] || 0) + point
-    }
-  }
-
-  // 風雷合一スキル対応
-  if (skills['風雷合一'] > 4) {
-    const point = skills['風雷合一'] - 3
-    for (const skill of Object.keys(skills)) {
-      if (skill === '風雷合一') continue
-      skills[skill] = skills[skill] + point
-    }
-  }
-
-  // 護石、装飾品スキル
-  for (const value of [equip.charm, ...equip.decos]) {
-    if (!value) continue
-    for (const [skill, point] of Object.entries(value.skills)) {
-      skills[skill] = (skills[skill] || 0) + point
-    }
-  }
-
-  return { ...equip, def, skills }
-}
+export const createSiumlatorWorker = () =>
+  new Worker(new URL('./worker.ts', import.meta.url))
 
 export default class Simulator {
   private pw: PromiseWorker
@@ -135,10 +100,10 @@ export default class Simulator {
   private stocks: Stock[] = []
   private next: Stock[] = []
 
-  constructor(worker: Worker, condition: Condition) {
+  constructor(condition: Condition, private worker = createSiumlatorWorker()) {
     this.pw = new PromiseWorker(worker)
 
-    const { objectiveSkill, weaponSlot } = condition
+    const { objectiveSkill, weaponSlots } = condition
     const skills = objectiveSkill ? { ...condition.skills, [objectiveSkill]: 0 } : condition.skills
     const skillKeys = Object.keys(skills)
     const ignore = new Set(condition.ignore || [])
@@ -153,7 +118,7 @@ export default class Simulator {
     this.condition = {
       objectiveSkill,
       skills,
-      weaponSlot,
+      weaponSlots,
       head: headData.armors,
       body: bodyData.armors,
       arm: armData.armors,
@@ -187,7 +152,8 @@ export default class Simulator {
     if (this.next.length) {
       await new Promise(requestAnimationFrame)
 
-      return toEquip(this.next.pop())
+      const stock = this.next.pop()
+      return stock ? toEquip(stock) : null
     }
 
     const result = await this.pw.postMessage<Result | null, SimulatorCondition>(this.condition)
@@ -197,7 +163,8 @@ export default class Simulator {
         this.next = this.stocks
         this.stocks = []
 
-        return toEquip(this.next.pop())
+        const stock = this.next.pop()
+        return stock ? toEquip(stock) : null
       }
 
       return null
@@ -221,7 +188,7 @@ export default class Simulator {
             for (const leg of this.getArmors('leg', result.leg)) {
               const sortKey = [head, body, arm, wst, leg].reduce((sum, v) => sum + (v ? v.defs[1] : NO_ARMOR_COEFFICIENT), 0)
 
-              list.push({ sortKey, weaponSlot: this.condition.weaponSlot, head, body, arm, wst, leg, charm, decos })
+              list.push({ sortKey, weaponSlots: this.condition.weaponSlots, head, body, arm, wst, leg, charm, decos })
             }
           }
         }
@@ -234,6 +201,11 @@ export default class Simulator {
     this.next = tmp.filter(v => v.sortKey >= border).sort((a, b) => a.sortKey - b.sortKey)
     this.stocks = tmp.filter(v => v.sortKey < border)
 
-    return toEquip(this.next.pop())
+    const stock = this.next.pop()
+    return stock ? toEquip(stock) : null
+  }
+
+  terminate() {
+    this.worker.terminate()
   }
 }

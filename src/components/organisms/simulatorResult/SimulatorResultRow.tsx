@@ -14,10 +14,11 @@ const rowRootStyle = css`
 
 interface Props {
   equip: Equip
+  open: boolean
+  setOpen: (open: boolean) => void
 }
 
-export default function SimulatorResultRow({ equip }: Props) {
-  const [open, setOpen] = useState(false)
+export default function SimulatorResultRow({ equip, open, setOpen }: Props) {
   const [isDialogOpen, setDialogOpen] = useState(false)
 
   return (

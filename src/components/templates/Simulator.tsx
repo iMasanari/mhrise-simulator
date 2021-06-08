@@ -1,13 +1,8 @@
 import { css, Theme } from '@emotion/react'
-import { Box, Button, Tab, Tabs } from '@material-ui/core'
-import { Mode } from '@material-ui/icons'
-import { useRouter } from 'next/router'
-import React, { useEffect, useState } from 'react'
-import { Slots } from '../../domain/equips'
+import { Box, Tab, Tabs } from '@material-ui/core'
+import React from 'react'
 import { ActiveSkill, SkillSystem } from '../../domain/skill'
-import { useCharms } from '../../hooks/charmsHooks'
-import { useSimulator } from '../../hooks/simulatorHooks'
-import { useUpdateSkillLog } from '../../hooks/skillLogHooks'
+import { useSetMode, useSimulatorPageState } from '../../hooks/simualtorPageState'
 import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
@@ -18,8 +13,6 @@ interface Props {
   skills: SkillSystem[]
   shares: { id: string, skills: ActiveSkill }[]
 }
-
-type Mode = 'usage' | 'result' | 'addSkill' | 'charm'
 
 const containerStyle = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
@@ -46,72 +39,14 @@ const resultStyle = (theme: Theme) => css`
 `
 
 export default function Simulator({ skills, shares }: Props) {
-  const [activeSkill, setActiveSkill] = useState<ActiveSkill>({})
-  const [weaponSlot, setWeaponSlot] = useState<Slots>([])
-  const { loading, completed, result, addableSkillList, simulate, more, searchAddableSkillList } = useSimulator()
-  const charms = useCharms()
-  const [mode, setMode] = useState<Mode>('usage')
-  const [autoExecute, setAutoExecute] = useState(false)
-  const router = useRouter()
-
-  const updateSkillLog = useUpdateSkillLog()
-
-  const execute = () => {
-    setMode('result')
-    simulate(activeSkill, weaponSlot, charms)
-    updateSkillLog(activeSkill)
-  }
-
-  const addSkill = () => {
-    setMode('addSkill')
-    searchAddableSkillList(activeSkill, weaponSlot, charms)
-    updateSkillLog(activeSkill)
-  }
-
-  useEffect(() => {
-    const query = location.search
-    if (query.length < 2) return
-
-    const searchParams = new URLSearchParams(query)
-
-    const skills = Object.fromEntries(
-      (searchParams.get('skills') || '').split(',')
-        .map(v => v.split('Lv'))
-        .map(([key, value]) => [key, +value])
-    )
-
-    const slots = (searchParams.get('weaponSlots') || '').split(',').map(Number)
-
-    setActiveSkill(skills)
-    setWeaponSlot(slots)
-    setAutoExecute(true)
-
-    router.replace(location.pathname)
-  }, [router])
-
-  useEffect(() => {
-    if (autoExecute) {
-      execute()
-      setAutoExecute(false)
-    }
-    // eslint-disable-next-line
-  }, [autoExecute])
+  const { mode } = useSimulatorPageState()
+  const setMode = useSetMode()
 
   return (
     <Box sx={{ my: 4 }}>
       <div css={containerStyle}>
         <div css={conditionStyle}>
-          <SimulatorCondition
-            skills={skills}
-            activeSkill={activeSkill}
-            setActiveSkill={setActiveSkill}
-            weaponSlot={weaponSlot}
-            setWeaponSlot={setWeaponSlot}
-          />
-          <Box display="flex" mx={2}>
-            <Button onClick={execute} variant="contained" sx={{ flex: '1', mr: 1 }}>検索</Button>
-            <Button onClick={addSkill} variant="outlined">追加スキル検索</Button>
-          </Box>
+          <SimulatorCondition skills={skills} />
         </div>
         <div css={resultStyle}>
           <Tabs
@@ -122,19 +57,19 @@ export default function Simulator({ skills, shares }: Props) {
           >
             <Tab value="usage" label="使い方" css={tabStyle} />
             <Tab value="result" label="検索結果" css={tabStyle} />
-            <Tab value="addSkill" label="追加スキル" css={tabStyle} />
-            <Tab value="charm" label="護石設定" css={tabStyle} />
+            <Tab value="addableSkill" label="追加スキル" css={tabStyle} />
+            <Tab value="charms" label="護石設定" css={tabStyle} />
           </Tabs>
           {mode === 'usage' && (
             <SimulatorUsage shares={shares} />
           )}
           {mode === 'result' && (
-            <SimulatorResult result={result} loading={loading} completed={completed} more={more} />
+            <SimulatorResult />
           )}
-          {mode === 'addSkill' && (
-            <SimulatorAddableSkill skills={addableSkillList} completed={completed} setActiveSkill={setActiveSkill} />
+          {mode === 'addableSkill' && (
+            <SimulatorAddableSkill />
           )}
-          {mode === 'charm' && (
+          {mode === 'charms' && (
             <CharmSettings skills={skills} />
           )}
         </div>

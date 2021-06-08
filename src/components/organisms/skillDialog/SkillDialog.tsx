@@ -1,6 +1,7 @@
-import { AppBar, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, makeStyles, Slide, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Slide, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { TransitionProps } from '@material-ui/core/transitions'
 import { Close } from '@material-ui/icons'
+import { makeStyles } from '@material-ui/styles'
 import React, { useMemo, useRef, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import SkillList from './SkillList'

@@ -6,7 +6,7 @@ import { SimulatorCondition } from '.'
 registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
   const solver = new Solver(condition.skills, condition.objectiveSkill)
 
-  solver.setWeaponSlots(condition.weaponSlot)
+  solver.setWeaponSlots(condition.weaponSlots)
 
   for (const type of ['head', 'body', 'arm', 'wst', 'leg'] as const) {
     for (const armor of Object.values(condition[type])) {
@@ -26,6 +26,3 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
 
   return solver.solve()
 })
-
-// for Webpack worker-loader
-export default null! as { new(): Worker }
