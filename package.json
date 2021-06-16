@@ -25,7 +25,7 @@
     "clsx": "^1.1.1",
     "firebase-admin": "^9.9.0",
     "javascript-lp-solver": "^0.4.24",
-    "next": "10.2.1",
+    "next": "^11.0.0",
     "promise-worker": "^2.0.1",
     "puppeteer-core": "^9.1.0",
     "react": "^17.0.2",
@@ -48,7 +48,6 @@
     "firebase-tools": "^9.12.1",
     "node-fetch": "^2.6.1",
     "ts-node": "^10.0.0",
-    "typescript": "^4.3.2",
-    "webpack": "^5.38.1"
+    "typescript": "^4.3.2"
   }
 }
