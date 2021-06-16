@@ -1,4 +1,4 @@
-import { AppBar, Button, Dialog, DialogActions, DialogContent, DialogTitle, Grid, IconButton, Slide, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { AppBar, Box, Button, Dialog, DialogActions, DialogContent, Grid, IconButton, Slide, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@material-ui/core'
 import { TransitionProps } from '@material-ui/core/transitions'
 import { Close } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
@@ -56,7 +56,7 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
           </Typography>
         </Toolbar>
       </AppBar>
-      <DialogTitle disableTypography>
+      <DialogContent sx={{ display: 'flex', flexDirection: 'column', pb: 0 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <TextField
@@ -85,9 +85,9 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
             </TextField>
           </Grid>
         </Grid>
-      </DialogTitle>
-      <DialogContent sx={{ paddingTop: 0 }}>
-        <SkillList skills={filterdSkills} activeSkill={currentActiveSkill} setActiveSkill={setActiveSkill} />
+        <Box flex="1" overflow="auto">
+          <SkillList skills={filterdSkills} activeSkill={currentActiveSkill} setActiveSkill={setActiveSkill} />
+        </Box>
       </DialogContent>
       <DialogActions>
         <Button variant="contained" fullWidth onClick={handleClose}>
