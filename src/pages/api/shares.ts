@@ -28,12 +28,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const result = await firestore.collection('shares').add({
     weaponSlots: equip.weaponSlots,
-    head: equip.head?.name,
-    body: equip.body?.name,
-    arm: equip.arm?.name,
-    wst: equip.wst?.name,
-    leg: equip.leg?.name,
-    charm: equip.charm || { skills: {}, slots: [] },
+    head: equip.head?.name || null,
+    body: equip.body?.name || null,
+    arm: equip.arm?.name || null,
+    wst: equip.wst?.name || null,
+    leg: equip.leg?.name || null,
+    charm: equip.charm || null,
     decos: equip.decos.map(deco => deco.name),
     skills: equip.skills,
     skillList: Object.keys(equip.skills),
