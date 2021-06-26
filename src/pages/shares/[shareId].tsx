@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Paper, TableContainer, Typography } from '@material-ui/core'
+import { Box, Breadcrumbs, Button, Grid, Paper, TableContainer, Typography } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import React from 'react'
@@ -7,6 +7,7 @@ import { getDecoInfo } from '../../api/decos'
 import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
+import ResultSkills from '../../components/molecules/ResultSkills'
 import MetaData from '../../components/templates/MetaData'
 import { Deco, Equip, toEquip } from '../../domain/equips'
 
@@ -85,9 +86,16 @@ export default function Shares({ equip }: Props) {
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
           {'装備共有'}
         </Typography>
-        <TableContainer component={Paper} variant="outlined">
-          <ResultEquip equip={equip} />
-        </TableContainer>
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={6}>
+            <ResultEquip equip={equip} />
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box sx={{ p: [1, 2] }}>
+              <ResultSkills equip={equip} />
+            </Box>
+          </Grid>
+        </Grid>
         <Button component={Link} href={simulatorUrl} fullWidth sx={{ my: 2 }}>
           {'この装備の条件で検索する'}
         </Button>

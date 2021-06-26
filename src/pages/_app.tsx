@@ -1,5 +1,4 @@
-import createCache from '@emotion/cache'
-import { CacheProvider, css, Global } from '@emotion/react'
+import { css, Global } from '@emotion/react'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ThemeProvider } from '@material-ui/core/styles'
 import { AppProps } from 'next/app'
@@ -17,8 +16,6 @@ body {
 }
 `
 
-export const cache = createCache({ key: 'css', prepend: true })
-
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props
 
@@ -35,14 +32,12 @@ export default function MyApp(props: AppProps) {
       <SimulatorProvider>
         <PersistGate persistor={persistor}>
           {() =>
-            <CacheProvider value={cache}>
-              <ThemeProvider theme={theme}>
-                <CssBaseline />
-                <Global styles={globalStyle} />
-                <Header title="MHRise スキルシミュ" />
-                <Component {...pageProps} />
-              </ThemeProvider>
-            </CacheProvider>
+            <ThemeProvider theme={theme}>
+              <CssBaseline />
+              <Global styles={globalStyle} />
+              <Header title="MHRise スキルシミュ" />
+              <Component {...pageProps} />
+            </ThemeProvider>
           }
         </PersistGate>
       </SimulatorProvider>

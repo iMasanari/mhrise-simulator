@@ -35,6 +35,7 @@ export interface Equip {
   charm: Charm | null
   decos: Deco[]
   skills: ActiveSkill
+  elements: [number, number, number, number, number]
 }
 
 interface EquipConditon {
@@ -51,6 +52,14 @@ interface EquipConditon {
 export const toEquip = ({ weaponSlots, head, body, arm, wst, leg, charm, decos }: EquipConditon): Equip => {
   const armors = [head, body, arm, wst, leg].filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
   const def = armors.reduce((sum, v) => sum + (v ? v.defs[1] : 0), 0)
+
+  const elements: [number, number, number, number, number] = [
+    armors.reduce((sum, v) => sum + (v ? v.elements[0] : 0), 0),
+    armors.reduce((sum, v) => sum + (v ? v.elements[1] : 0), 0),
+    armors.reduce((sum, v) => sum + (v ? v.elements[2] : 0), 0),
+    armors.reduce((sum, v) => sum + (v ? v.elements[3] : 0), 0),
+    armors.reduce((sum, v) => sum + (v ? v.elements[4] : 0), 0),
+  ]
 
   const skills = {} as ActiveSkill
 
@@ -78,5 +87,5 @@ export const toEquip = ({ weaponSlots, head, body, arm, wst, leg, charm, decos }
     }
   }
 
-  return { weaponSlots, head, body, arm, wst, leg, charm, decos, def, skills }
+  return { weaponSlots, head, body, arm, wst, leg, charm, decos, def, skills, elements }
 }
