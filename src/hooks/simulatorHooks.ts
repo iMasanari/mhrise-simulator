@@ -6,7 +6,6 @@ import { RootState } from '../modules'
 import { addResult, simulateComplete, simulateInit, simulateStart, simulateStop } from '../modules/simulatorResult'
 import Simulator from '../simulator'
 import { useAction } from './actionHooks'
-import { useResetResultOpens } from './simualtorPageState'
 
 const selector = (state: RootState) =>
   state.simulatorResult
@@ -18,7 +17,6 @@ export const useSimulator = () => {
   const stop = useAction(simulateStop)
   const complete = useAction(simulateComplete)
   const add = useAction(addResult)
-  const resetResultOpen = useResetResultOpens()
   const simulatorRef = useSimulatorRef()
 
   const exec = async (simulator: Simulator) => {
@@ -51,7 +49,6 @@ export const useSimulator = () => {
     simulatorRef.current = simulator
 
     init()
-    resetResultOpen()
 
     await exec(simulator)
   }
