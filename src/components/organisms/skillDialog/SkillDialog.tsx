@@ -1,9 +1,9 @@
-import { AppBar, Box, Button, Dialog, DialogActions, DialogContent, Grid, IconButton, Slide, TextField, Toolbar, Typography, useMediaQuery, useTheme } from '@material-ui/core'
+import { Box, Button, Dialog, DialogActions, DialogContent, Grid, Slide, TextField, useMediaQuery, useTheme } from '@material-ui/core'
 import { TransitionProps } from '@material-ui/core/transitions'
-import { Close } from '@material-ui/icons'
 import { makeStyles } from '@material-ui/styles'
 import React, { useMemo, useRef, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
+import DialogHeader from '../../molecules/DialogHeader'
 import SkillList from './SkillList'
 
 const useStyles = makeStyles(() => ({
@@ -46,16 +46,7 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
 
   return (
     <Dialog open={open} fullScreen={fullScreen} onClose={handleClose} classes={{ paper: classes.paper }} fullWidth TransitionComponent={Transition}>
-      <AppBar sx={{ position: 'relative' }}>
-        <Toolbar>
-          <IconButton edge="start" color="inherit" onClick={handleClose} aria-label="close">
-            <Close />
-          </IconButton>
-          <Typography variant="h6">
-            {'スキル選択'}
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <DialogHeader title="スキル選択" onClose={handleClose} />
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', pb: 0 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
