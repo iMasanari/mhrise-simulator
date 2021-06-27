@@ -1,4 +1,4 @@
-import { Box, Breadcrumbs, Button, Grid, Paper, TableContainer, Typography } from '@material-ui/core'
+import { Box, Breadcrumbs, Button, Grid, Typography } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import React from 'react'
@@ -50,7 +50,11 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
 }
 
 export default function Shares({ equip }: Props) {
-  const skillParam = Object.entries(equip.skills).map(([k, v]) => `${k}Lv${v}`).sort().join(',')
+  const skillParam = Object.entries(equip.skills)
+    .sort(([, a], [, b]) => b - a)
+    .map(([k, v]) => `${k}Lv${v}`)
+    .join(',')
+
   const slotsParam = equip.weaponSlots.join(',')
 
   const simulatorUrl = `/?skills=${skillParam}&weaponSlots=${slotsParam}`
@@ -64,7 +68,6 @@ export default function Shares({ equip }: Props) {
     leg: equip.leg?.name || '',
     charmSkills: Object.entries(equip.charm?.skills || {}).map(([k, v]) => `${k}Lv${v}`).join(','),
     charmSlots: equip.charm?.slots.join(',') || '',
-    decos: equip.decos.map(v => v.name).join(','),
     skills: skillParam,
   }
 
