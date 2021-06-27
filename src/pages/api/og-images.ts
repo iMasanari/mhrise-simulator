@@ -1,37 +1,15 @@
-import chrome from 'chrome-aws-lambda'
+import fs from 'fs/promises'
+import path from 'path'
 import { NextApiRequest, NextApiResponse } from 'next'
-import core from 'puppeteer-core'
-import React from 'react'
-import ReactDOMServer from 'react-dom/server'
-import OgImage from '../../components/templates/OgImage'
+import sharp from 'sharp'
 
-const isDev = !process.env.AWS_REGION
+path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'fonts.conf')
+path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'NotoSansJP-Regular.otf')
 
-const getLaunchOptions = async (isDev: boolean) => {
-  if (isDev) {
-    return {
-      args: [],
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
-      headless: true,
-    }
-  } else {
-    return {
-      args: chrome.args,
-      executablePath: await chrome.executablePath,
-      headless: chrome.headless,
-    }
-  }
-}
+const svgPath = path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'template.svg')
 
-const getHtml = ({ equip }: { equip: any }) => {
-  const element = React.createElement(OgImage, { equip })
-  const markup = ReactDOMServer.renderToStaticMarkup(element)
-
-  return `<!doctype html>${markup}`
-}
-
-const createSkills = (skills: string) =>
-  skills ? Object.fromEntries(skills.split(',').map(v => v.split('Lv')).map(([key, value]) => [key, +value])) : {}
+const showSlots = (slots: string | null) =>
+  `スロット${slots?.split(',').map(v => `【${v}】`).join('') || 'なし'}`
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {
@@ -42,34 +20,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
 
   try {
-    const { weaponSlots, head, body, arm, wst, leg, charmSkills, charmSlots, decos, skills } = req.query as Record<string, string>
+    const { weaponSlots, head, body, arm, wst, leg, charmSkills, charmSlots, skills } = req.query as Record<string, string>
 
-    const equip = {
-      weaponSlots: weaponSlots.split(',').map(Number),
-      head,
-      body,
-      arm,
-      wst,
-      leg,
-      charm: {
-        skills: createSkills(charmSkills),
-        slots: charmSlots.split(',').map(Number),
-      },
-      decos: decos.split(','),
-      skills: createSkills(skills),
-    }
+    const weapon = showSlots(weaponSlots)
+    const charmList = [...(charmSkills?.split(',') || []), showSlots(charmSlots)]
+    const skillList = skills?.split(',') || []
 
-    const html = getHtml({ equip })
-    const options = await getLaunchOptions(isDev)
-    const browser = await core.launch(options)
-    const page = await browser.newPage()
+    const mapping = new Map<string, string>([
+      ...Object.entries({ weapon, head, body, arm, wst, leg }).map(([key, value]) => [`{{${key}}}`, value] as const),
+      ...[...Array(3).keys()].map(i => [`{{charm${i + 1}}}`, charmList[i]] as const),
+      ...[...Array(20).keys()].map(i => [`{{skill${i + 1}}}`, skillList[i]] as const),
+    ])
 
-    await page.setViewport({ width: 1200, height: 630 })
-    await page.setContent(html, { waitUntil: 'domcontentloaded' })
-    await page.evaluateHandle('document.fonts.ready')
+    const svg = await fs.readFile(svgPath, 'utf-8')
+    const reg = new RegExp([...mapping.keys()].join('|'), 'g')
+    const ogp = svg.replace(reg, v => mapping.get(v) || '')
 
-    const buffer = await page.screenshot({ type: 'png' })
-    await browser.close()
+    const buffer = await sharp(Buffer.from(ogp)).png().toBuffer()
 
     const chacheAge = 2 * 7 * 24 * 60 * 60 // 2週間
 
