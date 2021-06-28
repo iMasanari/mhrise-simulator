@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 
 path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'fonts.conf')
-path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'NotoSansJP-Regular.otf')
+path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'Noto_Sans_JP', 'NotoSansJP-Regular.otf')
 
 const svgPath = path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'template.svg')
 
@@ -22,12 +22,20 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { weaponSlots, head, body, arm, wst, leg, charmSkills, charmSlots, skills } = req.query as Record<string, string>
 
-    const weapon = showSlots(weaponSlots)
+    const equips = {
+      weapon: showSlots(weaponSlots),
+      head: head || '装備なし',
+      body: body || '装備なし',
+      arm: arm || '装備なし',
+      wst: wst || '装備なし',
+      leg: leg || '装備なし',
+    }
+
     const charmList = [...(charmSkills?.split(',') || []), showSlots(charmSlots)]
     const skillList = skills?.split(',') || []
 
     const mapping = new Map<string, string>([
-      ...Object.entries({ weapon, head, body, arm, wst, leg }).map(([key, value]) => [`{{${key}}}`, value] as const),
+      ...Object.entries(equips).map(([key, value]) => [`{{${key}}}`, value] as const),
       ...[...Array(3).keys()].map(i => [`{{charm${i + 1}}}`, charmList[i]] as const),
       ...[...Array(20).keys()].map(i => [`{{skill${i + 1}}}`, skillList[i]] as const),
     ])

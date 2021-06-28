@@ -1,21 +1,35 @@
 import { List, ListItem, ListItemText } from '@material-ui/core'
 import React from 'react'
 import { ActiveSkill } from '../../domain/skill'
-import Link from '../atoms/Link'
+import NakedLink from '../atoms/NakedLink'
+
+export interface Share {
+  id: string
+  head: string | null
+  body: string | null
+  arm: string | null
+  wst: string | null
+  leg: string | null
+  skills: ActiveSkill
+}
 
 interface Props {
-  shares: { id: string, skills: ActiveSkill }[]
+  shares: Share[]
 }
 
 export default function ShareList({ shares }: Props) {
   return (
     <List>
-      {shares.map(v =>
-        <ListItem key={v.id}>
-          <ListItemText>
-            <ShareLink href={`/shares/${v.id}`} skills={v.skills} />
-          </ListItemText>
-        </ListItem>
+      {shares.map(({ id, head, body, arm, wst, leg, skills }) =>
+        <li key={id}>
+          <ListItem button component={NakedLink} href={`/shares/${id}`}>
+            <ListItemText
+              primary={`${head || '装備なし'} - ${body || '装備なし'} - ${arm || '装備なし'} - ${wst || '装備なし'} - ${leg || '装備なし'}`}
+              secondary={getSkillText(skills)}
+              primaryTypographyProps={{ color: 'primary' }}
+            />
+          </ListItem>
+        </li>
       )}
       {!shares.length && (
         <ListItem>
@@ -26,18 +40,9 @@ export default function ShareList({ shares }: Props) {
   )
 }
 
-interface ShareLinkProps {
-  href: string
-  skills: ActiveSkill
-}
-
-const ShareLink = ({ href, skills }: ShareLinkProps) => {
+const getSkillText = (skills: ActiveSkill) => {
   const skillList = Object.entries(skills).map(([name, point]) => ({ name, point }))
     .sort((a, b) => b.point - a.point)
 
-  return (
-    <Link href={href}>
-      {skillList.map(({ name, point }) => `${name}Lv${point}`).join(' ')}
-    </Link>
-  )
+  return skillList.map(({ name, point }) => `${name}Lv${point}`).join(' ')
 }
