@@ -25,7 +25,7 @@
     "clsx": "^1.1.1",
     "firebase-admin": "^9.9.0",
     "javascript-lp-solver": "^0.4.24",
-    "next": "^11.0.0",
+    "next": "^11.0.1",
     "promise-worker": "^2.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
