@@ -4,17 +4,16 @@ import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import React from 'react'
-import { getSeries } from '../../api/armors'
+import { getArm, getBody, getHead, getLeg, getSeries, getWst } from '../../api/armors'
 import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
-import ShareList from '../../components/molecules/ShareList'
+import ShareList, { Share } from '../../components/molecules/ShareList'
 import MetaData from '../../components/templates/MetaData'
 import { Armor } from '../../domain/equips'
-import { ActiveSkill } from '../../domain/skill'
 
 interface Props {
   armor: Armor
-  shares: { id: string, skills: ActiveSkill }[]
+  shares: Share[]
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -47,10 +46,20 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
     .limit(10)
     .get()
 
-  const shares: { id: string, skills: ActiveSkill }[] = []
-  collection.forEach(doc => {
-    shares.push({ id: doc.id, skills: doc.data().skills })
-  })
+  const list: any[] = []
+  collection.forEach(v => list.push({ id: v.id, ...v.data() }))
+
+  const shares: Share[] = await Promise.all(
+    list.map(async ({ id, head, body, arm, wst, leg, skills }) => ({
+      id: id,
+      head: (await getHead(head))?.series || head,
+      body: (await getBody(body))?.series || body,
+      arm: (await getArm(arm))?.series || arm,
+      wst: (await getWst(wst))?.series || wst,
+      leg: (await getLeg(leg))?.series || leg,
+      skills,
+    }))
+  )
 
   return {
     props: { armor, shares },

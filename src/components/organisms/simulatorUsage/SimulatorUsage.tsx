@@ -1,11 +1,10 @@
 import { css } from '@emotion/react'
 import { Box, Typography } from '@material-ui/core'
 import React from 'react'
-import { ActiveSkill } from '../../../domain/skill'
-import ShareList from '../../molecules/ShareList'
+import ShareList, { Share } from '../../molecules/ShareList'
 
 interface Props {
-  shares: { id: string, skills: ActiveSkill }[]
+  shares: Share[]
 }
 
 const imgStyle = css`

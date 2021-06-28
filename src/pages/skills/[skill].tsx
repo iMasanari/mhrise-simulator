@@ -4,14 +4,13 @@ import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import * as React from 'react'
-import { findArmor } from '../../api/armors'
+import { findArmor, getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
 import { getDecos } from '../../api/decos'
 import { firestore } from '../../api/firebase'
 import { getSkills } from '../../api/skills'
 import Link from '../../components/atoms/Link'
-import ShareList from '../../components/molecules/ShareList'
+import ShareList, { Share } from '../../components/molecules/ShareList'
 import MetaData from '../../components/templates/MetaData'
-import { ActiveSkill } from '../../domain/skill'
 
 type Armor = { name: string, point: number } | null
 
@@ -27,7 +26,7 @@ interface Props {
   }
   armors: (readonly [string, Armor, Armor, Armor, Armor, Armor])[]
   decos: { name: string, point: number }[]
-  shares: { id: string, skills: ActiveSkill }[]
+  shares: Share[]
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -50,17 +49,26 @@ export const getStaticProps: GetStaticProps<Props> = async ctx => {
     .filter(v => v.skills[skillName] != null)
     .map(v => ({ name: v.name, point: v.skills[skillName] }))
 
-
   const collection = await firestore.collection('shares')
     .where('skillList', 'array-contains', skillName)
     .orderBy('createdAt', 'desc')
     .limit(10)
     .get()
 
-  const shares: { id: string, skills: ActiveSkill }[] = []
-  collection.forEach(doc => {
-    shares.push({ id: doc.id, skills: doc.data().skills })
-  })
+  const list: any[] = []
+  collection.forEach(v => list.push({ id: v.id, ...v.data() }))
+
+  const shares: Share[] = await Promise.all(
+    list.map(async ({ id, head, body, arm, wst, leg, skills }) => ({
+      id: id,
+      head: (await getHead(head))?.series || head,
+      body: (await getBody(body))?.series || body,
+      arm: (await getArm(arm))?.series || arm,
+      wst: (await getWst(wst))?.series || wst,
+      leg: (await getLeg(leg))?.series || leg,
+      skills,
+    }))
+  )
 
   return {
     props: { skill, armors, decos, shares },
@@ -99,7 +107,7 @@ export default function SkillDetailPage({ skill, armors, decos, shares }: Props)
                 <TableRow key={detail.name}>
                   <TableCell align="center">
                     {detail.point}pt
-                    </TableCell>
+                  </TableCell>
                   <TableCell>
                     <Typography variant="inherit" noWrap>{detail.name}</Typography>
                   </TableCell>

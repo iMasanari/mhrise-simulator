@@ -1,8 +1,9 @@
 import { css, Global, Theme } from '@emotion/react'
 import { Tab, Tabs } from '@material-ui/core'
 import React from 'react'
-import { ActiveSkill, SkillSystem } from '../../domain/skill'
+import { SkillSystem } from '../../domain/skill'
 import { useSetMode, useSimulatorPageState } from '../../hooks/simualtorPageState'
+import { Share } from '../molecules/ShareList'
 import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
@@ -11,7 +12,7 @@ import SimulatorUsage from '../organisms/simulatorUsage/SimulatorUsage'
 
 interface Props {
   skills: SkillSystem[]
-  shares: { id: string, skills: ActiveSkill }[]
+  shares: Share[]
 }
 
 const globalStyle = (theme: Theme) => css`
