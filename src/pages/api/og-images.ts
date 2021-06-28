@@ -4,7 +4,7 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import sharp from 'sharp'
 
 path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'fonts.conf')
-path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'NotoSansJP-Regular.otf')
+path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'Noto_Sans_JP', 'NotoSansJP-Regular.otf')
 
 const svgPath = path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'template.svg')
 
