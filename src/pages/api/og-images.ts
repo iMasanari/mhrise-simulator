@@ -9,7 +9,7 @@ path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'Noto_Sans_JP', 'NotoS
 const svgPath = path.resolve(process.cwd(), 'src', 'assets', 'og-images', 'template.svg')
 
 const showSlots = (slots: string | null) =>
-  `スロット${slots?.split(',').map(v => `【${v}】`).join('') || 'なし'}`
+  `スロット${slots ? slots.split(',').map(v => `【${v}】`).join('') : 'なし'}`
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'GET') {
@@ -31,7 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       leg: leg || '装備なし',
     }
 
-    const charmList = [...(charmSkills?.split(',') || []), showSlots(charmSlots)]
+    const charmList = [...(charmSkills ? charmSkills.split(',') : []), showSlots(charmSlots)]
     const skillList = skills?.split(',') || []
 
     const mapping = new Map<string, string>([

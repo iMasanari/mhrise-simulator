@@ -9,10 +9,10 @@ import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
 import ShareList, { Share } from '../../components/molecules/ShareList'
 import MetaData from '../../components/templates/MetaData'
-import { Armor } from '../../domain/equips'
+import { ArmorWithDetails } from '../../domain/equips'
 
 interface Props {
-  armor: Armor
+  armor: ArmorWithDetails
   shares: Share[]
 }
 
