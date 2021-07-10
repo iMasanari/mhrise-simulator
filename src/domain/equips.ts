@@ -9,6 +9,9 @@ export interface Armor {
   defs: [number, number]
   elements: [number, number, number, number, number]
   skills: ActiveSkill
+}
+
+export interface ArmorWithDetails extends Armor {
   materials: Record<string, number>
 }
 
@@ -21,6 +24,9 @@ export interface Deco {
   name: string
   size: number
   skills: ActiveSkill
+}
+
+export interface DecoWithDetails extends Deco {
   materials: Record<string, number>
 }
 
@@ -34,6 +40,20 @@ export interface Equip {
   leg: Armor | null
   charm: Charm | null
   decos: Deco[]
+  skills: ActiveSkill
+  elements: [number, number, number, number, number]
+}
+
+export interface EquipWithDetails {
+  def: number
+  weaponSlots: Slots
+  head: ArmorWithDetails | null
+  body: ArmorWithDetails | null
+  arm: ArmorWithDetails | null
+  wst: ArmorWithDetails | null
+  leg: ArmorWithDetails | null
+  charm: Charm | null
+  decos: DecoWithDetails[]
   skills: ActiveSkill
   elements: [number, number, number, number, number]
 }

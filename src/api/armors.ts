@@ -1,12 +1,12 @@
-import { Armor } from '../domain/equips'
+import { ArmorWithDetails } from '../domain/equips'
 
 export const getSeries = async () => {
-  const head = await import('../../generated/head.json').then(v => v.default)
-  const body = await import('../../generated/body.json').then(v => v.default)
-  const arm = await import('../../generated/arm.json').then(v => v.default)
-  const wst = await import('../../generated/wst.json').then(v => v.default)
-  const leg = await import('../../generated/leg.json').then(v => v.default)
-  const series = await import('../../generated/series.json').then(v => v.default)
+  const head = await import('../../generated/details/head.json').then(v => v.default)
+  const body = await import('../../generated/details/body.json').then(v => v.default)
+  const arm = await import('../../generated/details/arm.json').then(v => v.default)
+  const wst = await import('../../generated/details/wst.json').then(v => v.default)
+  const leg = await import('../../generated/details/leg.json').then(v => v.default)
+  const series = await import('../../generated/details/series.json').then(v => v.default)
 
   const headMap = new Map(head.map(v => [v.name, v]))
   const bodyMap = new Map(body.map(v => [v.name, v]))
@@ -26,17 +26,27 @@ export const getSeries = async () => {
   })
 }
 
-const getArmor = (data: Armor[], name: string | undefined) => {
+const getArmor = (data: ArmorWithDetails[], name: string | undefined) => {
   if (!name) return null
 
   return data.find(v => v.name === name) || null
 }
 
-export const getHead = async (name: string | undefined) => getArmor(await import('../../generated/head.json').then(v => v.default), name)
-export const getBody = async (name: string | undefined) => getArmor(await import('../../generated/body.json').then(v => v.default), name)
-export const getArm = async (name: string | undefined) => getArmor(await import('../../generated/arm.json').then(v => v.default), name)
-export const getWst = async (name: string | undefined) => getArmor(await import('../../generated/wst.json').then(v => v.default), name)
-export const getLeg = async (name: string | undefined) => getArmor(await import('../../generated/leg.json').then(v => v.default), name)
+export const getHead = async (name: string | undefined) =>
+  getArmor(await import('../../generated/details/head.json').then(v => v.default), name)
+
+export const getBody = async (name: string | undefined) =>
+  getArmor(await import('../../generated/details/body.json').then(v => v.default), name)
+
+export const getArm = async (name: string | undefined) =>
+  getArmor(await import('../../generated/details/arm.json').then(v => v.default), name)
+
+export const getWst = async (name: string | undefined) =>
+  getArmor(await import('../../generated/details/wst.json').then(v => v.default), name)
+
+export const getLeg = async (name: string | undefined) =>
+  getArmor(await import('../../generated/details/leg.json').then(v => v.default), name)
+
 
 export const findArmor = async (skill: string) => {
   const series = await getSeries()

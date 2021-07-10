@@ -10,10 +10,10 @@ import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
 import ResultSkills from '../../components/molecules/ResultSkills'
 import MetaData from '../../components/templates/MetaData'
-import { Deco, Equip, toEquip } from '../../domain/equips'
+import { Deco, Equip, EquipWithDetails, toEquip } from '../../domain/equips'
 
 interface Props {
-  equip: Equip
+  equip: EquipWithDetails
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -42,7 +42,7 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
     leg: await getLeg(data.leg),
     charm: data.charm,
     decos: await Promise.all(data.decos.map(getDecoInfo)) as Deco[],
-  })
+  }) as EquipWithDetails
 
   return {
     props: { equip },

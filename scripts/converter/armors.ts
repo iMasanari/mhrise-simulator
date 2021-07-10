@@ -23,7 +23,7 @@ export const getArmorData = async () => {
 
   const series = seriesList.map(series => ({
     name: series.name,
-    equips: armors.map(list => list.find(v => v.series === series.name)?.name || null),
+    equips: armors.map(({ armor }) => armor.find(v => v.series === series.name)?.name || null),
   }))
 
   return { head, body, arm, wst, leg, series }
@@ -72,5 +72,5 @@ const getArmors = async (path: string, seriesList: { name: string, reg: RegExp }
     }
   })
 
-  return list
+  return { armor: list, simulatorArmor: list.map(({ materials, ...v }) => v) }
 }
