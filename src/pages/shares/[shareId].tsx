@@ -1,7 +1,8 @@
-import { Box, Breadcrumbs, Button, Grid, Typography } from '@material-ui/core'
+import { css, Theme } from '@emotion/react'
+import { Box, Breadcrumbs, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@material-ui/core'
 import Container from '@material-ui/core/Container'
 import { GetStaticPaths, GetStaticProps } from 'next'
-import React from 'react'
+import React, { useMemo } from 'react'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
 import { getDecoInfo } from '../../api/decos'
 import { firestore } from '../../api/firebase'
@@ -49,6 +50,13 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   }
 }
 
+const materialsTotalStyle = (theme: Theme) => css`
+  column-count: 2;
+  ${theme.breakpoints.up('sm')} {
+    column-count: 3;
+  }
+`
+
 export default function Shares({ equip }: Props) {
   const skillParam = Object.entries(equip.skills)
     .sort(([, a], [, b]) => b - a)
@@ -72,6 +80,38 @@ export default function Shares({ equip }: Props) {
   }
 
   const ogImageUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/api/og-images?${Object.entries(params).map(([key, value]) => `${key}=${value}`).join('&')}`
+
+  const materialEquipList = useMemo(() => {
+    const armors = [equip.head, equip.body, equip.arm, equip.wst, equip.leg]
+      .filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
+
+    const decos = [...new Set(equip.decos.map(deco => deco.name))].map(name => {
+      const list = equip.decos.filter(deco => deco.name === name)
+
+      return { deco: list[0], amount: list.length }
+    })
+
+    return [
+      ...armors.map(v => ({ name: v.name, href: `/armors/${v.name}`, materials: v.materials, amount: 1 })),
+      ...decos.map(({ deco, amount }) => ({ name: deco.name, href: `/decos/${deco.name}`, materials: deco.materials, amount })),
+    ]
+  }, [equip])
+
+  const materialList = useMemo(() => {
+    const materials = materialEquipList.reduce((acc, v) => {
+      for (const [material, amount] of Object.entries(v.materials)) {
+        acc[material] = (acc[material] || 0) + amount * v.amount
+      }
+      return acc
+    }, {} as Record<string, number>)
+
+    return Object.entries(materials).sort(([a], [b]) => {
+      const aIsStorn = a.includes('原珠')
+      const bIsStorn = b.includes('原珠')
+
+      return aIsStorn === bIsStorn ? (a > b ? 1 : -1) : (aIsStorn ? 1 : -1)
+    })
+  }, [materialEquipList])
 
   return (
     <Container maxWidth="md">
@@ -99,9 +139,56 @@ export default function Shares({ equip }: Props) {
             </Box>
           </Grid>
         </Grid>
-        <Button component={Link} href={simulatorUrl} fullWidth sx={{ my: 2 }}>
-          {'この装備の条件で検索する'}
-        </Button>
+        <Box position="sticky" bottom={0} py={1} bgcolor="background.paper">
+          <Button variant="contained" component={Link} href={simulatorUrl} fullWidth>
+            この装備の条件で検索する
+          </Button>
+        </Box>
+        <Typography variant="h6" component="h2" gutterBottom>
+          必要素材
+        </Typography>
+        <TableContainer component={Paper} sx={{ my: 2 }} variant="outlined">
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell component="th">名称</TableCell>
+                <TableCell component="th">素材</TableCell>
+                <TableCell component="th" align="center">装備数</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {materialEquipList.map((equip) =>
+                <TableRow key={equip.name}>
+                  <TableCell>
+                    <Link href={equip.href} >{equip.name}</Link>
+                  </TableCell>
+                  <TableCell>
+                    {Object.entries(equip.materials).map(([key, value]) =>
+                      <div key={key}>{`${key} x${value}`}</div>
+                    )}
+                  </TableCell>
+                  <TableCell align="center">
+                    {equip.amount}
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={3}>
+                  <Typography component="div" gutterBottom variant="body2">
+                    合計
+                  </Typography>
+                  <div css={materialsTotalStyle}>
+                    {materialList.map(([key, value]) =>
+                      <div key={key}>{`${key} x${value}`}</div>
+                    )}
+                  </div>
+                </TableCell>
+              </TableRow>
+            </TableFooter>
+          </Table>
+        </TableContainer>
       </Box>
     </Container>
   )
