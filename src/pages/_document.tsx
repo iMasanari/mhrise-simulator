@@ -1,7 +1,9 @@
+import createEmotionServer from '@emotion/server/create-instance'
 import { ServerStyleSheets } from '@material-ui/styles'
-import Document, { DocumentContext, Head, Html, Main, NextScript } from 'next/document'
-import React from 'react'
+import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
+import * as React from 'react'
 import theme from '../theme'
+import { cache } from './_app'
 
 const googleAnalyticsId = process.env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID
 
@@ -12,6 +14,8 @@ gtag('js', new Date());
 
 gtag('config', ${JSON.stringify(googleAnalyticsId)});
 `
+
+const { extractCritical } = createEmotionServer(cache)
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -24,6 +28,7 @@ export default class MyDocument extends Document {
       })
 
     const initialProps = await Document.getInitialProps(ctx)
+    const styles = extractCritical(initialProps.html)
 
     return {
       ...initialProps,
@@ -31,6 +36,11 @@ export default class MyDocument extends Document {
       styles: [
         ...React.Children.toArray(initialProps.styles),
         sheets.getStyleElement(),
+        <style
+          key="emotion-style-tag"
+          data-emotion={`css ${styles.ids.join(' ')}`}
+          dangerouslySetInnerHTML={{ __html: styles.css }}
+        />,
       ],
     }
   }

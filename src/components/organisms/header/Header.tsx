@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { AppBar, Divider, Drawer, IconButton, List, Slide, Toolbar, useScrollTrigger } from '@material-ui/core'
+import { AppBar, Container, Divider, Drawer, IconButton, List, Slide, Toolbar, useScrollTrigger } from '@material-ui/core'
 import CloseIcon from '@material-ui/icons/Close'
 import MenuIcon from '@material-ui/icons/Menu'
 import { useRouter } from 'next/router'
@@ -67,7 +67,7 @@ export default function Header({ title }: Props) {
     <>
       <Slide appear={false} direction="down" in={!trigger}>
         <AppBar css={appBarStyle} position="fixed" color="default" elevation={1}>
-          <Toolbar>
+          <Toolbar component={Container} maxWidth="md" disableGutters>
             <SiteTitle
               css={titleStyle}
               isHeading={isRoot}

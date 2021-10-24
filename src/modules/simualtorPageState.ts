@@ -1,18 +1,15 @@
-import { GridRowId } from '@material-ui/data-grid'
 import ActionReducer from 'action-reducer'
 
 export type Mode = 'usage' | 'result' | 'addableSkill' | 'charms'
 
 export interface SimulatorPageState {
   mode: Mode
-  resultOpen: boolean
-  selectionModel: GridRowId[]
+  opens: Record<string, boolean>
 }
 
 const initState: SimulatorPageState = {
   mode: 'usage',
-  resultOpen: false,
-  selectionModel: [],
+  opens: {},
 }
 
 const { reducer, createAction } = ActionReducer(initState, 'addableSkillsResult/')
@@ -21,12 +18,12 @@ export const setMode = createAction('setMode', (state, mode: Mode) => (
   { ...state, mode }
 ))
 
-export const setSelectionModel = createAction('setSelectionModel', (state, selectionModel: GridRowId[]) => (
-  { ...state, selectionModel }
+export const setResultOpen = createAction('setResultOpen', (state, id: number, open: boolean) => (
+  { ...state, opens: { ...state.opens, [id]: open } }
 ))
 
-export const setResultOpen = createAction('setResultOpen', (state, resultOpen: boolean) => (
-  { ...state, resultOpen }
+export const resetResultOpens = createAction('resetResultOpens', (state) => (
+  { ...state, opens: {} }
 ))
 
 export default reducer
