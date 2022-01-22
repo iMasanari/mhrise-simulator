@@ -1,3 +1,4 @@
+import Container from '@material-ui/core/Container'
 import { InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
@@ -78,12 +79,12 @@ export default function TopPage({ shares }: Props) {
   }))
 
   return (
-    <>
+    <Container maxWidth="md">
       <MetaData
         title="MHRise スキルシミュ"
         description="「モンスターハンター Rise」のスキルシミュレーターです。発動したいスキルが発動する防具や装飾品の組み合わせを検索します。"
       />
       <Simulator skills={skillList} shares={shares} />
-    </>
+    </Container>
   )
 }

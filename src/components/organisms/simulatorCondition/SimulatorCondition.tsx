@@ -72,37 +72,35 @@ export default function SimulatorCondition({ skills }: Props) {
   }
 
   return (
-    <Box display="flex" flexDirection="column" flex="1" overflow="hidden">
-      <Box flex="1" overflow="auto">
-        <List subheader={<ListSubheader disableSticky>武器</ListSubheader>}>
+    <div>
+      <List subheader={<ListSubheader disableSticky>武器</ListSubheader>}>
+        <ListItem>
+          <ListItemText primary="武器スロット" />
+          <SlotSelect slot={conditions.weaponSlots} setSlot={setWeaponSlots} />
+        </ListItem>
+      </List>
+      <List subheader={<ListSubheader disableSticky>スキル</ListSubheader>}>
+        {activeSkillList.map(skill =>
+          <ActiveSkillListItem
+            key={skill.name}
+            name={skill.name}
+            items={skill.items}
+            value={conditions.skills[skill.name]}
+            setValue={(value) => addSkill(skill.name, value)}
+          />
+        )}
+        {!activeSkillList.length && (
           <ListItem>
-            <ListItemText primary="武器スロット" />
-            <SlotSelect slot={conditions.weaponSlots} setSlot={setWeaponSlots} />
+            <ListItemText primary="スキルが選択されていません" sx={{ textAlign: 'center' }} />
           </ListItem>
-        </List>
-        <List subheader={<ListSubheader disableSticky>スキル</ListSubheader>}>
-          {activeSkillList.map(skill =>
-            <ActiveSkillListItem
-              key={skill.name}
-              name={skill.name}
-              items={skill.items}
-              value={conditions.skills[skill.name]}
-              setValue={(value) => addSkill(skill.name, value)}
-            />
-          )}
-          {!activeSkillList.length && (
-            <ListItem>
-              <ListItemText primary="スキルが選択されていません" sx={{ textAlign: 'center' }} />
-            </ListItem>
-          )}
-          <ListItem>
-            <Button onClick={handleOpen} fullWidth>
-              スキル追加
-            </Button>
-          </ListItem>
-        </List>
-      </Box>
-      <Box display="flex" p={[2, 1]}>
+        )}
+        <ListItem>
+          <Button onClick={handleOpen} fullWidth>
+            スキル追加
+          </Button>
+        </ListItem>
+      </List>
+      <Box display="flex" mx={2}>
         <Button onClick={execute} variant="contained" sx={{ flex: '1', mr: 1 }}>検索</Button>
         <Button onClick={addableSkill} variant="outlined">追加スキル検索</Button>
       </Box>
@@ -114,6 +112,6 @@ export default function SimulatorCondition({ skills }: Props) {
           onClose={handleClose}
         />
       }
-    </Box>
+    </div>
   )
 }

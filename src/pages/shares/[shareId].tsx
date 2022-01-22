@@ -10,7 +10,7 @@ import Link from '../../components/atoms/Link'
 import ResultEquip from '../../components/molecules/ResultEquip'
 import ResultSkills from '../../components/molecules/ResultSkills'
 import MetaData from '../../components/templates/MetaData'
-import { Deco, Equip, EquipWithDetails, toEquip } from '../../domain/equips'
+import { Deco, EquipWithDetails, toEquip } from '../../domain/equips'
 
 interface Props {
   equip: EquipWithDetails
