@@ -44,7 +44,7 @@ export default function Simulator({ skills, shares }: Props) {
   const setMode = useSetMode()
 
   return (
-    <Box sx={{ my: 4 }}>
+    <Box my={2} >
       <div css={containerStyle}>
         <div css={conditionStyle}>
           <SimulatorCondition skills={skills} />

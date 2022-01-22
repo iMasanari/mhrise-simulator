@@ -1,9 +1,10 @@
 import { css } from '@emotion/react'
-import { Box, Button, Collapse, IconButton, TableCell, TableRow, Typography } from '@material-ui/core'
+import { Box, Button, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core'
 import { KeyboardArrowDown, KeyboardArrowUp, Link as LinkIcon } from '@material-ui/icons'
 import React, { useState } from 'react'
 import { Equip } from '../../../domain/equips'
 import ResultEquip from '../../molecules/ResultEquip'
+import ResultSkills from '../../molecules/ResultSkills'
 import ShareDialog from './ShareDialog'
 
 const rowRootStyle = css`
@@ -20,6 +21,7 @@ interface Props {
 
 export default function SimulatorResultRow({ equip, open, setOpen }: Props) {
   const [isDialogOpen, setDialogOpen] = useState(false)
+  const [fire, water, thunder, ice, dragon] = equip.elements
 
   return (
     <>
@@ -59,13 +61,41 @@ export default function SimulatorResultRow({ equip, open, setOpen }: Props) {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell sx={{ py: 0 }} colSpan={7}>
+        <TableCell sx={{ py: 0, maxWidth: 0 }} colSpan={7}>
           <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ m: 1 }}>
+            <Box m={1}>
               <ResultEquip equip={equip} size="small" />
-              <Button startIcon={<LinkIcon />} fullWidth sx={{ mt: 1 }} onClick={() => setDialogOpen(true)}>
-                {'結果を共有する'}
+              <TableContainer component={Paper} sx={{ my: 1 }} variant="outlined">
+                <Table sx={{ tableLayout: 'fixed' }} size="small">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell component="th" align="center">防御</TableCell>
+                      <TableCell component="th" align="center">火耐性</TableCell>
+                      <TableCell component="th" align="center">水耐性</TableCell>
+                      <TableCell component="th" align="center">雷耐性</TableCell>
+                      <TableCell component="th" align="center">氷耐性</TableCell>
+                      <TableCell component="th" align="center">龍耐性</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center">{equip.def}</TableCell>
+                      <TableCell align="center">{fire}</TableCell>
+                      <TableCell align="center">{water}</TableCell>
+                      <TableCell align="center">{thunder}</TableCell>
+                      <TableCell align="center">{ice}</TableCell>
+                      <TableCell align="center">{dragon}</TableCell>
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </TableContainer>
+              <Button variant="outlined" startIcon={<LinkIcon />} fullWidth sx={{ mt: 1 }} onClick={() => setDialogOpen(true)}>
+                結果を共有する
               </Button>
+              <Box my={2}>
+                <Typography gutterBottom>発動スキル</Typography>
+                <ResultSkills equip={equip} />
+              </Box>
             </Box>
           </Collapse>
         </TableCell>

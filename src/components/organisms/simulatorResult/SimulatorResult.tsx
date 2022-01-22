@@ -13,10 +13,10 @@ export default function SimulatorResult() {
     <div>
       {(result.length > 0 || loading) && (
         <TableContainer component={Paper} sx={{ my: 1 }} variant="outlined">
-          <Table>
+          <Table sx={{ tableLayout: 'fixed' }}>
             <TableHead>
               <TableRow>
-                <TableCell component="th" sx={{ px: 0.5 }}></TableCell>
+                <TableCell component="th" sx={{ px: 0.5, width: 42 }}></TableCell>
                 <TableCell component="th" align="center" sx={{ px: 0.5 }}>
                   <Typography variant="body2" component="span" noWrap>防御</Typography>
                 </TableCell>

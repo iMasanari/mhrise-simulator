@@ -32,6 +32,7 @@ export interface DecoWithDetails extends Deco {
 
 export interface Equip {
   def: number
+  elements: [number, number, number, number, number]
   weaponSlots: Slots
   head: Armor | null
   body: Armor | null
@@ -72,6 +73,12 @@ export const toEquip = ({ weaponSlots, head, body, arm, wst, leg, charm, decos }
   const armors = [head, body, arm, wst, leg].filter(Boolean as unknown as <T>(v: T) => v is NonNullable<T>)
   const def = armors.reduce((sum, v) => sum + (v ? v.defs[1] : 0), 0)
 
+  const fire = armors.reduce((sum, v) => sum + (v ? v.elements[0] : 0), 0)
+  const water = armors.reduce((sum, v) => sum + (v ? v.elements[1] : 0), 0)
+  const thunder = armors.reduce((sum, v) => sum + (v ? v.elements[2] : 0), 0)
+  const ice = armors.reduce((sum, v) => sum + (v ? v.elements[3] : 0), 0)
+  const dragon = armors.reduce((sum, v) => sum + (v ? v.elements[4] : 0), 0)
+
   const skills = {} as ActiveSkill
 
   // 防具スキル
@@ -98,5 +105,17 @@ export const toEquip = ({ weaponSlots, head, body, arm, wst, leg, charm, decos }
     }
   }
 
-  return { weaponSlots, head, body, arm, wst, leg, charm, decos, def, skills }
+  return {
+    weaponSlots,
+    head,
+    body,
+    arm,
+    wst,
+    leg,
+    charm,
+    decos,
+    def,
+    elements: [fire, water, thunder, ice, dragon],
+    skills,
+  }
 }
