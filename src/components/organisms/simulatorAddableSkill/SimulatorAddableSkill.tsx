@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemText, Typography } from '@material-ui/core'
+import { List, ListItem, ListItemText, Typography } from '@mui/material'
 import React from 'react'
 import { useAddableSkillsSimulator } from '../../../hooks/addableSkillsSimulator'
 import { useAddSkills } from '../../../hooks/simulatorConditionsHooks'

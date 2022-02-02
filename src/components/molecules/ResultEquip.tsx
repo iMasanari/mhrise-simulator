@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@material-ui/core'
+import { Paper, Table, TableBody, TableCell, TableContainer, TableRow } from '@mui/material'
 import React from 'react'
 import { Equip, Slots } from '../../domain/equips'
 import Link from '../atoms/Link'

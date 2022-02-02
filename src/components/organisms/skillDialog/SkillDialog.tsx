@@ -1,6 +1,6 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, Grid, Slide, TextField, useMediaQuery, useTheme } from '@material-ui/core'
-import { TransitionProps } from '@material-ui/core/transitions'
-import { makeStyles } from '@material-ui/styles'
+import { Box, Button, Dialog, DialogActions, DialogContent, Grid, Slide, TextField, useMediaQuery, useTheme } from '@mui/material'
+import { TransitionProps } from '@mui/material/transitions'
+import { makeStyles } from '@mui/styles'
 import React, { useMemo, useRef, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import DialogHeader from '../../molecules/DialogHeader'
@@ -20,7 +20,7 @@ interface Props {
 }
 
 const Transition = React.forwardRef(function Transition(
-  props: TransitionProps & { children?: React.ReactElement },
+  props: TransitionProps & { children: React.ReactElement },
   ref: React.Ref<unknown>,
 ) {
   return <Slide direction="up" ref={ref} {...props} />

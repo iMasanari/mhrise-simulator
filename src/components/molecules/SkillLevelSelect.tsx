@@ -1,6 +1,6 @@
-import { IconButton, InputAdornment, Select } from '@material-ui/core'
-import { Add, Remove } from '@material-ui/icons'
-import { makeStyles } from '@material-ui/styles'
+import { Add, Remove } from '@mui/icons-material'
+import { IconButton, InputAdornment, Select, SelectChangeEvent } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 
 interface Props {
   value: number
@@ -20,8 +20,8 @@ const useStyles = makeStyles({
 export default function SkillLevelSelect({ value, items, setValue }: Props) {
   const classes = useStyles()
 
-  const subActionHandler = (e: React.ChangeEvent<{ value: string | number }>) =>
-    setValue(+e.currentTarget.value)
+  const subActionHandler = (e: SelectChangeEvent<number>) =>
+    setValue(+e.target.value)
 
   return (
     <Select

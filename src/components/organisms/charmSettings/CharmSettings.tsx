@@ -1,4 +1,4 @@
-import { Box, Button, Checkbox, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core'
+import { Box, Button, Checkbox, Paper, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { toCharms, toCsv } from '../../../csv/charms'
 import { Charm } from '../../../domain/equips'
@@ -100,7 +100,7 @@ export default function CharmSettings({ skills }: Props) {
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6" gutterBottom>護石インポート/エクスポート</Typography>
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Select size="small" value={csvDelimiter} onChange={e => setCsvDelimiter(e.currentTarget.value)} native>
+          <Select size="small" value={csvDelimiter} onChange={e => setCsvDelimiter(e.target.value)} native>
             <option value=",">コンマ区切り</option>
             <option value={'\t'}>タブ区切り</option>
           </Select>

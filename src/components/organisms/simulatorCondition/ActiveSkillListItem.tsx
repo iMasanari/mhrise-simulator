@@ -1,4 +1,4 @@
-import { ListItem, ListItemText } from '@material-ui/core'
+import { ListItem, ListItemText } from '@mui/material'
 import React from 'react'
 import SkillLevel from '../../molecules/SkillLevel'
 import SkillLevelSelect from '../../molecules/SkillLevelSelect'

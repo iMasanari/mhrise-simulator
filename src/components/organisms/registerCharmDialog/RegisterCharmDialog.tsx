@@ -1,5 +1,5 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, TextField } from '@material-ui/core'
-import { makeStyles } from '@material-ui/styles'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, TextField } from '@mui/material'
+import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 import { Charm, Slots } from '../../../domain/equips'
 import SlotSelect from '../../molecules/SlotSelect'

@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { Box, Typography } from '@material-ui/core'
+import { Box, Typography } from '@mui/material'
 import React from 'react'
 import skillList from '../../../generated/skills.json'
 import { Equip } from '../../domain/equips'

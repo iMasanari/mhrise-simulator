@@ -1,4 +1,4 @@
-import { Box, Button, List, ListItem, ListItemText, ListSubheader } from '@material-ui/core'
+import { Box, Button, List, ListItem, ListItemText, ListSubheader } from '@mui/material'
 import React, { useMemo, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import { useAddableSkillsSimulator } from '../../../hooks/addableSkillsSimulator'

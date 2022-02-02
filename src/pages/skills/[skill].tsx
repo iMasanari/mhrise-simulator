@@ -1,7 +1,4 @@
-import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
+import { Box, Breadcrumbs, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import * as React from 'react'
 import { findArmor, getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'

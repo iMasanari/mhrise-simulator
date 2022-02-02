@@ -1,4 +1,4 @@
-import { Link as MuiLink, LinkProps } from '@material-ui/core'
+import { Link as MuiLink, LinkProps } from '@mui/material'
 import NextLink from 'next/link'
 import React, { forwardRef } from 'react'
 

@@ -1,4 +1,4 @@
-import Container from '@material-ui/core/Container'
+import { Container } from '@mui/material'
 import { InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
 import React, { useEffect } from 'react'
