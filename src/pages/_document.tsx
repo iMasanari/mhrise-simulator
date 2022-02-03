@@ -1,5 +1,4 @@
 import createEmotionServer from '@emotion/server/create-instance'
-import { ServerStyleSheets } from '@mui/styles'
 import Document, { Html, Head, Main, NextScript, DocumentContext } from 'next/document'
 import * as React from 'react'
 import theme from '../theme'
@@ -19,14 +18,6 @@ const { extractCritical } = createEmotionServer(cache)
 
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
-    const sheets = new ServerStyleSheets()
-    const originalRenderPage = ctx.renderPage
-
-    ctx.renderPage = () =>
-      originalRenderPage({
-        enhanceApp: (App) => (props) => sheets.collect(<App {...props} />),
-      })
-
     const initialProps = await Document.getInitialProps(ctx)
     const styles = extractCritical(initialProps.html)
 
@@ -35,7 +26,6 @@ export default class MyDocument extends Document {
       // Styles fragment is rendered after the app and page rendering finish.
       styles: [
         ...React.Children.toArray(initialProps.styles),
-        sheets.getStyleElement(),
         <style
           key="emotion-style-tag"
           data-emotion={`css ${styles.ids.join(' ')}`}

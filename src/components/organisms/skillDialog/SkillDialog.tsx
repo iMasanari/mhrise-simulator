@@ -1,16 +1,16 @@
+import { css } from '@emotion/react'
 import { Box, Button, Dialog, DialogActions, DialogContent, Grid, Slide, TextField, useMediaQuery, useTheme } from '@mui/material'
 import { TransitionProps } from '@mui/material/transitions'
-import { makeStyles } from '@mui/styles'
 import React, { useMemo, useRef, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import DialogHeader from '../../molecules/DialogHeader'
 import SkillList from './SkillList'
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    height: '100%',
-  },
-}))
+const dialogStyle = css`
+  & .SkillDialog-paper {
+    height: 100%;
+  }
+`
 
 interface Props {
   open: boolean
@@ -27,7 +27,6 @@ const Transition = React.forwardRef(function Transition(
 })
 
 export default function SkillDialog({ open, skills, activeSkill, onClose }: Props) {
-  const classes = useStyles()
   const [currentActiveSkill, setActiveSkill] = useState(activeSkill)
   const [value, setValue] = useState('')
   const [category, setCategory] = useState('')
@@ -45,7 +44,7 @@ export default function SkillDialog({ open, skills, activeSkill, onClose }: Prop
   }
 
   return (
-    <Dialog open={open} fullScreen={fullScreen} onClose={handleClose} classes={{ paper: classes.paper }} fullWidth TransitionComponent={Transition}>
+    <Dialog css={dialogStyle} open={open} fullScreen={fullScreen} onClose={handleClose} classes={{ paper: 'SkillDialog-paper' }} fullWidth TransitionComponent={Transition}>
       <DialogHeader title="スキル選択" onClose={handleClose} />
       <DialogContent sx={{ display: 'flex', flexDirection: 'column', pb: 0 }}>
         <Grid container spacing={2}>

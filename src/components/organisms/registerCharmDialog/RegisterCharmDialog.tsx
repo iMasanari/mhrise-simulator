@@ -1,14 +1,14 @@
+import { css } from '@emotion/react'
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, Grid, InputLabel, TextField } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import React, { useState } from 'react'
 import { Charm, Slots } from '../../../domain/equips'
 import SlotSelect from '../../molecules/SlotSelect'
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    alignItems: 'flex-start',
-  },
-}))
+const dialogStyle = css`
+  & .RegisterCharmDialog-paper {
+    align-items: flex-start;
+  }
+`
 
 interface Props {
   open: boolean
@@ -17,7 +17,6 @@ interface Props {
 }
 
 export default function RegisterCharmDialog({ open, onClose, skills }: Props) {
-  const classes = useStyles()
   const [skillName1, setSkillName1] = useState('')
   const [skillPoint1, setSkillPoint1] = useState('')
   const [skillName2, setSkillName2] = useState('')
@@ -30,8 +29,6 @@ export default function RegisterCharmDialog({ open, onClose, skills }: Props) {
     slots.length && `スロット${slots.map(v => `【${v}】`).join('')}`,
   ].filter(Boolean).join(' ')
 
-  const defaultCharmName = `護石${defaultCharmText ? `（${defaultCharmText}）` : ''}`
-
   const handleClose = () => {
     const skillList: [string, number][] = [[skillName1, +skillPoint1], [skillName2, +skillPoint2]]
     const skills = Object.fromEntries(
@@ -42,7 +39,7 @@ export default function RegisterCharmDialog({ open, onClose, skills }: Props) {
   }
 
   return (
-    <Dialog open={open} onClose={() => onClose()} classes={{ scrollPaper: classes.paper }} fullWidth>
+    <Dialog css={dialogStyle} open={open} onClose={() => onClose()} classes={{ scrollPaper: 'RegisterCharmDialog-paper' }} fullWidth>
       <DialogTitle>護石登録</DialogTitle>
       <DialogContent>
         <Grid container spacing={2}>

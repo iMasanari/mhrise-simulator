@@ -1,15 +1,15 @@
+import { css } from '@emotion/react'
 import { ContentCopy, Link as LinkIcon, Twitter } from '@mui/icons-material'
 import { Alert, AlertTitle, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, InputAdornment, Snackbar, TextField, Typography } from '@mui/material'
-import { makeStyles } from '@mui/styles'
 import React, { useEffect, useRef, useState } from 'react'
 import twitter from 'twitter-text'
 import { Charm, Equip } from '../../../domain/equips'
 
-const useStyles = makeStyles(() => ({
-  paper: {
-    alignItems: 'flex-start',
-  },
-}))
+const dialogStyle = css`
+  & .ShareDialog-paper {
+    align-items: flex-start;
+  }
+`
 
 interface Props {
   open: boolean
@@ -34,7 +34,6 @@ const getValidTweetLink = (text: string, url: string) => {
 }
 
 export default function ShareDialog({ open, onClose, equip }: Props) {
-  const classes = useStyles()
   const [shareId, setShareId] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -100,7 +99,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
   }
 
   return (
-    <Dialog open={open} onClose={() => onClose()} classes={{ scrollPaper: classes.paper }} fullWidth>
+    <Dialog css={dialogStyle} open={open} onClose={() => onClose()} classes={{ scrollPaper: 'ShareDialog-paper' }} fullWidth>
       <DialogTitle>結果の共有(β)</DialogTitle>
       <DialogContent>
         <Typography>
