@@ -76,8 +76,8 @@ export default function SkillDetailPage({ armor, shares }: Props) {
         description={`防具「${armor.name}」の詳細及び、その防具を使用した装備を紹介します。`}
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
-        <Link color="inherit" href="/">Top</Link>
-        <Link color="inherit" href="/armors">防具一覧</Link>
+        <Link color="inherit" underline="hover" href="/">Top</Link>
+        <Link color="inherit" underline="hover" href="/armors">防具一覧</Link>
         <Typography color="textPrimary">{armor.name}</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>

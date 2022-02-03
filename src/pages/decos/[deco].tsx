@@ -37,8 +37,8 @@ export default function SkillDetailPage({ deco }: Props) {
         description={`装飾品「${deco.name}」の詳細です。`}
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
-        <Link color="inherit" href="/">Top</Link>
-        <Link color="inherit" href="/decos">装飾品一覧</Link>
+        <Link color="inherit" underline="hover" href="/">Top</Link>
+        <Link color="inherit" underline="hover" href="/decos">装飾品一覧</Link>
         <Typography color="textPrimary">{deco.name}</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>

@@ -80,8 +80,8 @@ export default function SkillDetailPage({ skill, armors, decos, shares }: Props)
         description={`スキル「${skill.name}」の詳細及び、そのスキルを使用した装備を紹介します。`}
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
-        <Link color="inherit" href="/">Top</Link>
-        <Link color="inherit" href="/skills">スキル一覧</Link>
+        <Link color="inherit" underline="hover" href="/">Top</Link>
+        <Link color="inherit" underline="hover" href="/skills">スキル一覧</Link>
         <Typography color="textPrimary">{skill.name}</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>

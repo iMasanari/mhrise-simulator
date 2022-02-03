@@ -121,7 +121,7 @@ export default function Shares({ equip }: Props) {
         twitterCard="summary_large_image"
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
-        <Link color="inherit" href="/">Top</Link>
+        <Link color="inherit" underline="hover" href="/">Top</Link>
         <Typography color="textPrimary">装備共有</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>
