@@ -1,5 +1,5 @@
-import { red } from '@material-ui/core/colors'
-import { createTheme, Theme as MuiTheme } from '@material-ui/core/styles'
+import { red } from '@mui/material/colors'
+import { createTheme, Theme as MuiTheme } from '@mui/material/styles'
 
 declare module '@emotion/react' {
   interface Theme extends MuiTheme {

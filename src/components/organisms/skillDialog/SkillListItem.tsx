@@ -1,5 +1,5 @@
 import { css } from '@emotion/react'
-import { Checkbox, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
+import { Checkbox, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import React from 'react'
 import SkillLevel from '../../molecules/SkillLevel'
 

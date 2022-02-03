@@ -1,5 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { Box, Tab, Tabs } from '@material-ui/core'
+import { Box, Tab, Tabs } from '@mui/material'
 import React from 'react'
 import { SkillSystem } from '../../domain/skill'
 import { useSetMode, useSimulatorPageState } from '../../hooks/simualtorPageState'

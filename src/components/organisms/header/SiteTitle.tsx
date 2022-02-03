@@ -1,4 +1,4 @@
-import { Typography } from '@material-ui/core'
+import { Typography } from '@mui/material'
 import React, { HTMLProps } from 'react'
 import Link from '../../atoms/Link'
 

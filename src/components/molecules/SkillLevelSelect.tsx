@@ -1,6 +1,6 @@
-import { IconButton, InputAdornment, Select } from '@material-ui/core'
-import { Add, Remove } from '@material-ui/icons'
-import { makeStyles } from '@material-ui/styles'
+import { css } from '@emotion/react'
+import { Add, Remove } from '@mui/icons-material'
+import { IconButton, InputAdornment, Select, SelectChangeEvent } from '@mui/material'
 
 interface Props {
   value: number
@@ -8,29 +8,28 @@ interface Props {
   setValue: (value: number) => void
 }
 
-const useStyles = makeStyles({
-  icon: {
-    display: 'none',
-  },
-  select: {
-    '&&&': { paddingRight: 0 },
-  },
-})
+const selectStyle = css`
+  & .SkillLevelSelect-icon {
+    display: none;
+  }
+  &&& .SkillLevelSelect-select {
+    padding-right: 0;
+  }
+`
 
 export default function SkillLevelSelect({ value, items, setValue }: Props) {
-  const classes = useStyles()
-
-  const subActionHandler = (e: React.ChangeEvent<{ value: string | number }>) =>
-    setValue(+e.currentTarget.value)
+  const subActionHandler = (e: SelectChangeEvent<number>) =>
+    setValue(+e.target.value)
 
   return (
     <Select
+      css={selectStyle}
       variant="outlined"
       value={value || 0}
       native
       onChange={subActionHandler}
       size="small"
-      classes={{ icon: classes.icon, select: classes.select }}
+      classes={{ icon: 'SkillLevelSelect-icon', select: 'SkillLevelSelect-select' }}
       startAdornment={(
         <InputAdornment position="start">
           <IconButton edge="start" onClick={() => setValue(Math.max(value - 1, 0))}>

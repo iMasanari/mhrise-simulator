@@ -1,4 +1,4 @@
-import { ListItem, ListItemText } from '@material-ui/core'
+import { ListItem, ListItemText } from '@mui/material'
 import React, { ReactNode } from 'react'
 import NakedLink from '../../atoms/NakedLink'
 

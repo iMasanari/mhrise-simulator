@@ -13,7 +13,7 @@ const linkStyle = (theme: Theme) => css`
 
 export default function NavItem({ href, children }: Props) {
   return (
-    <Link href={href} css={linkStyle} color="inherit" variant="body1" noWrap>
+    <Link href={href} css={linkStyle} color="inherit" underline="hover" variant="body1" noWrap>
       {children}
     </Link>
   )

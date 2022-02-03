@@ -1,4 +1,4 @@
-import { Button, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core'
+import { Button, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React from 'react'
 import { useSetResultOpen, useSimulatorPageState } from '../../../hooks/simualtorPageState'
 import { useSimulator } from '../../../hooks/simulatorHooks'

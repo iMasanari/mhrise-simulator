@@ -1,6 +1,6 @@
 import { css } from '@emotion/react'
-import { Box, Button, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@material-ui/core'
-import { KeyboardArrowDown, KeyboardArrowUp, Link as LinkIcon } from '@material-ui/icons'
+import { KeyboardArrowDown, KeyboardArrowUp, Link as LinkIcon } from '@mui/icons-material'
+import { Box, Button, Collapse, IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import { Equip } from '../../../domain/equips'
 import ResultEquip from '../../molecules/ResultEquip'

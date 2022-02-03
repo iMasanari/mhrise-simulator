@@ -1,4 +1,4 @@
-import { Select } from '@material-ui/core'
+import { Select, SelectChangeEvent } from '@mui/material'
 import React from 'react'
 import { Slots } from '../../domain/equips'
 
@@ -9,8 +9,8 @@ interface Props {
 }
 
 export default function WeaponSlotSelect({ slot, setSlot, label }: Props) {
-  const setSlotValue = (e: React.ChangeEvent<{ value: string }>) => {
-    const value = e.currentTarget.value
+  const setSlotValue = (e: SelectChangeEvent) => {
+    const value = e.target.value
     setSlot(value === '0' ? [] : value.split('-').map(Number))
   }
 

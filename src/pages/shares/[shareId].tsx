@@ -1,6 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { Box, Breadcrumbs, Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@material-ui/core'
-import Container from '@material-ui/core/Container'
+import { Box, Breadcrumbs, Button, Container, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableFooter, TableHead, TableRow, Typography } from '@mui/material'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import React, { useMemo } from 'react'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
@@ -122,7 +121,7 @@ export default function Shares({ equip }: Props) {
         twitterCard="summary_large_image"
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
-        <Link color="inherit" href="/">Top</Link>
+        <Link color="inherit" underline="hover" href="/">Top</Link>
         <Typography color="textPrimary">装備共有</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>

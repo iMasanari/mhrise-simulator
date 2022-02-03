@@ -1,8 +1,5 @@
 import { css, Theme } from '@emotion/react'
-import { Breadcrumbs, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@material-ui/core'
-import Box from '@material-ui/core/Box'
-import Container from '@material-ui/core/Container'
-import Typography from '@material-ui/core/Typography'
+import { Box, Breadcrumbs, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { InferGetStaticPropsType } from 'next'
 import Image from 'next/image'
 import React from 'react'
@@ -77,7 +74,7 @@ export default function SkillsPage({ series }: Props) {
         description="MHRise スキルシミュで使用している防具の一覧です。"
       />
       <Breadcrumbs aria-label="breadcrumb" sx={{ my: 1 }}>
-        <Link color="inherit" href="/">Top</Link>
+        <Link color="inherit" underline="hover" href="/">Top</Link>
         <Typography color="textPrimary">防具一覧</Typography>
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>
