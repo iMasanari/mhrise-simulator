@@ -2,6 +2,7 @@ import { Box, Button, List, ListItem, ListItemText, ListSubheader } from '@mui/m
 import React, { useMemo, useState } from 'react'
 import { ActiveSkill, SkillSystem } from '../../../domain/skill'
 import { useAddableSkillsSimulator } from '../../../hooks/addableSkillsSimulator'
+import { useIgnoreArmors } from '../../../hooks/armorSettingsHooks'
 import { useCharms } from '../../../hooks/charmsHooks'
 import { useSetMode } from '../../../hooks/simualtorPageState'
 import { useAddSkills, useSetSkills, useSetWeaponSlots, useSimulatorConditons } from '../../../hooks/simulatorConditionsHooks'
@@ -17,6 +18,7 @@ interface Props {
 
 export default function SimulatorCondition({ skills }: Props) {
   const conditions = useSimulatorConditons()
+  const ignore = useIgnoreArmors()
   const setWeaponSlots = useSetWeaponSlots()
   const setActiveSkill = useSetSkills()
   const addSkill = useAddSkills()
@@ -46,13 +48,13 @@ export default function SimulatorCondition({ skills }: Props) {
 
   const execute = () => {
     setMode('result')
-    simulate(conditions.skills, conditions.weaponSlots, charms)
+    simulate(conditions.skills, conditions.weaponSlots, charms, Object.keys(ignore))
     updateSkillLog(conditions.skills)
   }
 
   const addableSkill = () => {
     setMode('addableSkill')
-    searchAddableSkills(conditions.skills, conditions.weaponSlots, charms)
+    searchAddableSkills(conditions.skills, conditions.weaponSlots, charms, Object.keys(ignore))
     updateSkillLog(conditions.skills)
   }
 

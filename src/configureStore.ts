@@ -11,7 +11,7 @@ const migrations: Migrations = {
 const persistConfig: PersistConfig<RootState> = {
   key: 'mh-rise',
   storage,
-  whitelist: ['skillLog', 'charms'],
+  whitelist: ['skillLog', 'charms', 'ignoreArmors'],
   migrate: createMigrate(migrations as MigrationManifest),
   version: 0,
 }

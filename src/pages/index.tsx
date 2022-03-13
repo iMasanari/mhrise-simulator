@@ -9,6 +9,7 @@ import { Share } from '../components/molecules/ShareList'
 import MetaData from '../components/templates/MetaData'
 import Simulator from '../components/templates/Simulator'
 import { SkillSystem } from '../domain/skill'
+import { useIgnoreArmors } from '../hooks/armorSettingsHooks'
 import { useCharms } from '../hooks/charmsHooks'
 import { useSetMode } from '../hooks/simualtorPageState'
 import { useSetSkills, useSetWeaponSlots } from '../hooks/simulatorConditionsHooks'
@@ -44,6 +45,7 @@ export default function TopPage({ shares }: Props) {
   const setSkills = useSetSkills()
   const setWeaponSlots = useSetWeaponSlots()
   const charms = useCharms()
+  const ignore = useIgnoreArmors()
   const simulator = useSimulator()
   const setMode = useSetMode()
   const router = useRouter()
@@ -64,7 +66,7 @@ export default function TopPage({ shares }: Props) {
 
     setSkills(skills)
     setWeaponSlots(slots)
-    simulator.simulate(skills, slots, charms)
+    simulator.simulate(skills, slots, charms, Object.keys(ignore))
     setMode('result')
 
     router.replace(location.pathname)

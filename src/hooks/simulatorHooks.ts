@@ -42,12 +42,12 @@ export const useSimulator = () => {
     stop()
   }
 
-  const simulate = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
+  const simulate = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[], ignore: string[]) => {
     if (simulatorRef.current) {
       simulatorRef.current.terminate()
     }
 
-    const simulator = new Simulator({ skills, weaponSlots, charms, ignore: [] })
+    const simulator = new Simulator({ skills, weaponSlots, charms, ignore })
     simulatorRef.current = simulator
 
     init()

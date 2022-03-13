@@ -6,6 +6,7 @@ import { useSetMode, useSimulatorPageState } from '../../hooks/simualtorPageStat
 import { Share } from '../molecules/ShareList'
 import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
+import SimulatorArmors from '../organisms/simulatorArmors/SimulatorArmors'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
 import SimulatorResult from '../organisms/simulatorResult/SimulatorResult'
 import SimulatorUsage from '../organisms/simulatorUsage/SimulatorUsage'
@@ -60,6 +61,7 @@ export default function Simulator({ skills, shares }: Props) {
             <Tab value="result" label="検索結果" css={tabStyle} />
             <Tab value="addableSkill" label="追加スキル" css={tabStyle} />
             <Tab value="charms" label="護石設定" css={tabStyle} />
+            <Tab value="armors" label="除外防具" css={tabStyle} />
           </Tabs>
           {mode === 'usage' && (
             <SimulatorUsage shares={shares} />
@@ -72,6 +74,9 @@ export default function Simulator({ skills, shares }: Props) {
           )}
           {mode === 'charms' && (
             <CharmSettings skills={skills} />
+          )}
+          {mode === 'armors' && (
+            <SimulatorArmors />
           )}
         </div>
       </div>
