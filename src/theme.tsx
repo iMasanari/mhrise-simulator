@@ -9,7 +9,7 @@ declare module '@emotion/react' {
 // Create a theme instance.
 const theme = createTheme({
   typography: {
-    fontFamily: '游ゴシック体,YuGothic,游ゴシック,Yu Gothic,メイリオ,sans-serif',
+    fontFamily: '"游ゴシック体","YuGothic","游ゴシック","Yu Gothic","ヒラギノ角ゴ Pro W3","メイリオ",sans-serif',
     fontWeightRegular: 500,
   },
   palette: {
