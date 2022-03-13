@@ -6,6 +6,7 @@ import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
 import { getDecoInfo } from '../../api/decos'
 import { firestore } from '../../api/firebase'
 import Link from '../../components/atoms/Link'
+import Time from '../../components/atoms/Time'
 import ResultEquip from '../../components/molecules/ResultEquip'
 import ResultSkills from '../../components/molecules/ResultSkills'
 import MetaData from '../../components/templates/MetaData'
@@ -13,6 +14,7 @@ import { Deco, EquipWithDetails, toEquip } from '../../domain/equips'
 
 interface Props {
   equip: EquipWithDetails
+  createdAt: string
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -43,8 +45,10 @@ export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
     decos: await Promise.all(data.decos.map(getDecoInfo)) as Deco[],
   }) as EquipWithDetails
 
+  const createdAt = (data.createdAt.toDate() as Date).toISOString()
+
   return {
-    props: { equip },
+    props: { equip, createdAt },
     revalidate: 24 * 60 * 60, // 24時間
   }
 }
@@ -56,7 +60,7 @@ const materialsTotalStyle = (theme: Theme) => css`
   }
 `
 
-export default function Shares({ equip }: Props) {
+export default function Shares({ equip, createdAt }: Props) {
   const skillParam = Object.entries(equip.skills)
     .sort(([, a], [, b]) => b - a)
     .map(([k, v]) => `${k}Lv${v}`)
@@ -112,10 +116,12 @@ export default function Shares({ equip }: Props) {
     })
   }, [materialEquipList])
 
+  const title = `${equip.head?.series || '装備なし'} - ${equip.body?.series || '装備なし'} - ${equip.arm?.series || '装備なし'} - ${equip.wst?.series || '装備なし'} - ${equip.leg?.series || '装備なし'}`
+
   return (
     <Container maxWidth="md">
       <MetaData
-        title="装備共有 | MHRise スキルシミュ"
+        title={`装備共有 (${title}) | MHRise スキルシミュ`}
         description="MHRise スキルシミュで検索・共有された装備です。"
         image={ogImageUrl}
         twitterCard="summary_large_image"
@@ -126,7 +132,11 @@ export default function Shares({ equip }: Props) {
       </Breadcrumbs>
       <Box sx={{ my: 2 }}>
         <Typography variant="h5" component="h1" gutterBottom textAlign="center">
-          {'装備共有'}
+          {title}
+        </Typography>
+        <Typography component="div" gutterBottom variant="body2" textAlign="right">
+          {'作成日: '}
+          <Time dateTime={createdAt} variant="body2" />
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={6}>
