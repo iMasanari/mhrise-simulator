@@ -14,10 +14,10 @@ gtag('js', new Date());
 gtag('config', ${JSON.stringify(googleAnalyticsId)});
 `
 
-const { extractCritical } = createEmotionServer(cache)
-
 export default class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
+    const { extractCritical } = createEmotionServer(cache)
+
     const initialProps = await Document.getInitialProps(ctx)
     const styles = extractCritical(initialProps.html)
 

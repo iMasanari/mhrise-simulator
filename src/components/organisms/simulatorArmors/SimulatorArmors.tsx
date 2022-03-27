@@ -1,7 +1,7 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@mui/material'
 import React, { useMemo, useState } from 'react'
 import series from '../../../../generated/details/series.json'
-import { useIgnoreArmors, useToggleIgnoreArmors, useUpdateIgnoreArmors } from '../../../hooks/armorSettingsHooks'
+import { useIgnoreArmors, useToggleIgnoreArmors, useUpdateIgnoreArmors } from '../../../hooks/ignoreArmors'
 import ConfirmButton from '../../molecules/ConfirmButton'
 import SimulatorArmorsRow from './SimulatorArmorsRow'
 

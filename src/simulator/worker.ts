@@ -22,6 +22,7 @@ registerPromiseWorker<SimulatorCondition, Result | null>((condition) => {
     solver.addDeco(equip)
   }
 
+  solver.addDecoLimits(condition.decoLimits)
   solver.setPrevs(condition.prevs)
 
   return solver.solve()

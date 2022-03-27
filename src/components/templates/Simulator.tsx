@@ -8,6 +8,7 @@ import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorArmors from '../organisms/simulatorArmors/SimulatorArmors'
 import SimulatorCondition from '../organisms/simulatorCondition/SimulatorCondition'
+import SimulatorDecos from '../organisms/simulatorDecos/SimulatorDecos'
 import SimulatorResult from '../organisms/simulatorResult/SimulatorResult'
 import SimulatorUsage from '../organisms/simulatorUsage/SimulatorUsage'
 
@@ -62,6 +63,7 @@ export default function Simulator({ skills, shares }: Props) {
             <Tab value="addableSkill" label="追加スキル" css={tabStyle} />
             <Tab value="charms" label="護石設定" css={tabStyle} />
             <Tab value="armors" label="除外防具" css={tabStyle} />
+            <Tab value="decos" label="装飾品設定" css={tabStyle} />
           </Tabs>
           {mode === 'usage' && (
             <SimulatorUsage shares={shares} />
@@ -77,6 +79,9 @@ export default function Simulator({ skills, shares }: Props) {
           )}
           {mode === 'armors' && (
             <SimulatorArmors />
+          )}
+          {mode === 'decos' && (
+            <SimulatorDecos />
           )}
         </div>
       </div>

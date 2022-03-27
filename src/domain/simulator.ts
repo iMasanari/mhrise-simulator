@@ -6,6 +6,7 @@ export interface Condition {
   skills: ActiveSkill
   charms: Charm[]
   ignore: string[]
+  decoLimits: Record<string, number>
   objectiveSkill?: string
 }
 
