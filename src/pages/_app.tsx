@@ -3,7 +3,6 @@ import { CacheProvider, css, Global } from '@emotion/react'
 import { CssBaseline } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
 import { AppProps } from 'next/app'
-import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import Header from '../components/organisms/header/Header'
@@ -19,17 +18,7 @@ body {
 
 export const cache = createCache({ key: 'css', prepend: true })
 
-export default function MyApp(props: AppProps) {
-  const { Component, pageProps } = props
-
-  useEffect(() => {
-    // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector('#jss-server-side')
-    if (jssStyles) {
-      jssStyles.parentElement!.removeChild(jssStyles)
-    }
-  }, [])
-
+export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <Provider store={store}>
       <SimulatorProvider>
