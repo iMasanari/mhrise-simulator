@@ -1,11 +1,20 @@
 import { Box, Breadcrumbs, Container, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next'
+import { GetStaticPaths, GetStaticProps } from 'next'
 import * as React from 'react'
 import { getDecos } from '../../api/decos'
 import Link from '../../components/atoms/Link'
 import MetaData from '../../components/templates/MetaData'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
+interface Deco {
+  name: string
+  size: number
+  skills: Record<string, number>
+  materials: Record<string, number>
+}
+
+interface Props {
+  deco: Deco
+}
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const decos = await getDecos()
@@ -16,13 +25,15 @@ export const getStaticPaths: GetStaticPaths = async () => {
   return { paths, fallback: false }
 }
 
-export const getStaticProps = async (ctx: GetStaticPropsContext) => {
+export const getStaticProps: GetStaticProps<Props> = async (ctx) => {
   const decoName = ctx.params?.deco
   const decos = await getDecos()
 
   const deco = decos.find(v => v.name === decoName)
 
-  if (!deco) throw new Error(`${decoName} is not found`)
+  if (!deco) {
+    return { notFound: true }
+  }
 
   return {
     props: { deco },

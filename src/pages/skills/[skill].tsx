@@ -39,7 +39,9 @@ export const getStaticProps: GetStaticProps<Props> = async ctx => {
 
   const skill = skills.find(v => v.name === skillName)
 
-  if (!skill) throw new Error(`${skillName} is not found`)
+  if (!skill) {
+    return { notFound: true }
+  }
 
   const armors = await findArmor(skill.name)
   const decos = (await getDecos())
@@ -193,7 +195,7 @@ export default function SkillDetailPage({ skill, armors, decos, shares }: Props)
           </Table>
         </TableContainer>
         <Typography variant="h5" component="h2" gutterBottom>
-          {'このスキルを使用した装備'}
+          このスキルを使用した装備
         </Typography>
         <ShareList shares={shares} />
       </Box>
