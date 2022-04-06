@@ -105,7 +105,7 @@ export default function CharmSettings({ skills }: Props) {
             <option value={'\t'}>タブ区切り</option>
           </Select>
           <Button variant={csvText === '' ? 'contained' : 'outlined'} onClick={() => setCsvText(toCsv(charms, csvDelimiter))}>
-            {'エクスポート'}
+            エクスポート
           </Button>
         </Box>
         <TextField
@@ -119,7 +119,7 @@ export default function CharmSettings({ skills }: Props) {
         />
         <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
           <Button variant="contained" disabled={csvText === ''} onClick={() => replaceCharm(toCharms(csvText))}>
-            {'インポート'}
+            インポート
           </Button>
         </Box>
       </Box>

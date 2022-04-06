@@ -103,7 +103,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
       <DialogTitle>結果の共有(β)</DialogTitle>
       <DialogContent>
         <Typography>
-          {'この装備の内容を共有するリンクを生成します。'}
+          この装備の内容を共有するリンクを生成します。
         </Typography>
         {shareId ? (
           <TextField
@@ -126,26 +126,26 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
           />
         ) : (
           <Button startIcon={<LinkIcon />} variant="outlined" fullWidth disabled={loading} onClick={createUrl} sx={{ my: 2 }}>
-            {'共有リンクの生成'}
+            共有リンクの生成
           </Button>
         )}
         <Typography gutterBottom variant="body2">
-          {'※生成したリンクはこのサイトのトップページや防具ページ等に掲載されることがあります'}
+          ※生成したリンクはこのサイトのトップページや防具ページ等に掲載されることがあります
         </Typography>
         <Typography gutterBottom variant="body2">
-          {'※開発等の理由により、生成したリンクを無効化する可能性があります'}
+          ※開発等の理由により、生成したリンクを無効化する可能性があります
         </Typography>
         {shareId && (
           <Box sx={{ textAlign: 'center' }}>
             <Button startIcon={<Twitter />} variant="outlined" size="large" sx={{ mt: 1 }} onClick={tweetLink}            >
-              {'ツイートする'}
+              ツイートする
             </Button>
           </Box>
         )}
       </DialogContent>
       <DialogActions>
         <Button onClick={() => onClose()}>
-          {'閉じる'}
+          閉じる
         </Button>
       </DialogActions>
       <Snackbar
@@ -155,7 +155,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
         autoHideDuration={5000}
       >
         <Alert onClose={() => setCopySnackbarOpen(false)} severity="success" sx={{ width: '100%' }}>
-          {'コピーしました'}
+          コピーしました
         </Alert>
       </Snackbar>
       <Snackbar
@@ -166,7 +166,7 @@ export default function ShareDialog({ open, onClose, equip }: Props) {
       >
         <Alert onClose={() => setError(false)} severity="error" sx={{ width: '100%' }}>
           <AlertTitle>通信エラーが発生しました</AlertTitle>
-          {'時間をおいて、再度実行してください。'}
+          時間をおいて、再度実行してください。
         </Alert>
       </Snackbar>
     </Dialog >
