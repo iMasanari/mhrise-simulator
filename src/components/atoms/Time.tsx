@@ -1,7 +1,7 @@
 import { Typography, TypographyProps } from '@mui/material'
 import { useMemo } from 'react'
 
-interface Props extends TypographyProps {
+interface Props extends TypographyProps<'time'> {
   dateTime: string
 }
 

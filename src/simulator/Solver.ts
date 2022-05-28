@@ -163,6 +163,8 @@ export default class Simulator {
 
   addDeco(deco: Deco) {
     this.addIntVariable(`${DECO_PREFIX}${deco.name}`, {
+      // 個数（装飾品制限用）
+      [`Y_DECO/${deco.name}`]: 1,
       // スロット
       [Y_SLOT_1_OVER]: deco.size >= 1 ? -1 : 0,
       [Y_SLOT_2_OVER]: deco.size >= 2 ? -1 : 0,
@@ -172,6 +174,14 @@ export default class Simulator {
         [skill, deco.skills[skill] || 0]
       )),
     })
+  }
+
+  addDecoLimits(limits: Record<string, number>) {
+    for (const [key, value] of Object.entries(limits)) {
+      this.constraints[`Y_DECO/${key}`] = {
+        max: value,
+      }
+    }
   }
 
   setPrevs(prevs: Result[]) {

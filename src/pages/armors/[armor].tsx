@@ -188,7 +188,7 @@ export default function SkillDetailPage({ armor, shares }: Props) {
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h5" component="h2" gutterBottom>
-              {'この防具を使用した装備'}
+              この防具を使用した装備
             </Typography>
             <ShareList shares={shares} />
           </Grid>

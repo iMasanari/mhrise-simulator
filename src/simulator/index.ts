@@ -22,7 +22,8 @@ export interface SimulatorCondition {
   deco: Deco[]
   skills: ActiveSkill
   prevs: Result[]
-  ignore?: string[]
+  // ignore: string[]
+  decoLimits: Record<string, number>
 }
 
 interface Groups {
@@ -126,6 +127,7 @@ export default class Simulator {
       leg: legData.armors,
       charm: charmData.charms,
       deco: deco.filter(deco => !ignore.has(deco.name)),
+      decoLimits: condition.decoLimits,
       prevs: [],
     }
 

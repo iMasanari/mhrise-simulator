@@ -1,7 +1,6 @@
 import { useSelector } from 'react-redux'
 import { useSimulatorRef } from '../contexts/SimulatorContext'
-import { Charm, Slots } from '../domain/equips'
-import { ActiveSkill } from '../domain/skill'
+import { Condition } from '../domain/simulator'
 import { RootState } from '../modules'
 import { addResult, simulateComplete, simulateInit, simulateStart, simulateStop } from '../modules/simulatorResult'
 import Simulator from '../simulator'
@@ -42,12 +41,12 @@ export const useSimulator = () => {
     stop()
   }
 
-  const simulate = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
+  const simulate = async (condition: Condition) => {
     if (simulatorRef.current) {
       simulatorRef.current.terminate()
     }
 
-    const simulator = new Simulator({ skills, weaponSlots, charms, ignore: [] })
+    const simulator = new Simulator(condition)
     simulatorRef.current = simulator
 
     init()

@@ -10,6 +10,8 @@ import MetaData from '../components/templates/MetaData'
 import Simulator from '../components/templates/Simulator'
 import { SkillSystem } from '../domain/skill'
 import { useCharms } from '../hooks/charmsHooks'
+import { useDecoLimits } from '../hooks/decoLimits'
+import { useIgnoreArmors } from '../hooks/ignoreArmors'
 import { useSetMode } from '../hooks/simualtorPageState'
 import { useSetSkills, useSetWeaponSlots } from '../hooks/simulatorConditionsHooks'
 import { useSimulator } from '../hooks/simulatorHooks'
@@ -44,6 +46,8 @@ export default function TopPage({ shares }: Props) {
   const setSkills = useSetSkills()
   const setWeaponSlots = useSetWeaponSlots()
   const charms = useCharms()
+  const ignore = useIgnoreArmors()
+  const decoLimits = useDecoLimits()
   const simulator = useSimulator()
   const setMode = useSetMode()
   const router = useRouter()
@@ -60,11 +64,19 @@ export default function TopPage({ shares }: Props) {
         .map(([key, value]) => [key, +value])
     )
 
-    const slots = (searchParams.get('weaponSlots') || '').split(',').map(Number)
+    const weaponSlots = (searchParams.get('weaponSlots') || '').split(',').map(Number)
 
     setSkills(skills)
-    setWeaponSlots(slots)
-    simulator.simulate(skills, slots, charms)
+    setWeaponSlots(weaponSlots)
+
+    simulator.simulate({
+      skills,
+      weaponSlots,
+      charms,
+      ignore: Object.keys(ignore),
+      decoLimits,
+    })
+
     setMode('result')
 
     router.replace(location.pathname)

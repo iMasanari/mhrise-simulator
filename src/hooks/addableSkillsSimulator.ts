@@ -1,8 +1,7 @@
 import { useRef } from 'react'
 import { useSelector, useStore } from 'react-redux'
 import skillList from '../../generated/skills.json'
-import { Charm, Slots } from '../domain/equips'
-import { ActiveSkill } from '../domain/skill'
+import { Condition } from '../domain/simulator'
 import { RootState } from '../modules'
 import { addResult, simulateStart, simulateStop } from '../modules/addableSkillsResult'
 import Simulator, { createSiumlatorWorker } from '../simulator'
@@ -25,7 +24,7 @@ export const useAddableSkillsSimulator = () => {
 
   const store = useStore<RootState>()
 
-  const searchAddableSkills = async (skills: ActiveSkill, weaponSlots: Slots, charms: Charm[]) => {
+  const searchAddableSkills = async (condition: Condition) => {
     if (addableSkillWorkerRef.current) {
       addableSkillWorkerRef.current.terminate()
     }
@@ -38,11 +37,11 @@ export const useAddableSkillsSimulator = () => {
     start()
 
     for (const skill of skillLog) {
-      const simulator = new Simulator({ skills, weaponSlots, charms, ignore: [], objectiveSkill: skill }, worker)
+      const simulator = new Simulator({ ...condition, objectiveSkill: skill }, worker)
       const result = await simulator.simulate()
       const point = result ? Math.min(result.skills[skill] || 0, skillMaxPointMap.get(skill)!) : 0
 
-      if (point && skills[skill] !== point) {
+      if (point && condition.skills[skill] !== point) {
         add(skill, point)
       }
     }

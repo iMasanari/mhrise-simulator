@@ -1,6 +1,6 @@
 import ActionReducer from 'action-reducer'
 
-export type Mode = 'usage' | 'result' | 'addableSkill' | 'charms'
+export type Mode = 'usage' | 'result' | 'addableSkill' | 'charms' | 'armors' | 'decos'
 
 export interface SimulatorPageState {
   mode: Mode
