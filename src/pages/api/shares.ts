@@ -1,7 +1,8 @@
+import { FieldValue } from 'firebase-admin/firestore'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { getArm, getBody, getHead, getLeg, getWst } from '../../api/armors'
 import { getDecoInfo } from '../../api/decos'
-import { FieldValue, firestore } from '../../api/firebase'
+import { firestore } from '../../api/firebase'
 import { toEquip } from '../../domain/equips'
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {

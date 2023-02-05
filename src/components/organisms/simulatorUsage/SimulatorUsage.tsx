@@ -16,7 +16,7 @@ export default function SimulatorUsage({ shares }: Props) {
     <Box sx={{ my: 2 }}>
       <Box component="section" sx={{ mb: 4 }}>
         <Typography gutterBottom>
-          モンスターハンター Rise のスキルシミュレーターです。
+          モンスターハンター Rise のスキルシミュレーターです。（サンブレイク未対応）
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
           使い方
