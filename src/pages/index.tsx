@@ -1,11 +1,7 @@
 import { Container } from '@mui/material'
-import { InferGetStaticPropsType } from 'next'
 import { useRouter } from 'next/router'
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import skills from '../../generated/skills.json'
-import { getArm, getBody, getHead, getLeg, getWst } from '../api/armors'
-import { firestore } from '../api/firebase'
-import { Share } from '../components/molecules/ShareList'
 import MetaData from '../components/templates/MetaData'
 import Simulator from '../components/templates/Simulator'
 import { SkillSystem } from '../domain/skill'
@@ -16,33 +12,7 @@ import { useSetMode } from '../hooks/simualtorPageState'
 import { useSetSkills, useSetWeaponSlots } from '../hooks/simulatorConditionsHooks'
 import { useSimulator } from '../hooks/simulatorHooks'
 
-type Props = InferGetStaticPropsType<typeof getStaticProps>
-
-export const getStaticProps = async () => {
-  const collection = await firestore.collection('shares').orderBy('createdAt', 'desc').limit(10).get()
-
-  const list: any[] = []
-  collection.forEach(v => list.push({ id: v.id, ...v.data() }))
-
-  const shares: Share[] = await Promise.all(
-    list.map(async ({ id, head, body, arm, wst, leg, skills }) => ({
-      id: id,
-      head: (await getHead(head))?.series || head,
-      body: (await getBody(body))?.series || body,
-      arm: (await getArm(arm))?.series || arm,
-      wst: (await getWst(wst))?.series || wst,
-      leg: (await getLeg(leg))?.series || leg,
-      skills,
-    }))
-  )
-
-  return {
-    props: { shares },
-    revalidate: 15 * 60, // 15分
-  }
-}
-
-export default function TopPage({ shares }: Props) {
+export default function TopPage() {
   const setSkills = useSetSkills()
   const setWeaponSlots = useSetWeaponSlots()
   const charms = useCharms()
@@ -96,7 +66,7 @@ export default function TopPage({ shares }: Props) {
         title="MHRise スキルシミュ"
         description="「モンスターハンター Rise」のスキルシミュレーターです。発動したいスキルが発動する防具や装飾品の組み合わせを検索します。"
       />
-      <Simulator skills={skillList} shares={shares} />
+      <Simulator skills={skillList} />
     </Container>
   )
 }
