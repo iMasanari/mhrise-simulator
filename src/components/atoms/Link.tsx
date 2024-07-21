@@ -12,26 +12,15 @@ interface Props extends LinkProps {
   locale?: string | false
 }
 
-export default forwardRef<HTMLAnchorElement, Props>(function Link(
-  { href, as, replace, scroll, shallow, prefetch, locale, ...props },
+export default forwardRef<HTMLAnchorElement, Props>(function LinkBehavior(
+  props,
   ref
 ) {
-  if (href[0] !== ('/')) {
-    return <MuiLink href={href} target="_blank" rel="noopener" {...props} ref={ref} />
+  if (props.href[0] !== ('/')) {
+    return <MuiLink target="_blank" rel="noopener" {...props} ref={ref} />
   }
 
   return (
-    <NextLink
-      href={href}
-      as={as}
-      replace={replace}
-      scroll={scroll}
-      shallow={shallow}
-      prefetch={prefetch}
-      locale={locale}
-      passHref
-    >
-      <MuiLink {...props} ref={ref} />
-    </NextLink>
+    <MuiLink component={NextLink} {...props} ref={ref} />
   )
 })

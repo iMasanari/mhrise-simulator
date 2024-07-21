@@ -12,20 +12,10 @@ interface Props extends AnchorHTMLAttributes<HTMLAnchorElement> {
 }
 
 export default forwardRef<HTMLAnchorElement, Props>(function NakedLink(
-  { href, as, replace, scroll, shallow, prefetch, locale, ...props },
+  props,
   ref
 ) {
   return (
-    <NextLink
-      href={href}
-      as={as}
-      replace={replace}
-      scroll={scroll}
-      shallow={shallow}
-      prefetch={prefetch}
-      locale={locale}
-    >
-      <a {...props} ref={ref} />
-    </NextLink>
+    <NextLink {...props} ref={ref} />
   )
 })

@@ -1,17 +1,12 @@
 import { css } from '@emotion/react'
 import { Box, Typography } from '@mui/material'
-import React from 'react'
-import ShareList, { Share } from '../../molecules/ShareList'
-
-interface Props {
-  shares: Share[]
-}
+import Link from '../../atoms/Link'
 
 const imgStyle = css`
   max-width: 100%;
 `
 
-export default function SimulatorUsage({ shares }: Props) {
+export default function SimulatorUsage() {
   return (
     <Box sx={{ my: 2 }}>
       <Box component="section" sx={{ mb: 4 }}>
@@ -48,7 +43,9 @@ export default function SimulatorUsage({ shares }: Props) {
         <Typography variant="h5" component="h2" gutterBottom>
           最近共有された装備
         </Typography>
-        <ShareList shares={shares} />
+        <Link href="/shares" prefetch={false}>
+          {'>> こちらに移動しました <<'}
+        </Link>
       </Box>
       <Box component="section" sx={{ mb: 4 }}>
         <Typography variant="h5" component="h2" gutterBottom>

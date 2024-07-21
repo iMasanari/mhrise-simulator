@@ -1,9 +1,7 @@
 import { css, Theme } from '@emotion/react'
 import { Box, Tab, Tabs } from '@mui/material'
-import React from 'react'
 import { SkillSystem } from '../../domain/skill'
 import { useSetMode, useSimulatorPageState } from '../../hooks/simualtorPageState'
-import { Share } from '../molecules/ShareList'
 import CharmSettings from '../organisms/charmSettings/CharmSettings'
 import SimulatorAddableSkill from '../organisms/simulatorAddableSkill/SimulatorAddableSkill'
 import SimulatorArmors from '../organisms/simulatorArmors/SimulatorArmors'
@@ -14,7 +12,6 @@ import SimulatorUsage from '../organisms/simulatorUsage/SimulatorUsage'
 
 interface Props {
   skills: SkillSystem[]
-  shares: Share[]
 }
 
 const containerStyle = (theme: Theme) => css`
@@ -41,7 +38,7 @@ const resultStyle = (theme: Theme) => css`
   }
 `
 
-export default function Simulator({ skills, shares }: Props) {
+export default function Simulator({ skills }: Props) {
   const { mode } = useSimulatorPageState()
   const setMode = useSetMode()
 
@@ -66,7 +63,7 @@ export default function Simulator({ skills, shares }: Props) {
             <Tab value="decos" label="装飾品設定" css={tabStyle} />
           </Tabs>
           {mode === 'usage' && (
-            <SimulatorUsage shares={shares} />
+            <SimulatorUsage />
           )}
           {mode === 'result' && (
             <SimulatorResult />

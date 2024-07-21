@@ -101,7 +101,7 @@ export default function SkillsPage({ series }: Props) {
                     <TableCell key={v || i} css={tableCellItemStyle}>
                       {v && (
                         <Link href={`/armors/${v}`} noWrap prefetch={false}>
-                          <Image css={linkIconStyle} src={`/images/armors/${images[i]}`} width={24} height={24} />
+                          <Image alt="" css={linkIconStyle} src={`/images/armors/${images[i]}`} width={24} height={24} />
                         </Link>
                       )}
                     </TableCell>
